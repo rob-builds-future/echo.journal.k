@@ -16,12 +16,12 @@ fun EntryListTopBar() {
     TopAppBar(
         title = { Text("Dein Journal") },
         navigationIcon = {
-            IconButton(onClick = { /* TODO: Statistik öffnen */ }) {
+            IconButton(onClick = { /*  */ }) {
                 Icon(Icons.Default.DateRange, contentDescription = "Stats")
             }
         },
         actions = {
-            IconButton(onClick = { /* TODO: Settings */ }) {
+            IconButton(onClick = { /*  */ }) {
                 Icon(Icons.Default.Settings, contentDescription = "Settings")
             }
         }

@@ -1,9 +1,7 @@
 package com.example.echojournal.ui.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -70,9 +68,9 @@ fun EntryListScreen() {
                 EntryList(
                     entries = sampleEntries,
                     filterFavorites = showFavoritesOnly,
-                    onEntryClick = { /* TODO: Navigation oder Aktion */ },
-                    onToggleFavorite = { /* TODO: Favorit umschalten */ },
-                    onDelete = { /* TODO: Eintrag löschen */ }
+                    onEntryClick = { /* Navigation oder Aktion */ },
+                    onToggleFavorite = { /*  Favorit umschalten */ },
+                    onDelete = { /* Eintrag löschen */ }
                 )
             }
             GradientOverlay(
