@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.EntryListScreen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,7 +60,8 @@ fun EntryRow(
             .padding(8.dp)
             .clickable { onClick() },
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border    = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)),
         colors    = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor   = MaterialTheme.colorScheme.onSurface

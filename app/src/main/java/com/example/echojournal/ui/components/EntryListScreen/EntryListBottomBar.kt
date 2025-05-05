@@ -1,6 +1,9 @@
 package com.example.echojournal.ui.components.EntryListScreen
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
@@ -8,6 +11,8 @@ import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,12 +28,8 @@ fun EntryListBottomBar(
     onInspirationClick: () -> Unit
 ) {
     BottomAppBar(
-        // macht den Hintergrund durchsichtig
         containerColor = Color.Transparent,
-        // hebt die Erhöhung auf
-        tonalElevation = 0.dp,
-        // optional: falls du die Icon-Farbe anpassen willst
-        contentColor = Color.Black
+        contentColor   = MaterialTheme.colorScheme.onBackground
     ) {
         IconButton(onClick = onToggleFavorites) {
             Icon(
@@ -37,8 +38,17 @@ fun EntryListBottomBar(
             )
         }
         Spacer(Modifier.weight(1f))
-        IconButton(onClick = onAddClick) {
-            Icon(Icons.Default.Add, contentDescription = "Neuer Eintrag")
+        Surface(
+            modifier     = Modifier
+                .height(48.dp)
+                .width(88.dp),
+            shape        = RoundedCornerShape(24.dp),              // Pill-Shape
+            color        = MaterialTheme.colorScheme.primary,      // Schwarz im Light, Weiß im Dark
+            contentColor = MaterialTheme.colorScheme.onPrimary     // Weiß im Light, Schwarz im Dark
+        ) {
+            IconButton(onClick = onAddClick) {
+                Icon(Icons.Default.Add, contentDescription = "Neuer Eintrag")
+            }
         }
         Spacer(Modifier.weight(1f))
         IconButton(onClick = onInspirationClick) {
