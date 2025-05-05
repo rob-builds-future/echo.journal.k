@@ -109,7 +109,7 @@ Die App schafft eine motivierende Umgebung, in der Nutzer ihre Gedanken festhalt
 
 	Der Datenfluss geht dabei typischerweise: View <-> ViewModel <-> Repository <-> External Sources
 
-##### 1. data - local/remote inkl. odels
+##### 1. data - local/remote inkl. models
 
 Aufgabe: Definieren die Datenstrukturen/Objekte der App (z.B. JournalEntry, User)
 

@@ -18,7 +18,7 @@ fun StatisticsHeaderPlaceholder() {
         Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(Color.LightGray),
+            .background(Color.Transparent),
         contentAlignment = Alignment.Center
     ) {
         Text("Statistics Header")

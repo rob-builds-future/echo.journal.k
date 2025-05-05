@@ -3,7 +3,9 @@ package com.example.echojournal.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,13 +24,6 @@ import com.example.echojournal.ui.components.EntryListScreen.GradientOverlay
 import com.example.echojournal.ui.components.EntryListScreen.InspirationPopoverPlaceholder
 import com.example.echojournal.ui.components.EntryListScreen.StatisticsHeaderPlaceholder
 import java.time.LocalDateTime
-
-
-
-
-
-
-
 
 @Composable
 fun EntryListScreen() {
@@ -61,12 +56,17 @@ fun EntryListScreen() {
             )
         }
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
         ) {
-            Column {
+            LazyColumn (
+                modifier = Modifier.fillMaxSize()
+            ){
+                item {
                 StatisticsHeaderPlaceholder()
+                }
                 EntryList(
                     entries = sampleEntries,
                     filterFavorites = showFavoritesOnly,
@@ -76,7 +76,7 @@ fun EntryListScreen() {
                 )
             }
             GradientOverlay(
-                height = 140.dp,
+                height = 80.dp,
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
