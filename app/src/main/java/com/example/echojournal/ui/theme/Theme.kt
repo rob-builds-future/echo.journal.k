@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,35 +8,48 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary              = Color.White,
+    onPrimary            = Color.Black,
+    primaryContainer     = Color.White,
+    onPrimaryContainer   = Color.Black,
+    secondary            = Color.White,
+    onSecondary          = Color.Black,
+    secondaryContainer   = Color.Black,
+    onSecondaryContainer = Color.White,
+    background           = Color.Black,
+    onBackground         = Color.White,
+    surface              = Color.Black,
+    onSurface            = Color.White,
+    error                = Color(0xFFCF6679),
+    onError              = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary              = Color.Black,
+    onPrimary            = Color.White,
+    primaryContainer     = Color.Black,
+    onPrimaryContainer   = Color.White,
+    secondary            = Color.Black,
+    onSecondary          = Color.White,
+    secondaryContainer   = Color.White,
+    onSecondaryContainer = Color.Black,
+    background           = Color.White,
+    onBackground         = Color.Black,
+    surface              = Color.White,
+    onSurface            = Color.Black,
+    error                = Color(0xFFB00020),
+    onError              = Color.White
 )
 
 @Composable
 fun EchojournalTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

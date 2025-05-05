@@ -2,7 +2,6 @@ package com.example.echojournal.ui.components.EntryListScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.local.JournalEntry
@@ -54,11 +52,6 @@ fun EntryRow(
     val dateFormatter = DateTimeFormatter.ofPattern("d. MMM yyyy", Locale.GERMAN)
     val dateStr       = entry.createdAt.format(dateFormatter)
 
-    // background und foreground Farben
-    val isDark = isSystemInDarkTheme()
-    val bg = if (isDark) Color.Black else Color.White
-    val fg = if (isDark) Color.White else Color.Black
-
 
     Card(
         modifier = Modifier
@@ -67,9 +60,9 @@ fun EntryRow(
             .clickable { onClick() },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = bg,
-            contentColor   = fg
+        colors    = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor   = MaterialTheme.colorScheme.onSurface
         )
     ) {
         Box {
@@ -79,7 +72,7 @@ fun EntryRow(
                     .align(Alignment.TopStart)
                     .width(100.dp)
                     .background(
-                        color = fg,
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         shape = customCornerShape(topStart = 12.dp, bottomEnd = 12.dp)
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -87,7 +80,7 @@ fun EntryRow(
                 Text(
                     text = dateStr,
                     style = MaterialTheme.typography.labelMedium,
-                    color = bg
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
 
@@ -112,7 +105,7 @@ fun EntryRow(
                         modifier = Modifier
                             .size(56.dp, 28.dp)
                             .background(
-                                color = fg,
+                                color = MaterialTheme.colorScheme.primaryContainer,
                                 shape = customCornerShape(topStart = 12.dp, bottomEnd = 12.dp)
                             )
                             .clickable { menuExpanded = true },
@@ -121,7 +114,7 @@ fun EntryRow(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = "More",
-                            tint = bg
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                     DropdownMenu(
@@ -179,7 +172,12 @@ fun EntryRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (entry.isFavorite) {
-                    Icon(Icons.Default.Bookmark, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        imageVector = Icons.Default.Bookmark,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(Modifier.width(4.dp))
                 }
                 Text(
