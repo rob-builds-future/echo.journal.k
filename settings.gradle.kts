@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AndroidAbschlussprojekt"
+rootProject.name = "echo.journal"
 include(":app")
- 

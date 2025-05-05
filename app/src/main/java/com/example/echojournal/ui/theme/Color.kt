@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt.ui.theme
+package com.example.echojournal.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt
+package com.example.echojournal
 
 import org.junit.Test
 

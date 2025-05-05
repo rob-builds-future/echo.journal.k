@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt.ui.theme
+package com.example.echojournal.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -34,7 +34,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun AndroidAbschlussprojektTheme(
+fun EchojournalTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -43,7 +43,9 @@ fun AndroidAbschlussprojektTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(
+                context
+            )
         }
 
         darkTheme -> DarkColorScheme
