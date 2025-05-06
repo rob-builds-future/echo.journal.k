@@ -20,7 +20,7 @@ import com.example.echojournal.ui.components.EntryListScreen.EntryListBottomBar
 import com.example.echojournal.ui.components.EntryListScreen.EntryListTopBar
 import com.example.echojournal.ui.components.EntryListScreen.GradientOverlay
 import com.example.echojournal.ui.components.EntryListScreen.InspirationPopoverPlaceholder
-import com.example.echojournal.ui.components.EntryListScreen.StatisticsHeaderPlaceholder
+import com.example.echojournal.ui.components.EntryListScreen.StatisticsHeader
 import java.time.LocalDateTime
 
 @Composable
@@ -63,7 +63,7 @@ fun EntryListScreen() {
                 modifier = Modifier.fillMaxSize()
             ){
                 item {
-                StatisticsHeaderPlaceholder()
+                StatisticsHeader()
                 }
                 EntryList(
                     entries = sampleEntries,

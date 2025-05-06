@@ -1,26 +1,104 @@
 package com.example.echojournal.ui.components.EntryListScreen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FormatQuote
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun StatisticsHeaderPlaceholder() {
-    // Platzhalter für späteren StatisticsHeader
-    Box(
-        Modifier
+fun StatisticsHeader(
+    totalWords: Int = 1234,
+    totalMinutes: Int = 56,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(Color.Transparent),
-        contentAlignment = Alignment.Center
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("Statistics Header")
+        // Wort-Statistik
+        Row(
+            modifier = Modifier
+                .weight(1f),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector    = Icons.Default.FormatQuote,
+                contentDescription = null,
+                modifier       = Modifier.size(16.dp),
+                tint           = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text     = totalWords.toString(),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text     = "Wörter",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        // Vertikaler Trenner
+        VerticalDivider(
+            modifier = Modifier
+                .height(40.dp)
+                .width(1.dp),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
+        )
+
+        // Zeit-Statistik
+        Row(
+            modifier = Modifier
+                .weight(1f),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector    = Icons.Default.Timer,
+                contentDescription = null,
+                modifier       = Modifier.size(16.dp),
+                tint           = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text     = totalMinutes.toString(),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text     = "Minuten",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }

@@ -17,7 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,6 +29,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,15 +90,17 @@ fun EntryRow(
             }
 
             // Hauptinhalt und Menü Button
-            Column(modifier = Modifier.padding(top = 24.dp)) {
+            Column(modifier = Modifier.padding(top = 32.dp)) {
                 Text(
                     text = entry.content,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     maxLines = 8,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .height(100.dp)
-                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(top = 4.dp)
                 )
                 Spacer(Modifier.height(8.dp))
                 // Menü Button
@@ -181,22 +186,46 @@ fun EntryRow(
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Spacer(Modifier.width(4.dp))
+                    VerticalDivider(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                        modifier = Modifier
+                            .height(16.dp)
+                            .width(1.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
                 }
-                Text(
-                    text = "${entry.content.split("\\s+".toRegex()).size}",
-                    style = MaterialTheme.typography.labelMedium
+                Icon(
+                    imageVector = Icons.Default.FormatQuote,
+                    contentDescription = "Quote",
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.width(4.dp))
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                Text(
+                    text = "${entry.content.split("\\s+".toRegex()).size}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(Modifier.width(4.dp))
+
+                VerticalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
                     modifier = Modifier
                         .height(16.dp)
                         .width(1.dp)
                 )
                 Spacer(Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.Timer,
+                    contentDescription = "Timer",
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(Modifier.width(4.dp))
                 Text(
                     text = "${entry.duration} min",
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
