@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.SettingsScreen
+package com.example.echojournal.ui.components.settingsScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,11 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.util.SettingType
 
+// Dummy user data
+private const val dummyUsername = "EchoUser"
+private const val dummyMemberSince = "01.01.2023"
+private const val dummyTargetLanguage = "Deutsch"
+
 @Composable
-fun AppSettingsCard(
-    onNavigateToAppSetting: (SettingType) -> Unit
+fun ProfileSettingsCard(
+    onNavigateToProfile: (SettingType) -> Unit
 ) {
-// App Einstellungen Card
+// Profil Einstellungen Card
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -28,21 +33,21 @@ fun AppSettingsCard(
     ) {
         Column {
             SettingItem(
-                label = "Farbschema",
-                value = "Schwarz & Weiß",
-                onClick = { onNavigateToAppSetting(SettingType.Theme) }
+                label = "Benutzername",
+                value = dummyUsername,
+                onClick = { onNavigateToProfile(SettingType.Username) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Journaling Vorlagen",
-                value = "3 Vorlagen",
-                onClick = { onNavigateToAppSetting(SettingType.Templates) }
+                label = "Zielsprache",
+                value = dummyTargetLanguage,
+                onClick = { onNavigateToProfile(SettingType.TargetLanguage) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Erinnerungen",
-                value = "Aus",
-                onClick = { onNavigateToAppSetting(SettingType.Reminders) }
+                label = "Mitglied seit",
+                value = dummyMemberSince,
+                onClick = { onNavigateToProfile(SettingType.MemberSince) }
             )
         }
     }

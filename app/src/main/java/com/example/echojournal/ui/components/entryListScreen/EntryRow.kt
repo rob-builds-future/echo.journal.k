@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.EntryListScreen
+package com.example.echojournal.ui.components.entryListScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

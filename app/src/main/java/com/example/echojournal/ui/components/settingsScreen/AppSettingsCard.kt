@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.SettingsScreen
+package com.example.echojournal.ui.components.settingsScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,16 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.util.SettingType
 
-// Dummy user data
-private const val dummyUsername = "EchoUser"
-private const val dummyMemberSince = "01.01.2023"
-private const val dummyTargetLanguage = "Deutsch"
-
 @Composable
-fun ProfileSettingsCard(
-    onNavigateToProfile: (SettingType) -> Unit
+fun AppSettingsCard(
+    onNavigateToAppSetting: (SettingType) -> Unit
 ) {
-// Profil Einstellungen Card
+// App Einstellungen Card
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -33,21 +28,21 @@ fun ProfileSettingsCard(
     ) {
         Column {
             SettingItem(
-                label = "Benutzername",
-                value = dummyUsername,
-                onClick = { onNavigateToProfile(SettingType.Username) }
+                label = "Farbschema",
+                value = "Schwarz & Weiß",
+                onClick = { onNavigateToAppSetting(SettingType.Theme) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Zielsprache",
-                value = dummyTargetLanguage,
-                onClick = { onNavigateToProfile(SettingType.TargetLanguage) }
+                label = "Journaling Vorlagen",
+                value = "3 Vorlagen",
+                onClick = { onNavigateToAppSetting(SettingType.Templates) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Mitglied seit",
-                value = dummyMemberSince,
-                onClick = { onNavigateToProfile(SettingType.MemberSince) }
+                label = "Erinnerungen",
+                value = "Aus",
+                onClick = { onNavigateToAppSetting(SettingType.Reminders) }
             )
         }
     }

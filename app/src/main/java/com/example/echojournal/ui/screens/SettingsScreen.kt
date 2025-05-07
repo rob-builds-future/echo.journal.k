@@ -27,10 +27,10 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.echojournal.ui.components.SettingsScreen.AppSettingsCard
-import com.example.echojournal.ui.components.SettingsScreen.InstaButton
-import com.example.echojournal.ui.components.SettingsScreen.ProfileSettingsCard
-import com.example.echojournal.ui.components.SettingsScreen.SettingItem
+import com.example.echojournal.ui.components.settingsScreen.AppSettingsCard
+import com.example.echojournal.ui.components.settingsScreen.InstaButton
+import com.example.echojournal.ui.components.settingsScreen.ProfileSettingsCard
+import com.example.echojournal.ui.components.settingsScreen.SettingItem
 import com.example.echojournal.util.SettingType
 
 

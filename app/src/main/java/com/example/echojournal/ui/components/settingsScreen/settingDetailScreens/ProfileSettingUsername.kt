@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.SettingsScreen.SettingDetailScreens
+package com.example.echojournal.ui.components.settingsScreen.settingDetailScreens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

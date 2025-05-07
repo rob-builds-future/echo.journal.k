@@ -14,13 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.local.JournalEntry
-import com.example.echojournal.ui.components.EntryListScreen.AddEntryDialogPlaceholder
-import com.example.echojournal.ui.components.EntryListScreen.EntryList
-import com.example.echojournal.ui.components.EntryListScreen.EntryListBottomBar
-import com.example.echojournal.ui.components.EntryListScreen.EntryListTopBar
-import com.example.echojournal.ui.components.EntryListScreen.GradientOverlay
-import com.example.echojournal.ui.components.EntryListScreen.InspirationPopoverPlaceholder
-import com.example.echojournal.ui.components.EntryListScreen.StatisticsHeader
+import com.example.echojournal.ui.components.entryListScreen.AddEntryDialogPlaceholder
+import com.example.echojournal.ui.components.entryListScreen.EntryList
+import com.example.echojournal.ui.components.entryListScreen.EntryListBottomBar
+import com.example.echojournal.ui.components.entryListScreen.EntryListTopBar
+import com.example.echojournal.ui.components.entryListScreen.GradientOverlay
+import com.example.echojournal.ui.components.entryListScreen.InspirationPopoverPlaceholder
+import com.example.echojournal.ui.components.entryListScreen.StatisticsHeader
 import java.time.LocalDateTime
 
 @Composable

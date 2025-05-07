@@ -13,7 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.echojournal.ui.components.SettingsScreen.SettingDetailScreens.ProfileSettingUsername
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.util.SettingType
 
 private const val dummyMemberSince = "01.01.2023"

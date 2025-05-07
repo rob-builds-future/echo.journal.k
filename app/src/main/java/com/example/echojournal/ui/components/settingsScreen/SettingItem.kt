@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.SettingsScreen
+package com.example.echojournal.ui.components.settingsScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

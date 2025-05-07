@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.EntryListScreen
+package com.example.echojournal.ui.components.entryListScreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange

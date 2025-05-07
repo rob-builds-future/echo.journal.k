@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.SettingsScreen
+package com.example.echojournal.ui.components.settingsScreen
 
 import androidx.compose.runtime.Composable
 import coil3.compose.AsyncImage
