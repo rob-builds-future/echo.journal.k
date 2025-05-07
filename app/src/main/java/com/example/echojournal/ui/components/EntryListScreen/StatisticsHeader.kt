@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun StatisticsHeader(
+    modifier: Modifier = Modifier,
     totalWords: Int = 1234,
-    totalMinutes: Int = 56,
-    modifier: Modifier = Modifier
+    totalMinutes: Int = 56
 ) {
     Row(
         modifier = modifier
