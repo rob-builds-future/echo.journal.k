@@ -1,5 +1,6 @@
 package com.example.echojournal.data.local
 
+import java.io.Serializable
 import java.time.LocalDateTime
 
 data class JournalEntry(
@@ -8,4 +9,4 @@ data class JournalEntry(
     val createdAt: LocalDateTime,
     val isFavorite: Boolean,
     val duration: Int
-)
+) : Serializable

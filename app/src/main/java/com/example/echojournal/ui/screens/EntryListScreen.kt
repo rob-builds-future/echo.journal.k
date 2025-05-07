@@ -24,7 +24,10 @@ import com.example.echojournal.ui.components.EntryListScreen.StatisticsHeader
 import java.time.LocalDateTime
 
 @Composable
-fun EntryListScreen() {
+fun EntryListScreen(
+    onEntryClick: (JournalEntry) -> Unit,
+    onSettingsClick: () -> Unit = {}
+) {
     // Lokale UI-States
     var showAddEntry by remember { mutableStateOf(false) }
     var showFavoritesOnly by remember { mutableStateOf(false) }
@@ -44,7 +47,7 @@ fun EntryListScreen() {
     }
 
     Scaffold(
-        topBar = { EntryListTopBar() },
+        topBar = { EntryListTopBar(onSettingsClick = onSettingsClick) },
         bottomBar = {
             EntryListBottomBar(
                 showFavoritesOnly = showFavoritesOnly,
@@ -68,7 +71,7 @@ fun EntryListScreen() {
                 EntryList(
                     entries = sampleEntries,
                     filterFavorites = showFavoritesOnly,
-                    onEntryClick = { /* Navigation oder Aktion */ },
+                    onEntryClick = onEntryClick,
                     onToggleFavorite = { /*  Favorit umschalten */ },
                     onDelete = { /* Eintrag löschen */ }
                 )

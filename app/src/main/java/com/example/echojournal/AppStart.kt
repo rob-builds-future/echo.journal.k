@@ -1,10 +1,16 @@
 package com.example.echojournal
 
 import androidx.compose.runtime.Composable
-import com.example.echojournal.ui.screens.SettingsScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.echojournal.navigation.AppNavGraph
 
 @Composable
 fun AppStart() {
-        //EntryListScreen()
-        SettingsScreen()
+    val navController: NavHostController = rememberNavController()
+    AppNavGraph(
+        navController = navController,
+        onLogoutConfirmed = {},
+        onInstagramClick = {}
+    )
 }
