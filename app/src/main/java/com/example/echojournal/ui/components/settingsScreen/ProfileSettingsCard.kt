@@ -14,7 +14,7 @@ import com.example.echojournal.util.SettingType
 
 // Dummy user data
 private const val dummyUsername = "EchoUser"
-private const val dummyMemberSince = "01.01.2023"
+private const val dummyInfo = "Deine Profil Infos"
 private const val dummyTargetLanguage = "Deutsch"
 
 @Composable
@@ -45,9 +45,9 @@ fun ProfileSettingsCard(
             )
             HorizontalDivider()
             SettingItem(
-                label = "Mitglied seit",
-                value = dummyMemberSince,
-                onClick = { onNavigateToProfile(SettingType.MemberSince) }
+                label = "Profil Info",
+                value = dummyInfo,
+                onClick = { onNavigateToProfile(SettingType.ProfileInfo) }
             )
         }
     }

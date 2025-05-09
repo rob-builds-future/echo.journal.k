@@ -4,7 +4,7 @@ package com.example.echojournal.util
 enum class SettingType {
     Username,
     TargetLanguage,
-    MemberSince,
+    ProfileInfo,
     Theme,
     Templates,
     Reminders

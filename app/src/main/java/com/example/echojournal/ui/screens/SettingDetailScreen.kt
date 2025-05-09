@@ -13,10 +13,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingLanguage
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.util.SettingType
-
-private const val dummyMemberSince = "01.01.2023"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +30,7 @@ fun SettingDetailScreen(
                 title = { Text(text = when(type) {
                     SettingType.Username       -> "Benutzername ändern"
                     SettingType.TargetLanguage -> "Zielsprache wählen"
-                    SettingType.MemberSince    -> "Mitglied seit anzeigen"
+                    SettingType.ProfileInfo    -> "Profil Info"
                     SettingType.Theme          -> "Farbschema"
                     SettingType.Templates      -> "Journaling-Vorlagen"
                     SettingType.Reminders      -> "Erinnerungen"
@@ -43,23 +43,32 @@ fun SettingDetailScreen(
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .padding(16.dp)) {
             when(type) {
                 SettingType.Username -> {
-                    Text("Hier kannst du deinen Benutzernamen ändern.")
                     ProfileSettingUsername(
+                        initialUsername = "EchoUser",
                         onSave = { newName ->
                             // hier UserStore.updateName(newName) o.ä.
-                        },
-                        initialUsername = "EchoUser",
+                        }
                     )
                 }
                 SettingType.TargetLanguage -> {
-                    Text("Wähle deine Zielsprache aus.")
-                    // Dropdown, RadioButtons …
+                    ProfileSettingLanguage(
+                        initialLanguage = "English",
+                        onSelect = {  lang ->
+                            // hier die Auswahl speichern, z.B. ViewModel.updateLanguage(lang)
+                        }
+                    )
                 }
-                SettingType.MemberSince -> {
-                    Text("Du bist seit $dummyMemberSince Mitglied.")
+                SettingType.ProfileInfo -> {
+                    ProfileSettingInfo(
+                        onDeleteProfile = {
+                            // hier das Profil löschen, über das viewmodel
+                        }
+                    )
                 }
                 SettingType.Theme -> {
                     Text("Theme wechseln: Hell, Dunkel, Automatisch.")

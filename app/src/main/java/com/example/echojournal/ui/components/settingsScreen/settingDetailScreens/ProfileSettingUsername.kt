@@ -4,9 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,10 +28,14 @@ fun ProfileSettingUsername(
     onSave: (String) -> Unit,
 ) {
     var username by remember { mutableStateOf(initialUsername) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Column {
+        Text(text = "Hier kannst du deinen Benutzernamen ändern.")
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Dein aktueller Benutzername: $initialUsername")
+        Spacer(modifier = Modifier.height(32.dp))
+
         TextField(
             value = username,
             onValueChange = { username = it },
@@ -41,10 +46,25 @@ fun ProfileSettingUsername(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onSave(username) },
+            onClick = {
+                onSave(username)
+                showDialog = true
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Speichern")
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            text = { Text("Dein Nutzername wurde geändert zu $username") },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
