@@ -47,7 +47,7 @@ android {
 dependencies {
 
     // Desugaring-Bibliothek für Java 8-APIs
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -65,7 +65,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     // extended icons
     implementation(libs.androidx.compose.material.icons.extended)
     // viewmodel
@@ -82,4 +81,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     // data store
     implementation(libs.androidx.datastore.preferences)
+
+    // material 3
+    implementation(libs.androidx.material3)
 }

@@ -28,8 +28,8 @@ fun AppSettingsCard(
     ) {
         Column {
             SettingItem(
-                label = "Farbschema",
-                value = "Schwarz & Weiß",
+                label = "Echo-Farbe",
+                value = "Lichtblau",
                 onClick = { onNavigateToAppSetting(SettingType.Theme) }
             )
             HorizontalDivider()

@@ -71,7 +71,7 @@ fun SettingDetailScreen(
                     )
                 }
                 SettingType.Theme -> {
-                    Text("Theme wechseln: Hell, Dunkel, Automatisch.")
+                    Text("Echo-Farbe wechseln:")
                 }
                 SettingType.Templates -> {
                     Text("Deine Journaling-Vorlagen verwalten.")

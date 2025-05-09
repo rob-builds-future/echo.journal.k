@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -52,7 +54,25 @@ fun ProfileSettingLanguage(
             onValueChange = { query = it },
             modifier = Modifier
                 .fillMaxWidth(),
-            label = { Text("Suche Sprache") }
+            label = { Text("Suche Sprache") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color.White.copy(alpha = 0.8f),
+                unfocusedLabelColor = Color.White.copy(alpha = 0.6f),
+                disabledLabelColor = Color.White.copy(alpha = 0.4f),
+                errorLabelColor = Color.White.copy(alpha = 0.8f),
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                errorTextColor = Color.Red,
+                focusedContainerColor = Color.Black,
+                unfocusedContainerColor = Color.Black,
+                disabledContainerColor = Color.Black,
+                errorContainerColor = Color.Black,
+                focusedPlaceholderColor = Color.White,
+                unfocusedPlaceholderColor = Color.White,
+                disabledPlaceholderColor = Color.White,
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
