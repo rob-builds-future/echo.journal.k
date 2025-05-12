@@ -30,7 +30,6 @@ fun AppNavGraph(
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set("entry", entry)
-                    // statische Route via navigateTo
                     navController.navigateTo(EntryDetailRoute)
                 },
                 onSettingsClick = {
@@ -43,7 +42,6 @@ fun AppNavGraph(
         typedComposable<SettingsRoute> {
             SettingsScreen(
                 onNavigateToProfile    = { type ->
-                    // dynamische Route via Standard-navigate
                     navController.navigate(SettingDetailRoute.createRoute(type))
                 },
                 onNavigateToAppSetting = { type ->

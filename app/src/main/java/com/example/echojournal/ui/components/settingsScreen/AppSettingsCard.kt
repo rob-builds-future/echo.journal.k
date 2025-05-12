@@ -29,19 +29,19 @@ fun AppSettingsCard(
         Column {
             SettingItem(
                 label = "Echo-Farbe",
-                value = "Lichtblau",
+                value = "Wolkenlos",
                 onClick = { onNavigateToAppSetting(SettingType.Theme) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Journaling Vorlagen",
-                value = "3 Vorlagen",
+                label = "Geführtes Tagebuchschreiben",
+                value = "Reflexion am Abend",
                 onClick = { onNavigateToAppSetting(SettingType.Templates) }
             )
             HorizontalDivider()
             SettingItem(
                 label = "Erinnerungen",
-                value = "Aus",
+                value = "Deine Erinnerungen",
                 onClick = { onNavigateToAppSetting(SettingType.Reminders) }
             )
         }

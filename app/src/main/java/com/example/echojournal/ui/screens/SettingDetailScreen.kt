@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingLanguage
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingReminder
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingTemplate
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingTheme
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.util.SettingType
 
@@ -27,26 +30,35 @@ fun SettingDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = when(type) {
-                    SettingType.Username       -> "Benutzername ändern"
-                    SettingType.TargetLanguage -> "Zielsprache wählen"
-                    SettingType.ProfileInfo    -> "Profil Info"
-                    SettingType.Theme          -> "Farbschema"
-                    SettingType.Templates      -> "Journaling-Vorlagen"
-                    SettingType.Reminders      -> "Erinnerungen"
-                }) },
+                title = {
+                    Text(
+                        text = when (type) {
+                            SettingType.Username -> "Benutzername ändern"
+                            SettingType.TargetLanguage -> "Zielsprache wählen"
+                            SettingType.ProfileInfo -> "Profil Info"
+                            SettingType.Theme -> "Echo-Farbe"
+                            SettingType.Templates -> "Geführtes Tagebuchschreiben"
+                            SettingType.Reminders -> "Erinnerungen"
+                        }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Zurück"
+                        )
                     }
                 }
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .padding(16.dp)) {
-            when(type) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            when (type) {
                 SettingType.Username -> {
                     ProfileSettingUsername(
                         initialUsername = "EchoUser",
@@ -55,14 +67,16 @@ fun SettingDetailScreen(
                         }
                     )
                 }
+
                 SettingType.TargetLanguage -> {
                     ProfileSettingLanguage(
                         initialLanguage = "English",
-                        onSelect = {  lang ->
+                        onSelect = { lang ->
                             // hier die Auswahl speichern, z.B. ViewModel.updateLanguage(lang)
                         }
                     )
                 }
+
                 SettingType.ProfileInfo -> {
                     ProfileSettingInfo(
                         onDeleteProfile = {
@@ -70,14 +84,32 @@ fun SettingDetailScreen(
                         }
                     )
                 }
+
                 SettingType.Theme -> {
-                    Text("Echo-Farbe wechseln:")
+                    ProfileSettingTheme(
+                        initialColorName = "Wolkenlos",
+                        onSelect = { theme ->
+                            // hier die Auswahl speichern
+                        }
+                    )
                 }
+
                 SettingType.Templates -> {
-                    Text("Deine Journaling-Vorlagen verwalten.")
+                    ProfileSettingTemplate(
+                        initialTemplateName = "Reflexion am Abend",
+                        onSelect = { template ->
+                            // hier die Vorlage speichern
+                        }
+                    )
                 }
+
                 SettingType.Reminders -> {
-                    Text("Erinnerungen ein-/ausschalten.")
+                    ProfileSettingReminder(
+                        initialReminders = emptyMap(), // oder dein gespeichertes Map aus dem ViewModel
+                        onChange = { label, enabled, time ->
+                            // hier die Reminder speichern: label, enabled, time
+                        }
+                    )
                 }
             }
         }
