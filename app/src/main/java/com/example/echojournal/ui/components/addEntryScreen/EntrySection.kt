@@ -1,8 +1,8 @@
 package com.example.echojournal.ui.components.addEntryScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,48 +30,66 @@ import androidx.compose.ui.unit.dp
 fun EntrySection(
     content: String,
     onContentChange: (String) -> Unit,
+    focusRequester: FocusRequester
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-        var textState by remember { mutableStateOf(TextFieldValue(content)) }
-        var showInspiration by remember { mutableStateOf(true) }
-        val inspirationText = "Deine Inspiration erscheint hier..."
+    // Wir halten den Text intern als TextFieldValue, damit Cursor-Position etc. erhalten bleiben
+    var textState by remember { mutableStateOf(TextFieldValue(text = content)) }
+    val wordCount = remember(textState.text) {
+        textState.text
+            .trim()
+            .split("\\s+".toRegex())
+            .filter { it.isNotBlank() }
+            .size
+    }
+    val inspirationText = "Deine Inspiration erscheint hier…"
+    var showInspiration by remember { mutableStateOf(true) }
 
-        val wordCount = remember(textState.text) {
-            textState.text
-                .trim()                                           // führende/trailing Leerzeichen entfernen
-                .split("\\s+".toRegex())                         // an einer oder mehreren Whitespaces splitten
-                .filter { it.isNotBlank() }                      // leere Strings rausfiltern
-                .size                                             // Größe der Liste ist die Anzahl der Wörter
-        }
-
-        Box(modifier = Modifier
+    Column(
+        modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .background(
-                shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.surface
-            )
+            .padding(horizontal = 8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
         ) {
-            TextField(
+            // === Hier dein CustomTextEditor ===
+            CustomTextEditor(
                 value = textState,
                 onValueChange = {
                     textState = it
                     onContentChange(it.text)
                 },
-                modifier = Modifier.fillMaxSize(),
-                placeholder = { Text("Schreibe hier deinen Eintrag...") }
+                modifier = Modifier
+                    .fillMaxSize(),
+                focusRequester = focusRequester,
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                contentPadding = PaddingValues(8.dp), // Innen‐Padding
+                borderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                borderWidth = 1.dp,
+                shape = RoundedCornerShape(8.dp),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                placeholder = {
+                    if (textState.text.isEmpty() && showInspiration) {
+                        Text(
+                            text = inspirationText,
+                            modifier = Modifier
+                                .align(Alignment.TopStart),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            )
+                        )
+                    }
+                }
             )
-            if (textState.text.isEmpty() && showInspiration) {
-                Text(
-                    text = inspirationText,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(8.dp),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
-            }
         }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = "$wordCount Worte",
             modifier = Modifier.fillMaxWidth(),

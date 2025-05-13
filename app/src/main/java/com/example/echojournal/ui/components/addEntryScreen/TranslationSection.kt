@@ -23,7 +23,7 @@ fun TranslationSection(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 100.dp)
+                .heightIn(min = 150.dp)
                 .padding(8.dp)
         )
     }
