@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.local.JournalEntry
-import com.example.echojournal.ui.components.entryListScreen.AddEntryDialogPlaceholder
 import com.example.echojournal.ui.components.entryListScreen.EntryList
 import com.example.echojournal.ui.components.entryListScreen.EntryListBottomBar
 import com.example.echojournal.ui.components.entryListScreen.EntryListTopBar
@@ -33,12 +32,20 @@ fun EntryListScreen(
     var showFavoritesOnly by remember { mutableStateOf(false) }
     var showInspirationPopover by remember { mutableStateOf(false) }
 
+    // Wenn AddEntry aktiv ist, ersetze kompletten Inhalt
+    if (showAddEntry) {
+        AddEntryScreen(
+            onDismiss = { showAddEntry = false }
+        )
+        return
+    }
+
     // Dummy-Daten für Preview / Entwicklung
     val now = remember { LocalDateTime.now() }
     val sampleEntries = remember {
         listOf(
             // id, content, createdAt, isFavorite, duration
-            JournalEntry("5", "Beispiel Eintrag 5", now.minusDays(4), true, 6),
+            JournalEntry("5", "Beispiel Eintrag 5 und vier Worte mehr.", now.minusDays(4), true, 6),
             JournalEntry("4", "Beispiel Eintrag 4", now.minusDays(3), true, 6),
             JournalEntry("1", "Beispiel Eintrag 1", now.minusDays(2), false, 5),
             JournalEntry("2", "Beispiel Eintrag 2", now.minusDays(1), true, 8),
@@ -82,9 +89,6 @@ fun EntryListScreen(
             )
         }
 
-        if (showAddEntry) {
-            AddEntryDialogPlaceholder(onDismiss = { showAddEntry = false })
-        }
         if (showInspirationPopover) {
             InspirationPopoverPlaceholder(onDismiss = { showInspirationPopover = false })
         }

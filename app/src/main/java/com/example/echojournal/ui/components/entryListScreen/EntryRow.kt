@@ -53,6 +53,12 @@ fun EntryRow(
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
+    val count = entry.content
+        .trim()
+        .split("\\s+".toRegex())
+        .filter { it.isNotBlank() }
+        .size
+
     val dateFormatter = DateTimeFormatter.ofPattern("d. MMM yyyy", Locale.GERMAN)
     val dateStr       = entry.createdAt.format(dateFormatter)
 
@@ -202,7 +208,7 @@ fun EntryRow(
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = "${entry.content.split("\\s+".toRegex()).size}",
+                    text = "$count",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
