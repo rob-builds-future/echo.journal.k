@@ -5,6 +5,8 @@ plugins {
 
     // navigation
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    // Google für Firebase
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -46,6 +48,7 @@ android {
 
 dependencies {
 
+    implementation(libs.firebase.firestore)
     // Desugaring-Bibliothek für Java 8-APIs
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
@@ -65,6 +68,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Firebase Auth
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     // extended icons
     implementation(libs.androidx.compose.material.icons.extended)
     // viewmodel
@@ -81,7 +90,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     // data store
     implementation(libs.androidx.datastore.preferences)
-
     // material 3
     implementation(libs.androidx.material3)
+
 }

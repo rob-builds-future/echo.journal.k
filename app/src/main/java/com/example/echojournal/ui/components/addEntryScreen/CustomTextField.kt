@@ -23,18 +23,6 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Ein vollständig anpassbares Text-Input-Feld basierend auf BasicTextField.
- *
- * @param value Der aktuelle Textzustand als TextFieldValue
- * @param onValueChange Callback, wenn sich der Text ändert
- * @param modifier Modifier für äußere Anpassungen (z.B. Größe)
- * @param backgroundColor Hintergrundfarbe des Felds
- * @param cursorColor Farbe des Textcursors
- * @param contentPadding Padding zwischen Feldrand und Textinhalt
- * @param borderColor Rahmenfarbe
- * @param borderWidth Rahmenstärke
- * @param shape Form des Rahmens/Ecken
- * @param textStyle Textstil für die Eingabe
- * @param placeholder Optionaler Composable-Content, der angezeigt wird, wenn value.text leer ist
  */
 @Composable
 fun CustomTextEditor(
