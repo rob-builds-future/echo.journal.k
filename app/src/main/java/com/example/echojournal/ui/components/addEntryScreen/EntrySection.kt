@@ -54,7 +54,6 @@ fun EntrySection(
                 .fillMaxWidth()
                 .height(200.dp)
         ) {
-            // === Hier dein CustomTextEditor ===
             CustomTextEditor(
                 value = textState,
                 onValueChange = {
