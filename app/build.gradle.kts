@@ -85,11 +85,17 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.retrofit)
     implementation(libs.converterMoshi)
+    implementation(libs.logging.interceptor)
     // async image
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     // data store
     implementation(libs.androidx.datastore.preferences)
+    // koin
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
     // material 3
     implementation(libs.androidx.material3)
 

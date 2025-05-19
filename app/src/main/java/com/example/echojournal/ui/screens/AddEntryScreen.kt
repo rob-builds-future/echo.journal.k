@@ -1,11 +1,11 @@
 package com.example.echojournal.ui.screens
 
 import android.app.DatePickerDialog
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.addEntryScreen.TranslationSection
+import com.example.echojournal.ui.viewModel.TranslationViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -57,11 +60,16 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEntryScreen(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    translationViewModel: TranslationViewModel = koinViewModel()
 ) {
     // Lokale UI-Stati
+    // Content hält nur noch den zu speichernden Text
     var content by remember { mutableStateOf("") }
-    var translationText by remember { mutableStateOf("") }
+
+    // Wir beobachten das übersetzte Ergebnis direkt aus dem ViewModel
+    val translationText by translationViewModel.translatedText.collectAsState()
+
     var showAlert by remember { mutableStateOf(false) }
 
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
@@ -73,13 +81,8 @@ fun AddEntryScreen(
     val context = LocalContext.current
     var isReversed by remember { mutableStateOf(false) }
 
-    LaunchedEffect(isReversed) {
-        entryFocusRequester.requestFocus()
-    }
-
-    LaunchedEffect(Unit) {
-        entryFocusRequester.requestFocus()
-    }
+    LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
+    LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
 
     BackHandler(enabled = true) { showAlert = true }
 
@@ -117,8 +120,14 @@ fun AddEntryScreen(
                 },
                 actions = {
                     val isEnabled = content.isNotBlank()
-                    val backgroundColor = if (isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
-                    val iconTint = if (isEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    val backgroundColor =
+                        if (isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.12f
+                        )
+                    val iconTint =
+                        if (isEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.38f
+                        )
                     Box(
                         modifier = Modifier
                             .padding(end = 16.dp)
@@ -152,20 +161,28 @@ fun AddEntryScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Top
+                //verticalArrangement = Arrangement.Top
             ) {
                 if (isReversed) {
                     TranslationSection(translationText = translationText)
                     SwapDivider { isReversed = !isReversed }
                     EntrySection(
                         content = content,
-                        onContentChange = { content = it },
+                        onContentChange = {
+                            content = it
+                            Log.d("AddEntryScreen", "Entry content changed: $it")
+                            translationViewModel.onTextChanged(it)
+                        },
                         focusRequester = entryFocusRequester
                     )
                 } else {
                     EntrySection(
                         content = content,
-                        onContentChange = { content = it },
+                        onContentChange = {
+                            content = it
+                            Log.d("AddEntryScreen", "Entry content changed: $it")
+                            translationViewModel.onTextChanged(it)
+                        },
                         focusRequester = entryFocusRequester
                     )
                     SwapDivider { isReversed = !isReversed }
