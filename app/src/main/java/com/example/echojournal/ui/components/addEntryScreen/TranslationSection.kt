@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun TranslationSection(
     translationText: String
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
         Text(
             text = translationText.ifEmpty { "Hier wird übersetzt..." },
             style = MaterialTheme.typography.bodyMedium,

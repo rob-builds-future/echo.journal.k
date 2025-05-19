@@ -27,6 +27,8 @@ class TranslationViewModel(
 
     // Feste Zielsprache, bis das User-Repo kommt
     private val targetLanguage: String = "en"
+    // Feste Eingabeprache, bis das User-Repo kommt
+    private val inputLanguage: String = "de"
 
     // SharedFlow für Texteingaben zum Debouncen
     private val textInput = MutableSharedFlow<String>(replay = 1)
@@ -64,7 +66,7 @@ class TranslationViewModel(
         runCatching {
             translationRepository.translate(
                 text = text,
-                from = "auto",
+                from = inputLanguage,
                 to   = targetLanguage
             )
         }.onSuccess { result ->
