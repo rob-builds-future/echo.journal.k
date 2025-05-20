@@ -29,3 +29,11 @@ object SettingDetailRoute : NavDestination {
 object EntryDetailRoute : NavDestination {
     override val route = "entry_detail"
 }
+
+@Serializable object AuthRootRoute       : NavDestination { override val route = "auth_root" }
+@Serializable object SignInRoute         : NavDestination { override val route = "sign_in" }
+@Serializable object SignUpRoute         : NavDestination { override val route = "sign_up" }
+
+@Serializable object OnboardingRootRoute : NavDestination { override val route = "onboarding_root" }
+@Serializable object WelcomeRoute        : NavDestination { override val route = "welcome" }
+@Serializable object PrefsRoute          : NavDestination { override val route = "prefs_setup" }

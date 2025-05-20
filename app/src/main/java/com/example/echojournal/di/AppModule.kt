@@ -2,8 +2,14 @@ package com.example.echojournal.di
 
 import com.example.echojournal.data.remote.BASE_URL
 import com.example.echojournal.data.remote.LibreTranslateService
+import com.example.echojournal.data.repository.FirebaseUserAuthRepo
+import com.example.echojournal.data.repository.PrefsRepo
+import com.example.echojournal.data.repository.PrefsRepoImpl
 import com.example.echojournal.data.repository.TranslationApiRepo
 import com.example.echojournal.data.repository.TranslationApiRepoImpl
+import com.example.echojournal.data.repository.UserAuthRepo
+import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -48,7 +54,7 @@ val appModule = module {
                     // nur IPv4-Adressen filtern
                     val ipv4Only = all.filterIsInstance<Inet4Address>()
                     // zurückgeben als List<InetAddress>
-                    return ipv4Only.map { it as InetAddress }
+                    return ipv4Only.map { it }
                 }
             })
             .addInterceptor(logging)
@@ -64,4 +70,8 @@ val appModule = module {
     single<LibreTranslateService> { get<Retrofit>().create(LibreTranslateService::class.java) }
     single<TranslationApiRepo> { TranslationApiRepoImpl(get()) }
     viewModel { TranslationViewModel(get()) }
+    single<UserAuthRepo> { FirebaseUserAuthRepo() }
+    viewModel { AuthViewModel(get()) }
+    single<PrefsRepo> { PrefsRepoImpl() }
+    viewModel { PrefsViewModel(get()) }
 }

@@ -1,7 +1,7 @@
 package com.example.echojournal.data.repository
 
 import com.example.echojournal.data.remote.LibreTranslateService
-import com.example.echojournal.data.remote.TranslateRequest
+import com.example.echojournal.data.remote.model.TranslateRequest
 
 class TranslationApiRepoImpl(
     private val api: LibreTranslateService
