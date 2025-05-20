@@ -31,7 +31,9 @@ import com.example.echojournal.ui.components.mainflow.settingsScreen.AppSettings
 import com.example.echojournal.ui.components.mainflow.settingsScreen.InstaButton
 import com.example.echojournal.ui.components.mainflow.settingsScreen.ProfileSettingsCard
 import com.example.echojournal.ui.components.settingsScreen.SettingItem
+import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.util.SettingType
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +45,12 @@ fun SettingsScreen(
     onLogoutConfirmed: () -> Unit = {},
     version: String = "v1.0"
 ) {
+
+    // AuthViewModel für Logout
+    val authViewModel: AuthViewModel = koinViewModel()
+
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,9 +58,6 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
-
-        var showLogoutDialog by remember { mutableStateOf(false) }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -127,6 +132,9 @@ fun SettingsScreen(
                         TextButton(
                             onClick = {
                                 showLogoutDialog = false
+                                // 1) Firebase-Logout
+                                authViewModel.signOut()
+                                // 2) Callback anraphen, um NavGraph zu informieren
                                 onLogoutConfirmed()
                             }
                         ) { Text("Ja") }

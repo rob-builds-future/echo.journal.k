@@ -27,7 +27,6 @@ fun AppNavGraph(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     prefsViewModel: PrefsViewModel,
-    onLogoutConfirmed: () -> Unit = {},
     onInstagramClick: () -> Unit = {}
 ) {
     val user by authViewModel.user.collectAsState()
@@ -108,8 +107,11 @@ fun AppNavGraph(
                 },
                 onInstagramClick       = onInstagramClick,
                 onLogoutConfirmed      = {
-                    onLogoutConfirmed()
-                    navController.popBackStack()
+                    // erstens: Firebase-Logout wurde schon in SettingsScreen gemacht
+                    // zweitens: zurück in den Auth-Flow navigieren und Main-Graph entfernen
+                    navController.navigate(AuthRootRoute.route) {
+                        popUpTo(EntryListRoute.route) { inclusive = true }
+                    }
                 }
             )
         }

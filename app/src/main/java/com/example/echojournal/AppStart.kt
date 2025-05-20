@@ -19,7 +19,6 @@ fun AppStart() {
         navController = navController,
         authViewModel     = authViewModel,
         prefsViewModel    = prefsViewModel,
-        onLogoutConfirmed = {},
         onInstagramClick = {}
     )
 }
