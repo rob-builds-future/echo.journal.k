@@ -47,9 +47,10 @@ fun AppNavGraph(
             route           = AuthRootRoute.route
         ) {
             composable(SignInRoute.route) {
-                SignInScreen(onSignedIn = {
-                    navController.navigate(SignUpRoute.route)
-                })
+                SignInScreen(
+                    onSignedIn = { navController.navigate(SignUpRoute.route) },
+                    onSignUpClick = { navController.navigate(SignUpRoute.route) }
+                )
             }
             composable(SignUpRoute.route) {
                 SignUpScreen(onSignedUp = {
