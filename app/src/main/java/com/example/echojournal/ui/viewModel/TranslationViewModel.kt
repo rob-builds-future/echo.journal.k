@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * ViewModel für Übersetzungen.
+ */
 @OptIn(FlowPreview::class)
 class TranslationViewModel(
     private val translationRepository: TranslationApiRepo

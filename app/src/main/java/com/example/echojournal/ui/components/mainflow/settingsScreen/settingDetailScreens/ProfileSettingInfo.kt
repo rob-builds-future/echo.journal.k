@@ -40,6 +40,9 @@ private const val dummyReminders = "Aus"
  */
 @Composable
 fun ProfileSettingInfo(
+    memberSince: String,
+    username: String,
+    language: String,
     onDeleteProfile: () -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -56,18 +59,18 @@ fun ProfileSettingInfo(
             )
         ) {
             Text(
-                text = "Mitglied seit: $dummyMemberSince",
+                text = "Mitglied seit: $memberSince",
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Benutzername: $dummyUsername",
+            Text(text = "Benutzername: $username",
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
-            Text(text = "Zielsprache: $dummyLanguage",
+            Text(text = "Zielsprache: $language",
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium

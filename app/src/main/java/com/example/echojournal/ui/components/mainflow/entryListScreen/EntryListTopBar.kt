@@ -13,11 +13,12 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntryListTopBar(
+    title: String,
     onSettingsClick: () -> Unit,
-    onStatsClick: () -> Unit = {}
+    onStatsClick: () -> Unit
 ) {
     TopAppBar(
-        title = { Text("Dein Journal") },
+        title = { Text(title) } ,
         navigationIcon = {
             IconButton(onClick = onStatsClick) {
                 Icon(Icons.Default.DateRange, contentDescription = "Stats")

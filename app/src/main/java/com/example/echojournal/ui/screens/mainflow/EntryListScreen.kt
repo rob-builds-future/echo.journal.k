@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +21,8 @@ import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListT
 import com.example.echojournal.ui.components.mainflow.entryListScreen.GradientOverlay
 import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopoverPlaceholder
 import com.example.echojournal.ui.components.mainflow.entryListScreen.StatisticsHeader
+import com.example.echojournal.ui.viewModel.AuthViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 
 @Composable
@@ -27,6 +30,10 @@ fun EntryListScreen(
     onEntryClick: (JournalEntry) -> Unit,
     onSettingsClick: () -> Unit = {}
 ) {
+    // AuthViewModel holen
+    val authViewModel: AuthViewModel = koinViewModel()
+    val user by authViewModel.user.collectAsState()
+
     // Lokale UI-States
     var showAddEntry by remember { mutableStateOf(false) }
     var showFavoritesOnly by remember { mutableStateOf(false) }
@@ -45,7 +52,13 @@ fun EntryListScreen(
     val sampleEntries = remember {
         listOf(
             // id, content, createdAt, isFavorite, duration
-            JournalEntry("5", "Beispiel Eintrag 5 und vier Worte mehr.", now.minusDays(4), true, 6),
+            JournalEntry(
+                "5",
+                "Beispiel Eintrag 5 und vier Worte mehr.",
+                now.minusDays(4),
+                true,
+                6
+            ),
             JournalEntry("4", "Beispiel Eintrag 4", now.minusDays(3), true, 6),
             JournalEntry("1", "Beispiel Eintrag 1", now.minusDays(2), false, 5),
             JournalEntry("2", "Beispiel Eintrag 2", now.minusDays(1), true, 8),
@@ -53,8 +66,16 @@ fun EntryListScreen(
         )
     }
 
+    val titleText = user?.let { "${it.username}’s Journal" } ?: "Dein Journal"
+
     Scaffold(
-        topBar = { EntryListTopBar(onSettingsClick = onSettingsClick) },
+        topBar = {
+            EntryListTopBar(
+                title = titleText,
+                onSettingsClick = onSettingsClick,
+                onStatsClick = {}
+            )
+        },
         bottomBar = {
             EntryListBottomBar(
                 showFavoritesOnly = showFavoritesOnly,
@@ -69,11 +90,11 @@ fun EntryListScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            LazyColumn (
+            LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            ){
+            ) {
                 item {
-                StatisticsHeader()
+                    StatisticsHeader()
                 }
                 EntryList(
                     entries = sampleEntries,
@@ -90,7 +111,9 @@ fun EntryListScreen(
         }
 
         if (showInspirationPopover) {
-            InspirationPopoverPlaceholder(onDismiss = { showInspirationPopover = false })
+            InspirationPopoverPlaceholder(onDismiss = {
+                showInspirationPopover = false
+            })
         }
     }
 }

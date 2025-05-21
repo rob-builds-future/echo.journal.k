@@ -20,5 +20,5 @@ interface UserAuthRepo {
 
     fun signOut()
 
-    fun getCurrentUser(): User?
+    suspend fun getCurrentUser(): User?
 }

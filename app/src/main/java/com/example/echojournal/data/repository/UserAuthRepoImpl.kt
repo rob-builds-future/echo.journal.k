@@ -69,16 +69,23 @@ class FirebaseUserAuthRepo : UserAuthRepo {
         auth.signOut()
     }
 
-    override fun getCurrentUser(): User? {
+    override suspend fun getCurrentUser(): User? {
+        // Prüfe, ob Firebase einen User hat
         val firebaseUser = auth.currentUser ?: return null
-        // Nutzer-Profile nur aus Firestore laden, wenn nötig
-        // Hier stub: wir geben nur ID & Email zurück
+        // Profil aus Firestore laden
+        val uid = firebaseUser.uid
+        val doc = db.collection("users").document(uid).get().await()
+        val emailStored = doc.getString("email") ?: firebaseUser.email.orEmpty()
+        val username     = doc.getString("username") ?: ""
+        val langCode     = doc.getString("preferredLanguage") ?: ApiLanguage.EN.name
+        val ts           = doc.getTimestamp("createdAt")?.toDate() ?: Date()
+
         return User(
-            id = firebaseUser.uid,
-            email = firebaseUser.email ?: "",
-            username = "",
-            preferredLanguage = ApiLanguage.EN,
-            createdAt = Date(0)
+            id = uid,
+            email = emailStored,
+            username = username,
+            preferredLanguage = ApiLanguage.valueOf(langCode.uppercase()),
+            createdAt = ts
         )
     }
 }

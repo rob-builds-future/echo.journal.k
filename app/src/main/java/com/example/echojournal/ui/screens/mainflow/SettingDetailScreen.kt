@@ -11,15 +11,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingLanguage
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingReminder
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTemplate
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTheme
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
+import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
+import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.util.SettingType
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +32,23 @@ fun SettingDetailScreen(
     type: SettingType,
     onBack: () -> Unit
 ) {
+
+    // 1) AuthViewModel holen
+    val authViewModel: AuthViewModel = koinViewModel()
+    val user by authViewModel.user.collectAsState()
+
+    // 2) Formatierer für Datum
+    val dateFormatter = remember {
+        java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    }
+    val memberSince = user
+        ?.createdAt
+        ?.toInstant()
+        ?.atZone(java.time.ZoneId.systemDefault())
+        ?.toLocalDate()
+        ?.format(dateFormatter)
+        ?: "–"
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,9 +101,10 @@ fun SettingDetailScreen(
 
                 SettingType.ProfileInfo -> {
                     ProfileSettingInfo(
-                        onDeleteProfile = {
-                            // hier das Profil löschen, über das viewmodel
-                        }
+                        memberSince     = memberSince,
+                        username        = user?.username ?: "–",
+                        language        = user?.preferredLanguage?.name ?: "–",
+                        onDeleteProfile = { /* … */ }
                     )
                 }
 

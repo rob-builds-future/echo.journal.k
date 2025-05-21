@@ -33,21 +33,25 @@ fun AppNavGraph(
     val onboarded by prefsViewModel.onboarded.collectAsState()
 
     NavHost(
-        navController    = navController,
+        navController = navController,
         startDestination = when {
-            user == null        -> AuthRootRoute.route
-            !onboarded          -> OnboardingRootRoute.route
-            else                -> EntryListRoute.route
+            user == null -> AuthRootRoute.route
+            !onboarded -> OnboardingRootRoute.route
+            else -> EntryListRoute.route
         }
     ) {
         // AUTH FLOW
         navigation(
             startDestination = SignInRoute.route,
-            route           = AuthRootRoute.route
+            route = AuthRootRoute.route
         ) {
             composable(SignInRoute.route) {
                 SignInScreen(
-                    onSignedIn = { navController.navigate(SignUpRoute.route) },
+                    onSignedIn = {
+                        navController.navigate(EntryListRoute.route) {
+                            popUpTo(AuthRootRoute.route) { inclusive = true }
+                        }
+                    },
                     onSignUpClick = { navController.navigate(SignUpRoute.route) }
                 )
             }
@@ -64,7 +68,7 @@ fun AppNavGraph(
         // ONBOARDING FLOW
         navigation(
             startDestination = WelcomeRoute.route,
-            route            = OnboardingRootRoute.route
+            route = OnboardingRootRoute.route
         ) {
             composable(WelcomeRoute.route) {
                 WelcomeScreen(onNext = {
@@ -99,14 +103,14 @@ fun AppNavGraph(
         // 2) Settings-Übersicht
         typedComposable<SettingsRoute> {
             SettingsScreen(
-                onNavigateToProfile    = { type ->
+                onNavigateToProfile = { type ->
                     navController.navigate(SettingDetailRoute.createRoute(type))
                 },
                 onNavigateToAppSetting = { type ->
                     navController.navigate(SettingDetailRoute.createRoute(type))
                 },
-                onInstagramClick       = onInstagramClick,
-                onLogoutConfirmed      = {
+                onInstagramClick = onInstagramClick,
+                onLogoutConfirmed = {
                     // erstens: Firebase-Logout wurde schon in SettingsScreen gemacht
                     // zweitens: zurück in den Auth-Flow navigieren und Main-Graph entfernen
                     navController.navigate(AuthRootRoute.route) {
@@ -126,7 +130,7 @@ fun AppNavGraph(
             val typeName = backStackEntry.arguments?.getString("type")!!
             val type = SettingType.valueOf(typeName)
             SettingDetailScreen(
-                type   = type,
+                type = type,
                 onBack = { navController.popBackStack() }
             )
         }

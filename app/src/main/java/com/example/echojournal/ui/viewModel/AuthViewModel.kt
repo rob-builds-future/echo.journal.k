@@ -30,6 +30,15 @@ class AuthViewModel(
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user.asStateFlow()
 
+    init {
+        // Versuch, beim Start einen eingeloggten Nutzer zu laden
+        viewModelScope.launch {
+            _loading.value = true
+            _user.value = repo.getCurrentUser()
+            _loading.value = false
+        }
+    }
+
     fun signUp() {
         viewModelScope.launch {
             _loading.value = true
