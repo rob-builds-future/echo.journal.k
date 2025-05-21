@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.settingsScreen.SettingItem
-import com.example.echojournal.util.SettingType
 
 // Dummy user data
 private const val dummyUsername = "EchoUser"

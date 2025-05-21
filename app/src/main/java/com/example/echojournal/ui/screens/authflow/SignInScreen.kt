@@ -109,7 +109,7 @@ fun SignInScreen(
                 Column(
                     Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(8.dp),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

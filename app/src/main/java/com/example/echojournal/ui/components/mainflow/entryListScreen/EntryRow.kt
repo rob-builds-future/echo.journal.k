@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.remote.model.JournalEntry
-import com.example.echojournal.util.customCornerShape
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 

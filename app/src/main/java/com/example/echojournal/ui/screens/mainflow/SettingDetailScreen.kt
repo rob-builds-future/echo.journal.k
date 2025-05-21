@@ -23,7 +23,7 @@ import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDeta
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.viewModel.AuthViewModel
-import com.example.echojournal.util.SettingType
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

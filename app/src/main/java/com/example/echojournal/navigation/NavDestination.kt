@@ -1,6 +1,6 @@
 package com.example.echojournal.navigation
 
-import com.example.echojournal.util.SettingType
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import kotlinx.serialization.Serializable
 
 /** Marker-Interface für alle Routen; jedes Objekt liefert seinen eigenen [route]-String. */

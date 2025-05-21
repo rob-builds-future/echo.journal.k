@@ -20,7 +20,7 @@ import com.example.echojournal.ui.screens.onboardingflow.PrefsSetupScreen
 import com.example.echojournal.ui.screens.onboardingflow.WelcomeScreen
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
-import com.example.echojournal.util.SettingType
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 
 @Composable
 fun AppNavGraph(

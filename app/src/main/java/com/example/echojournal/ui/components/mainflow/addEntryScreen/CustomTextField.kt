@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -30,14 +31,15 @@ fun CustomTextEditor(
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester,
-    backgroundColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
-    cursorColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    cursorColor: Color = MaterialTheme.colorScheme.onSurface,
     contentPadding: PaddingValues = PaddingValues(8.dp),
-    borderColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+    borderColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
     borderWidth: Dp = 1.dp,
     shape: Shape = MaterialTheme.shapes.small,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-    placeholder: (@Composable () -> Unit)? = null
+    placeholder: (@Composable () -> Unit)? = null,
+    //visualTransformation: VisualTransformation = NewLineVisualTransformation()
 ) {
     Box(
         modifier = modifier
@@ -52,6 +54,7 @@ fun CustomTextEditor(
             onValueChange = onValueChange,
             textStyle = textStyle,
             cursorBrush = SolidColor(cursorColor),
+            //visualTransformation = visualTransformation,
             modifier = Modifier
                 .fillMaxSize()
                 .focusRequester(focusRequester),

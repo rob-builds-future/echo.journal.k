@@ -44,6 +44,19 @@ fun EntrySection(
     val inspirationText = "Deine Inspiration erscheint hier…"
     var showInspiration by remember { mutableStateOf(true) }
 
+//    // Dein Basis-TextStyle für das Eingabefeld:
+//    val baseStyle = MaterialTheme.typography.bodyMedium
+//        .copy(color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
+//
+//    // Rechne dir den Absatz-Abstand aus:
+//    val normalLH = baseStyle.lineHeight.value            // z.B. 20
+//    val paragraphLH = (normalLH + 8f).sp                  // 20 + 8 = 28.sp
+//
+//    // Erzeuge einmalig deine Transformation:
+//    val paragraphTransform = remember(baseStyle, paragraphLH) {
+//        ParagraphLineHeightTransformation(baseStyle, paragraphLH)
+//    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,6 +85,7 @@ fun EntrySection(
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 ),
+                //visualTransformation = paragraphTransform,
                 placeholder = {
                     if (textState.text.isEmpty() && showInspiration) {
                         Text(
