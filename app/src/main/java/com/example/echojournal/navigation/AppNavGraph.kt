@@ -56,13 +56,16 @@ fun AppNavGraph(
                 )
             }
             composable(SignUpRoute.route) {
-                SignUpScreen(onSignedUp = {
-                    // nach Signup flaggen, dass Onboarding nötig ist
-                    prefsViewModel.setOnboarded(false)
-                    navController.navigate(OnboardingRootRoute.route) {
-                        popUpTo(AuthRootRoute.route) { inclusive = true }
-                    }
-                })
+                SignUpScreen(
+                    onSignedUp = {
+                        // nach Signup flaggen, dass Onboarding nötig ist
+                        prefsViewModel.setOnboarded(false)
+                        navController.navigate(OnboardingRootRoute.route) {
+                            popUpTo(AuthRootRoute.route) { inclusive = true }
+                        }
+                    },
+                    onSignInClick = { navController.navigate(SignInRoute.route) }
+                )
             }
         }
         // ONBOARDING FLOW
