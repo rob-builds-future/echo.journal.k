@@ -2,12 +2,12 @@ package com.example.echojournal.di
 
 import com.example.echojournal.data.remote.BASE_URL
 import com.example.echojournal.data.remote.LibreTranslateService
-import com.example.echojournal.data.repository.FirebaseUserAuthRepo
 import com.example.echojournal.data.repository.PrefsRepo
 import com.example.echojournal.data.repository.PrefsRepoImpl
 import com.example.echojournal.data.repository.TranslationApiRepo
 import com.example.echojournal.data.repository.TranslationApiRepoImpl
 import com.example.echojournal.data.repository.UserAuthRepo
+import com.example.echojournal.data.repository.UserAuthRepoImpl
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
@@ -70,8 +70,10 @@ val appModule = module {
     single<LibreTranslateService> { get<Retrofit>().create(LibreTranslateService::class.java) }
     single<TranslationApiRepo> { TranslationApiRepoImpl(get()) }
     viewModel { TranslationViewModel(get()) }
-    single<UserAuthRepo> { FirebaseUserAuthRepo() }
-    viewModel { AuthViewModel(get()) }
+
+    single<UserAuthRepo> { UserAuthRepoImpl() }
+    viewModel { AuthViewModel(get(), get()) }
+
     single<PrefsRepo> { PrefsRepoImpl() }
     viewModel { PrefsViewModel(get()) }
 }

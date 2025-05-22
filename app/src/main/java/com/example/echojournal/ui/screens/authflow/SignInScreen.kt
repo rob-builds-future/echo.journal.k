@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
 import com.example.echojournal.ui.components.authflow.EchoLogoWithText
+import com.example.echojournal.ui.components.authflow.SignInWithGoogle
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -201,9 +203,29 @@ fun SignInScreen(
                         else Text("Anmelden")
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(
+                        color     = Color.White,
+                        thickness = 1.dp,
+                        modifier  = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    TextButton(onClick = { onSignUpClick() }) {
+                    SignInWithGoogle(
+                        onClick = { viewModel.signInWithGoogleOneTap() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+                    // Wechsel zu Signup
+                    TextButton(
+                        onClick = { onSignUpClick() },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
                         Text(
                             text = "Noch keinen Account? Registrieren",
                             color = Color.White

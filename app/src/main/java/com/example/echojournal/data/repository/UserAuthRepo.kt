@@ -1,5 +1,6 @@
 package com.example.echojournal.data.repository
 
+import android.content.Context
 import com.example.echojournal.data.remote.model.User
 
 /**
@@ -21,4 +22,6 @@ interface UserAuthRepo {
     fun signOut()
 
     suspend fun getCurrentUser(): User?
+
+    suspend fun signInWithGoogleOneTap(context: Context): Result<User>
 }

@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.viewModel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echojournal.data.remote.model.User
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
  * ViewModel für Sign In / Sign Up.
  */
 class AuthViewModel(
-    private val repo: UserAuthRepo
+    private val repo: UserAuthRepo,
+    private val context: Context
 ) : ViewModel() {
 
     val email = MutableStateFlow("")
@@ -76,5 +78,19 @@ class AuthViewModel(
     fun signOut() {
         repo.signOut()
         _user.value = null
+    }
+
+    /** startet den One-Tap-Flow */
+    fun signInWithGoogleOneTap() {
+        viewModelScope.launch {
+            _loading.value = true
+            _error.value   = null
+
+            repo.signInWithGoogleOneTap(context)
+                .onSuccess { _user.value = it }
+                .onFailure { _error.value = it.message }
+
+            _loading.value = false
+        }
     }
 }

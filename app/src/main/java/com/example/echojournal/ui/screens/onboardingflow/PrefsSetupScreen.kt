@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
  * Einstellungsbildschirm im Onboarding für Grundoptionen.
@@ -57,14 +60,41 @@ fun PrefsSetupScreen(
             horizontalAlignment = Alignment.Start
         ) {
 
+            Text(
+                text = "Bevor es mit dem Schreiben und Lernen los geht, lass uns Dein Tagebuch auf Dich anpassen.\n\nBitte wähle die Sprache, in die echo Deine Tagebucheinträge übersetzt, die Farbe Deines echo und dein Schreibziel, falls du eines hast!",
+                modifier = Modifier.padding(top = 32.dp),
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.height(32.dp))
             Text("Wähle deine Zielsprache:", Modifier.padding(bottom = 16.dp))
             OutlinedTextField(
                 value = language,
                 onValueChange = { language = it },
                 label = { Text("Sprache-Code (z.B. EN, DE)") }
             )
-            Spacer(Modifier.height(24.dp))
-            Button(onClick = onComplete) {
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text("Wähle deine Echo-Farbe:", Modifier.padding(bottom = 16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text("Wähle dein Schreibziel:", Modifier.padding(bottom = 16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text("Und keine Sorge: Du kannst Deine Einstellungen jederzeit im Einstellungsbereich der App anpassen!",
+                Modifier.padding(bottom = 16.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = onComplete,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+            ) {
                 Text("Fertig")
             }
         }
