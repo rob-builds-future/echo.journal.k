@@ -14,13 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -174,14 +174,6 @@ fun SignInScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    if (error != null) {
-                        Text(
-                            text = error!!,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
                     Button(
                         onClick = { viewModel.signIn() },
                         enabled = !loading,
@@ -202,12 +194,14 @@ fun SignInScreen(
                         )
                         else Text("Anmelden")
                     }
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider(
-                        color     = Color.White,
-                        thickness = 1.dp,
-                        modifier  = Modifier.fillMaxWidth()
+                    Text(
+                        text = "ODER",
+                        color = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -217,9 +211,15 @@ fun SignInScreen(
                             .fillMaxWidth()
                             .height(48.dp)
                     )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
+                    Spacer(modifier = Modifier.height(8.dp))
+                    if (error != null) {
+                        Text(
+                            text = error!!,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
 
                     // Wechsel zu Signup
                     TextButton(
