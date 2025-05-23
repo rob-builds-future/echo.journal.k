@@ -1,3 +1,16 @@
 <resources>
+
     <string name="app_name">echo.journal</string>
+
+    <string name="error_user_not_found">Nutzerkonto nicht gefunden.</string>
+    <string name="error_invalid_password">Falsches Passwort.</string>
+    <string name="error_email_already_in_use">E-Mail wird schon verwendet.</string>
+    <string name="error_no_network">Keine Internetverbindung.</string>
+    <string name="error_generic">Ein Fehler ist aufgetreten.</string>
+    <string name="error_email_required">Bitte gib deine E-Mail ein.</string>
+    <string name="error_password_required">Bitte gib ein Passwort ein.</string>
+    <string name="error_invalid_email_format">Bitte gib eine gültige E-Mail ein.</string>
+    <string name="error_username_required">Bitte gib einen Benutzernamen ein.</string>
+    <string name="error_password_weak">Das Passwort ist zu schwach.</string>
+
 </resources>

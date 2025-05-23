@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.authflow
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,6 +39,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -64,20 +67,47 @@ fun SignInScreen(
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val loading by viewModel.loading.collectAsState()
-    val error by viewModel.error.collectAsState()
     val user by viewModel.user.collectAsState()
+
+    // Error Handling
+    val error by viewModel.error.collectAsState()
+    val context = LocalContext.current
+    LaunchedEffect(error) {
+        if (error != null) {
+            Toast
+                .makeText(context, error, Toast.LENGTH_SHORT)
+                .show()
+            // Optional: danach das Error-State wieder zurücksetzen
+            viewModel.clearError()
+        }
+    }
 
     // Fokus und Tastatur
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val passwordRequester = remember { FocusRequester() }
 
+    // Navigation
     if (user != null) {
         onSignedIn()
         return
     }
 
     val backgroundPainter = painterResource(id = R.drawable.background)
+
+    // einheitliche TextField-Farben
+    val textFieldColors = TextFieldDefaults.colors(
+        focusedContainerColor = MaterialTheme.colorScheme.surface,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+    )
+
+    // Button-Farben: primary / onPrimary drehen sich je nach Theme
+    val buttonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.onPrimary,
+        contentColor = MaterialTheme.colorScheme.primary
+    )
 
     Scaffold { paddingValues ->
         // Painter oder Video Player
@@ -135,12 +165,7 @@ fun SignInScreen(
                             onNext = { passwordRequester.requestFocus() }
                         ),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            //unfocusedLabelColor = Color.White
-                        )
+                        colors = textFieldColors
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -164,12 +189,7 @@ fun SignInScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(passwordRequester),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            //unfocusedLabelColor = Color.White
-                        )
+                        colors = textFieldColors
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -181,10 +201,7 @@ fun SignInScreen(
                             .fillMaxWidth()
                             .height(48.dp),
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = Color.Black
-                        ),
+                        colors = buttonColors,
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                     ) {
                         if (loading) CircularProgressIndicator(
@@ -211,14 +228,7 @@ fun SignInScreen(
                             .fillMaxWidth()
                             .height(48.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    if (error != null) {
-                        Text(
-                            text = error!!,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
+
                     Spacer(modifier = Modifier.weight(1f))
 
                     // Wechsel zu Signup
@@ -228,7 +238,7 @@ fun SignInScreen(
                     ) {
                         Text(
                             text = "Noch keinen Account? Registrieren",
-                            color = Color.White
+                            color = Color.White,
                         )
                     }
                 }

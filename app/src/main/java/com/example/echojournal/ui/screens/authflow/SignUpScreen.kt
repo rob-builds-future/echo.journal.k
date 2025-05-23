@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.authflow
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,6 +40,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -61,8 +64,19 @@ fun SignUpScreen(
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val loading by viewModel.loading.collectAsState()
-    val error by viewModel.error.collectAsState()
     val user by viewModel.user.collectAsState()
+
+    // Error Handling
+    val error by viewModel.error.collectAsState()
+    val context = LocalContext.current
+
+    // Toast, wenn error sich ändert
+    LaunchedEffect(error) {
+        error?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearError()  // damit der Toast nicht ständig neu feuert
+        }
+    }
 
     // Focus- & Keyboard-Controller
     val focusManager = LocalFocusManager.current
@@ -82,6 +96,22 @@ fun SignUpScreen(
     }
 
     val backgroundPainter = painterResource(id = R.drawable.background)
+
+    // einheitliche TextField-Farben
+    val textFieldColors = TextFieldDefaults.colors(
+        focusedContainerColor   = MaterialTheme.colorScheme.surface,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+        focusedLabelColor       = MaterialTheme.colorScheme.onSurface,
+        unfocusedLabelColor     = MaterialTheme.colorScheme.onSurface
+    )
+
+    // Button-Farben: primary / onPrimary drehen sich je nach Theme
+    val buttonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.onPrimary,
+        disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+        contentColor   = MaterialTheme.colorScheme.primary,
+        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+        )
 
     Scaffold { insets ->
         // Painter oder Video Player
@@ -134,12 +164,7 @@ fun SignUpScreen(
                         onNext = { emailRequester.requestFocus() }
                     ),
                     modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        //unfocusedLabelColor = Color.White
-                    )
+                    colors = textFieldColors
                 )
                 Spacer(Modifier.height(8.dp))
 
@@ -159,12 +184,7 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(emailRequester),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        //unfocusedLabelColor = Color.White
-                    )
+                    colors = textFieldColors
                 )
                 Spacer(Modifier.height(8.dp))
 
@@ -188,12 +208,7 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(passwordRequester),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        //unfocusedLabelColor = Color.White
-                    )
+                    colors = textFieldColors
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -210,12 +225,6 @@ fun SignUpScreen(
                 )
                 Spacer(Modifier.height(16.dp))
 
-                // Fehleranzeige
-                error?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
-                    Spacer(Modifier.height(8.dp))
-                }
-
                 // Registrieren-Button nur aktiv, wenn alle Felder gefüllt & Passwort valid
                 val canRegister =
                     username.isNotBlank() &&
@@ -231,12 +240,7 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        disabledContainerColor = Color.White.copy(alpha = 0.5f),
-                        contentColor   = Color.Black,
-                        disabledContentColor = Color.Black.copy(alpha = 0.5f)
-                    ),
+                    colors = buttonColors,
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
                     if (loading) CircularProgressIndicator(
