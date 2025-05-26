@@ -10,6 +10,7 @@ interface NavDestination {
 
 @Serializable object MainRootRoute       : NavDestination { override val route = "main_root" }
 @Serializable object EntryListRoute      : NavDestination { override val route = "entry_list" }
+@Serializable object AddEntryRoute : NavDestination { override val route = "add_entry" }
 @Serializable object SettingsRoute       : NavDestination { override val route = "settings" }
 @Serializable object SettingDetailRoute  : NavDestination {
     override val route = "setting/{type}"

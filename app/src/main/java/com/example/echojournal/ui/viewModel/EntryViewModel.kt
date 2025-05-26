@@ -45,7 +45,7 @@ class EntryViewModel(
                 throw e
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
 
     private val _createResult = MutableStateFlow<Result<Unit>?>(null)
