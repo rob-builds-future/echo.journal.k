@@ -22,17 +22,19 @@ import com.example.echojournal.ui.components.mainflow.entryListScreen.GradientOv
 import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopoverPlaceholder
 import com.example.echojournal.ui.components.mainflow.entryListScreen.StatisticsHeader
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.EntryViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDateTime
 
 @Composable
 fun EntryListScreen(
     onEntryClick: (JournalEntry) -> Unit,
     onSettingsClick: () -> Unit = {}
 ) {
-    // AuthViewModel holen
+    // AuthViewModel und EntryViewModel holen
     val authViewModel: AuthViewModel = koinViewModel()
     val user by authViewModel.user.collectAsState()
+    val viewModel: EntryViewModel = koinViewModel()
+    val entries by viewModel.entries.collectAsState()
 
     // Lokale UI-States
     var showAddEntry by remember { mutableStateOf(false) }
@@ -47,26 +49,8 @@ fun EntryListScreen(
         return
     }
 
-    // Dummy-Daten für Preview / Entwicklung
-    val now = remember { LocalDateTime.now() }
-    val sampleEntries = remember {
-        listOf(
-            // id, content, createdAt, isFavorite, duration
-            JournalEntry(
-                "5",
-                "Beispiel Eintrag 5 und vier Worte mehr.",
-                now.minusDays(4),
-                true,
-                6
-            ),
-            JournalEntry("4", "Beispiel Eintrag 4", now.minusDays(3), true, 6),
-            JournalEntry("1", "Beispiel Eintrag 1", now.minusDays(2), false, 5),
-            JournalEntry("2", "Beispiel Eintrag 2", now.minusDays(1), true, 8),
-            JournalEntry("3", "Beispiel Eintrag 3", now, false, 12)
-        )
-    }
-
     val titleText = user?.let { "${it.username}’s Journal" } ?: "Dein Journal"
+    val filtered = entries.filter { !showFavoritesOnly || it.isFavorite }
 
     Scaffold(
         topBar = {
@@ -93,16 +77,20 @@ fun EntryListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
+                item { StatisticsHeader() }
                 item {
-                    StatisticsHeader()
+                    this@LazyColumn.EntryList(
+                        entries = filtered,
+                        filterFavorites = showFavoritesOnly,
+                        onEntryClick = onEntryClick,
+                        onToggleFavorite = { entry ->
+                            viewModel.updateEntry(entry.copy(isFavorite = !entry.isFavorite))
+                        },
+                        onDelete = { entry ->
+                            viewModel.deleteEntry(entry.id)
+                        }
+                    )
                 }
-                EntryList(
-                    entries = sampleEntries,
-                    filterFavorites = showFavoritesOnly,
-                    onEntryClick = onEntryClick,
-                    onToggleFavorite = { /*  Favorit umschalten */ },
-                    onDelete = { /* Eintrag löschen */ }
-                )
             }
             GradientOverlay(
                 height = 80.dp,

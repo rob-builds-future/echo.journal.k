@@ -2,6 +2,8 @@ package com.example.echojournal.di
 
 import com.example.echojournal.data.remote.BASE_URL
 import com.example.echojournal.data.remote.LibreTranslateService
+import com.example.echojournal.data.repository.JournalRepo
+import com.example.echojournal.data.repository.JournalRepoImpl
 import com.example.echojournal.data.repository.PrefsRepo
 import com.example.echojournal.data.repository.PrefsRepoImpl
 import com.example.echojournal.data.repository.TranslationApiRepo
@@ -9,8 +11,11 @@ import com.example.echojournal.data.repository.TranslationApiRepoImpl
 import com.example.echojournal.data.repository.UserAuthRepo
 import com.example.echojournal.data.repository.UserAuthRepoImpl
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Dns
@@ -71,9 +76,17 @@ val appModule = module {
     single<TranslationApiRepo> { TranslationApiRepoImpl(get()) }
     viewModel { TranslationViewModel(get()) }
 
-    single<UserAuthRepo> { UserAuthRepoImpl() }
+    single<FirebaseAuth> { FirebaseAuth.getInstance() }
+    single<UserAuthRepo> { UserAuthRepoImpl(get(), get()) }
     viewModel { AuthViewModel(get(), get()) }
-
     single<PrefsRepo> { PrefsRepoImpl() }
     viewModel { PrefsViewModel(get()) }
+
+    single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
+    single<JournalRepo> { JournalRepoImpl(db = get()) }
+    viewModel { EntryViewModel(
+        authViewModel       = get(),
+        journalRepo         = get(),
+        translationApiRepo  = get()
+    ) }
 }

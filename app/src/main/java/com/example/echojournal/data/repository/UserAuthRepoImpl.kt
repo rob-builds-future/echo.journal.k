@@ -17,9 +17,10 @@ import java.security.MessageDigest
 import java.util.Date
 import java.util.UUID
 
-class UserAuthRepoImpl : UserAuthRepo {
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+class UserAuthRepoImpl(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+) : UserAuthRepo {
 
     override suspend fun signUp(
         email: String,

@@ -8,27 +8,14 @@ interface NavDestination {
     val route: String
 }
 
-@Serializable
-object EntryListRoute : NavDestination {
-    override val route = "entry_list"
-}
-
-@Serializable
-object SettingsRoute : NavDestination {
-    override val route = "settings"
-}
-
-@Serializable
-object SettingDetailRoute : NavDestination {
+@Serializable object MainRootRoute       : NavDestination { override val route = "main_root" }
+@Serializable object EntryListRoute      : NavDestination { override val route = "entry_list" }
+@Serializable object SettingsRoute       : NavDestination { override val route = "settings" }
+@Serializable object SettingDetailRoute  : NavDestination {
     override val route = "setting/{type}"
-
     fun createRoute(type: SettingType) = "setting/${type.name}"
 }
-
-@Serializable
-object EntryDetailRoute : NavDestination {
-    override val route = "entry_detail"
-}
+@Serializable object EntryDetailRoute    : NavDestination { override val route = "entry_detail" }
 
 @Serializable object AuthRootRoute       : NavDestination { override val route = "auth_root" }
 @Serializable object SignInRoute         : NavDestination { override val route = "sign_in" }

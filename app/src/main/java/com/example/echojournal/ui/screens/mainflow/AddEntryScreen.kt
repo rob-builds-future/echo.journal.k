@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
+import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
@@ -61,17 +62,18 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AddEntryScreen(
     onDismiss: () -> Unit,
-    translationViewModel: TranslationViewModel = koinViewModel()
+    //translationViewModel: TranslationViewModel = koinViewModel()
 ) {
-    // Lokale UI-Stati
-    // Content hält nur noch den zu speichernden Text
-    var content by remember { mutableStateOf("") }
+    // ViewModels holen
+    val entryViewModel: EntryViewModel = koinViewModel()
+    val translationViewModel: TranslationViewModel = koinViewModel()
 
-    // Wir beobachten das übersetzte Ergebnis direkt aus dem ViewModel
+    // Lokale UI-States
+    var content by remember { mutableStateOf("") }
     val translationText by translationViewModel.translatedText.collectAsState()
+    val createResult by entryViewModel.createResult.collectAsState()
 
     var showAlert by remember { mutableStateOf(false) }
-
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -83,7 +85,6 @@ fun AddEntryScreen(
 
     LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
     LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
-
     BackHandler(enabled = true) { showAlert = true }
 
     // Zeige DatePickerDialog bei Bedarf
@@ -110,12 +111,8 @@ fun AddEntryScreen(
                     )
                 },
                 navigationIcon = {
-
                     IconButton(onClick = { showAlert = true }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "Schließen"
-                        )
+                        Icon(Icons.Default.Close, contentDescription = "Schließen")
                     }
                 },
                 actions = {
@@ -135,7 +132,14 @@ fun AddEntryScreen(
                             .width(60.dp)
                             .clip(RoundedCornerShape(15.dp))
                             .background(backgroundColor)
-                            .clickable(enabled = isEnabled) { onDismiss() },
+                            .clickable(enabled = isEnabled) {
+                                entryViewModel.createEntry(
+                                    rawContent = content,
+                                    duration = 0, // actual duration logik noch machen
+                                    sourceLang = "de",
+                                    targetLang = "en"
+                                )
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -153,9 +157,7 @@ fun AddEntryScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = { focusManager.clearFocus() })
-                },
+                .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) },
             contentAlignment = Alignment.TopStart
         ) {
             Column(
@@ -197,14 +199,22 @@ fun AddEntryScreen(
                 onDismissRequest = { showAlert = false },
                 title = { Text("Änderungen verwerfen?") },
                 text = { Text("Möchtest du die Änderungen wirklich verwerfen?") },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) { Text("Abbrechen") }
-                },
-                dismissButton = {
-                    TextButton(onClick = onDismiss) { Text("Verwerfen") }
-                }
+                confirmButton = { TextButton(onClick = { showAlert = false }) { Text("Abbrechen") } },
+                dismissButton = { TextButton(onClick = onDismiss) { Text("Verwerfen") } }
             )
         }
+
+        LaunchedEffect(createResult) {
+            createResult?.onSuccess {
+                entryViewModel.clearCreateResult()
+                onDismiss()
+            }
+            createResult?.onFailure {
+                // show error logik ergänzen
+                entryViewModel.clearCreateResult()
+            }
+        }
+
     }
 }
 

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.remote.model.JournalEntry
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -59,7 +60,13 @@ fun EntryRow(
         .size
 
     val dateFormatter = DateTimeFormatter.ofPattern("d. MMM yyyy", Locale.GERMAN)
-    val dateStr       = entry.createdAt.format(dateFormatter)
+    // Timestamp → Date → Instant → ZonedDateTime → String
+    val dateStr = entry.createdAt
+        ?.toDate()                          // Timestamp → java.util.Date
+        ?.toInstant()                       // Date → Instant
+        ?.atZone(ZoneId.systemDefault())   // Instant → ZonedDateTime
+        ?.format(dateFormatter)             // → String
+        ?: ""
 
 
     Card(

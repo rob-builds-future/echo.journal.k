@@ -1,8 +1,10 @@
 package com.example.echojournal.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.echojournal.data.remote.model.JournalEntry
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import com.example.echojournal.ui.screens.authflow.SignInScreen
 import com.example.echojournal.ui.screens.authflow.SignUpScreen
 import com.example.echojournal.ui.screens.mainflow.EntryDetailScreen
@@ -20,7 +23,6 @@ import com.example.echojournal.ui.screens.onboardingflow.PrefsSetupScreen
 import com.example.echojournal.ui.screens.onboardingflow.WelcomeScreen
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
-import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 
 @Composable
 fun AppNavGraph(
@@ -32,13 +34,32 @@ fun AppNavGraph(
     val user by authViewModel.user.collectAsState()
     val onboarded by prefsViewModel.onboarded.collectAsState()
 
+    LaunchedEffect(user, onboarded) {
+        when {
+            user == null -> {
+                navController.navigate(AuthRootRoute.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+            !onboarded -> {
+                navController.navigate(OnboardingRootRoute.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+            else -> {
+                navController.navigate(MainRootRoute.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = when {
-            user == null -> AuthRootRoute.route
-            !onboarded -> OnboardingRootRoute.route
-            else -> EntryListRoute.route
-        }
+        startDestination =  AuthRootRoute.route
     ) {
         // AUTH FLOW
         navigation(
@@ -114,10 +135,10 @@ fun AppNavGraph(
                 },
                 onInstagramClick = onInstagramClick,
                 onLogoutConfirmed = {
-                    // erstens: Firebase-Logout wurde schon in SettingsScreen gemacht
-                    // zweitens: zurück in den Auth-Flow navigieren und Main-Graph entfernen
                     navController.navigate(AuthRootRoute.route) {
-                        popUpTo(EntryListRoute.route) { inclusive = true }
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = true
+                        }
                     }
                 }
             )
