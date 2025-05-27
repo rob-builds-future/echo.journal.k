@@ -8,4 +8,10 @@ interface PrefsRepo {
 
     val theme: Flow<String>
     suspend fun setTheme(value: String)
+
+    val currentLanguageCode: Flow<String>
+    suspend fun setLanguageCode(code: String)
+
+    val sourceLanguageCode: Flow<String>
+    suspend fun setSourceLanguageCode(code: String)
 }

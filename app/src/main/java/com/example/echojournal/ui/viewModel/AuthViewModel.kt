@@ -162,6 +162,16 @@ class AuthViewModel(
         }
     }
 
+    fun updatePreferredLanguage(newLang: String) {
+        val current = _user.value ?: return
+        viewModelScope.launch {
+            // 1) Firestore updaten
+            repo.updatePreferredLanguage(current.id, newLang)
+            // 2) lokalen State aktualisieren
+            _user.value = current.copy(preferredLanguage = newLang)
+        }
+    }
+
     fun signOut() {
         repo.signOut()
         _user.value = null

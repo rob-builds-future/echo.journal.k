@@ -16,24 +16,36 @@ class PrefsRepoImpl(
     private object Keys {
         val ONBOARDED = booleanPreferencesKey("onboarded")
         val THEME     = stringPreferencesKey("theme")
+        val LANGUAGE  = stringPreferencesKey("language")
+        val SOURCE_LANGUAGE = stringPreferencesKey("source_language")
     }
 
     // 1. DataStore verwenden
     private val ds = context.dataStore
 
-    // 2. Flow, das den letzten Wert aus dem Store liefert (default = false)
     override val onboarded: Flow<Boolean> = ds.data
         .map { it[Keys.ONBOARDED] ?: false }
-
-    // 3. Setzen des Flags
     override suspend fun setOnboarded(value: Boolean) {
         ds.edit { it[Keys.ONBOARDED] = value }
     }
 
     override val theme: Flow<String> = ds.data
         .map { it[Keys.THEME] ?: "Wolkenlos" }  // Default-Theme
-
     override suspend fun setTheme(value: String) {
         ds.edit { it[Keys.THEME] = value }
+    }
+
+    override val currentLanguageCode: Flow<String> = ds.data
+        .map { it[Keys.LANGUAGE] ?: "en" }
+
+    override suspend fun setLanguageCode(code: String) {
+        ds.edit { it[Keys.LANGUAGE] = code }
+    }
+
+    override val sourceLanguageCode: Flow<String>
+        get() = ds.data.map { it[Keys.SOURCE_LANGUAGE] ?: "de" }
+
+    override suspend fun setSourceLanguageCode(value: String) {
+        ds.edit { prefs -> prefs[Keys.SOURCE_LANGUAGE] = value }
     }
 }

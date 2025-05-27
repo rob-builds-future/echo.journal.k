@@ -34,7 +34,6 @@ fun EntryListBottomBar(
     onAddClick: () -> Unit,
     onInspirationClick: () -> Unit
 ) {
-
     // PrefsViewModel holen, um das aktuelle Theme auszulesen
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()

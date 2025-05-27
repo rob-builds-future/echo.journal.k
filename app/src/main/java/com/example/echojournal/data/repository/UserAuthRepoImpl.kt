@@ -6,7 +6,6 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import com.example.echojournal.R
 import com.example.echojournal.data.remote.model.User
-import com.example.echojournal.data.remote.model.util.ApiLanguage
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -28,32 +27,29 @@ class UserAuthRepoImpl(
         username: String,
         preferredLanguage: String
     ): Result<User> = runCatching {
-        // 1) Auth mit E-Mail/Passwort
         val authResult = auth.createUserWithEmailAndPassword(email, password).await()
         val uid = authResult.user!!.uid
 
-        // 2) Profil ergänzen im Firestore
         val now = Date()
+        // store the raw string
         val userMap = mapOf(
-            "email" to email,
-            "username" to username,
+            "email"             to email,
+            "username"          to username,
             "preferredLanguage" to preferredLanguage,
-            "createdAt" to now
+            "createdAt"         to now
         )
-        db.collection("users")
-            .document(uid)
-            .set(userMap)
-            .await()
+        db.collection("users").document(uid).set(userMap).await()
 
-        // 3) User-Objekt zurückgeben
+        // return it unchanged
         User(
-            id = uid,
-            email = email,
-            username = username,
-            preferredLanguage = ApiLanguage.valueOf(preferredLanguage.uppercase()),
-            createdAt = now
+            id                = uid,
+            email             = email,
+            username          = username,
+            preferredLanguage = preferredLanguage,
+            createdAt         = now
         )
     }
+
 
     override suspend fun signIn(email: String, password: String): Result<User> =
         runCatching {
@@ -71,10 +67,17 @@ class UserAuthRepoImpl(
                 id = uid,
                 email = emailStored,
                 username = username,
-                preferredLanguage = ApiLanguage.valueOf(langCode.uppercase()),
+                preferredLanguage = langCode,
                 createdAt = ts
             )
         }
+
+    override suspend fun updatePreferredLanguage(userId: String, newLang: String) {
+        db.collection("users")
+            .document(userId)
+            .update("preferredLanguage", newLang)
+            .await()
+    }
 
     override fun signOut() {
         auth.signOut()
@@ -88,14 +91,14 @@ class UserAuthRepoImpl(
         val doc = db.collection("users").document(uid).get().await()
         val emailStored = doc.getString("email") ?: firebaseUser.email.orEmpty()
         val username = doc.getString("username") ?: ""
-        val langCode = doc.getString("preferredLanguage") ?: ApiLanguage.EN.name
+        val langCode = doc.getString("preferredLanguage") ?: "en"
         val ts = doc.getTimestamp("createdAt")?.toDate() ?: Date()
 
         return User(
             id = uid,
             email = emailStored,
             username = username,
-            preferredLanguage = ApiLanguage.valueOf(langCode.uppercase()),
+            preferredLanguage = langCode,
             createdAt = ts
         )
     }
@@ -143,9 +146,7 @@ class UserAuthRepoImpl(
                 id                = userFb.uid,
                 email             = snapshot.getString("email")!!,
                 username          = snapshot.getString("username")!!,
-                preferredLanguage = ApiLanguage.valueOf(
-                    snapshot.getString("preferredLanguage")!!.uppercase()
-                ),
+                preferredLanguage = snapshot.getString("preferredLanguage")!!,
                 createdAt         = snapshot.getTimestamp("createdAt")!!.toDate()
             )
         } else {
@@ -154,7 +155,7 @@ class UserAuthRepoImpl(
             val info = mapOf(
                 "email"             to (userFb.email ?: ""),
                 "username"          to (userFb.displayName ?: ""),
-                "preferredLanguage" to "EN",
+                "preferredLanguage" to "en",
                 "createdAt"         to now
             )
             userDoc.set(info).await()
@@ -162,11 +163,10 @@ class UserAuthRepoImpl(
                 id                = userFb.uid,
                 email             = info["email"] as String,
                 username          = info["username"] as String,
-                preferredLanguage = ApiLanguage.EN,
+                preferredLanguage = "en",
                 createdAt         = now
             )
         }
-
         user
     }
 }

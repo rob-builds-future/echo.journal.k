@@ -19,6 +19,8 @@ interface UserAuthRepo {
         password: String
     ): Result<User>
 
+    suspend fun updatePreferredLanguage(userId: String, newLang: String)
+
     fun signOut()
 
     suspend fun getCurrentUser(): User?

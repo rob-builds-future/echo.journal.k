@@ -23,11 +23,20 @@ class PrefsViewModel(
     val theme: StateFlow<String> = prefsRepo.theme
         .stateIn(viewModelScope, SharingStarted.Eagerly, "Wolkenlos")
 
+    val currentLanguage = prefsRepo.currentLanguageCode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "en")
+    val sourceLanguage: StateFlow<String> = prefsRepo.sourceLanguageCode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "de")
+
     fun setOnboarded(value: Boolean) {
         viewModelScope.launch { prefsRepo.setOnboarded(value) }
     }
 
     fun setTheme(value: String) {
         viewModelScope.launch { prefsRepo.setTheme(value) }
+    }
+
+    fun setLanguage(code: String) = viewModelScope.launch {
+        prefsRepo.setLanguageCode(code)
     }
 }

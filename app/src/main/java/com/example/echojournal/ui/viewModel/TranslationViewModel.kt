@@ -20,18 +20,13 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 @OptIn(FlowPreview::class)
 class TranslationViewModel(
-    private val translationRepository: TranslationApiRepo
-    // private val userAuthRepository: UserAuthRepo // aktivieren, wenn das Repo da ist
+    private val translationRepository: TranslationApiRepo,
+    private val prefsViewModel: PrefsViewModel
 ) : ViewModel() {
 
     // State für die übersetzte Ausgabe
     private val _translatedText = MutableStateFlow("")
     val translatedText: StateFlow<String> = _translatedText.asStateFlow()
-
-    // Feste Zielsprache, bis das User-Repo kommt
-    private val targetLanguage: String = "en"
-    // Feste Eingabeprache, bis das User-Repo kommt
-    private val inputLanguage: String = "de"
 
     // SharedFlow für Texteingaben zum Debouncen
     private val textInput = MutableSharedFlow<String>(replay = 1)
@@ -66,11 +61,13 @@ class TranslationViewModel(
      */
     private suspend fun translateText(text: String) {
         Log.d("TranslationVM", "Translating text: $text")
+        val targetLang = prefsViewModel.currentLanguage.value.lowercase()
+        val sourceLang = prefsViewModel.sourceLanguage.value.lowercase()
         runCatching {
             translationRepository.translate(
                 text = text,
-                from = inputLanguage,
-                to   = targetLanguage
+                from = sourceLang,
+                to = targetLang
             )
         }.onSuccess { result ->
             Log.d("TranslationVM", "Translated result = $result")

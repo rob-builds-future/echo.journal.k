@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import ProfileSettingLanguage
 import ProfileSettingTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -18,12 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
-import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingLanguage
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingReminder
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTemplate
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,11 +34,15 @@ fun SettingDetailScreen(
     onBack: () -> Unit
 ) {
 
-    // 1) AuthViewModel holen
+    // AuthViewModel holen
     val authViewModel: AuthViewModel = koinViewModel()
     val user by authViewModel.user.collectAsState()
 
-    // 2) Formatierer für Datum
+    // PrefsViewModel holen, um aktuelle Sprache aus DataStore zu lesen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val currentLanguage by prefsViewModel.currentLanguage.collectAsState()
+
+    // Formatierer für Datum
     val dateFormatter = remember {
         java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
     }
@@ -91,19 +96,14 @@ fun SettingDetailScreen(
                 }
 
                 SettingType.TargetLanguage -> {
-                    ProfileSettingLanguage(
-                        initialLanguage = "English",
-                        onSelect = { lang ->
-                            // hier die Auswahl speichern, z.B. ViewModel.updateLanguage(lang)
-                        }
-                    )
+                    ProfileSettingLanguage()
                 }
 
                 SettingType.ProfileInfo -> {
                     ProfileSettingInfo(
                         memberSince     = memberSince,
                         username        = user?.username ?: "–",
-                        language        = user?.preferredLanguage?.name ?: "–",
+                        language        = currentLanguage,
                         onDeleteProfile = { /* … */ }
                     )
                 }
