@@ -76,10 +76,13 @@ fun EntryRow(
             .clickable { onClick() },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border    = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)),
-        colors    = CardDefaults.cardColors(
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        ),
+        colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            contentColor   = MaterialTheme.colorScheme.onSurface
+            contentColor = MaterialTheme.colorScheme.onSurface
         )
     ) {
         Box {
@@ -90,7 +93,10 @@ fun EntryRow(
                     .width(100.dp)
                     .background(
                         color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = customCornerShape(topStart = 12.dp, bottomEnd = 12.dp)
+                        shape = customCornerShape(
+                            topStart = 12.dp,
+                            bottomEnd = 12.dp
+                        )
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
@@ -103,18 +109,32 @@ fun EntryRow(
 
             // Hauptinhalt und Menü Button
             Column(modifier = Modifier.padding(top = 32.dp)) {
-                Text(
-                    text = entry.content,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 8,
-                    overflow = TextOverflow.Ellipsis,
+                // Feste Höhe für den Inhalt
+                Box(
                     modifier = Modifier
-                        .height(100.dp)
                         .fillMaxWidth()
+                        .height(100.dp)
                         .padding(horizontal = 8.dp)
-                        .padding(top = 4.dp)
-                )
+                ) {
+                    Column {
+                        // Paragraph logic for manual line breaks
+                        val lines = entry.content.split("\n")
+                        lines.forEachIndexed { idx, line ->
+                            Text(
+                                text = line,
+                                style = MaterialTheme.typography.bodySmall,
+                                maxLines = 8,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (idx < lines.lastIndex) {
+                                Spacer(modifier = Modifier.height(6.dp))
+                            }
+                        }
+                    }
+                }
                 Spacer(Modifier.height(8.dp))
+
                 // Menü Button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -125,7 +145,10 @@ fun EntryRow(
                             .size(56.dp, 28.dp)
                             .background(
                                 color = MaterialTheme.colorScheme.primaryContainer,
-                                shape = customCornerShape(topStart = 12.dp, bottomEnd = 12.dp)
+                                shape = customCornerShape(
+                                    topStart = 12.dp,
+                                    bottomEnd = 12.dp
+                                )
                             )
                             .clickable { menuExpanded = true },
                         contentAlignment = Alignment.Center
@@ -147,7 +170,10 @@ fun EntryRow(
                                 onClick()
                             },
                             leadingIcon = {
-                                Icon(Icons.Default.Visibility, contentDescription = null)
+                                Icon(
+                                    Icons.Default.Visibility,
+                                    contentDescription = null
+                                )
                             }
                         )
                         DropdownMenuItem(

@@ -1,5 +1,6 @@
 
 import android.app.DatePickerDialog
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,22 +32,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
 import com.example.echojournal.ui.viewModel.EntryViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +63,10 @@ fun EntryDetailScreen(
 ) {
     val entryViewModel: EntryViewModel = koinViewModel()
     val translationViewModel: TranslationViewModel = koinViewModel()
+    // Theme aus DataStore holen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = ColorManager.getColor(themeName)
 
     // — UI-State —
     var isEditing by remember { mutableStateOf(false) }
@@ -70,6 +83,11 @@ fun EntryDetailScreen(
         )
     }
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val weekday = remember(entryDate) {
+        entryDate.dayOfWeek
+            .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
+            .replaceFirstChar { it.uppercase() }
+    }
     var showDatePicker by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
     val translatedText by translationViewModel.translatedText.collectAsState()
@@ -84,7 +102,9 @@ fun EntryDetailScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = entryDate.format(dateFormatter),
+                        text = "$weekday, ${entryDate.format(dateFormatter)}",
+                        color = if (isEditing) echoColor else MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp,
                         modifier = Modifier.clickable {
                             if (isEditing) showDatePicker = true
                         }
@@ -98,34 +118,76 @@ fun EntryDetailScreen(
                     }
                 },
                 actions = {
+                    val isEnabled = content.isNotBlank()
                     if (isEditing) {
-                        IconButton(
-                            enabled = content.isNotBlank(),
-                            onClick = {
-                                // Update auslösen
-                                val updated = entry.copy(
-                                    content = content,
-                                    translatedContent = translatedText,
-                                    updatedAt = Timestamp.now()
+                        // Pill-Shape mit Echo-Farbe, weißem Icon
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .height(30.dp)
+                                .width(60.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .background(
+                                    if (isEnabled) echoColor
+                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
                                 )
-                                entryViewModel.updateEntry(updated)
-                                onDismiss()
-                            }
+                                .clickable(enabled = isEnabled) {
+                                    val updated = entry.copy(
+                                        content = content,
+                                        translatedContent = translatedText,
+                                        updatedAt = Timestamp.now()
+                                    )
+                                    entryViewModel.updateEntry(updated)
+                                    onDismiss()
+                                },
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                Icons.Default.Check,
-                                contentDescription = "Speichern"
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Speichern",
+                                tint = if (isEnabled) Color.White
+                                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                             )
                         }
                     } else {
                         IconButton(onClick = { isEditing = true }) {
                             Icon(
                                 Icons.Default.Edit,
-                                contentDescription = "Bearbeiten"
+                                contentDescription = "Bearbeiten",
+                                tint = echoColor
                             )
                         }
                     }
                 }
+//                actions = {
+//                    if (isEditing) {
+//                        IconButton(
+//                            enabled = content.isNotBlank(),
+//                            onClick = {
+//                                // Update auslösen
+//                                val updated = entry.copy(
+//                                    content = content,
+//                                    translatedContent = translatedText,
+//                                    updatedAt = Timestamp.now()
+//                                )
+//                                entryViewModel.updateEntry(updated)
+//                                onDismiss()
+//                            }
+//                        ) {
+//                            Icon(
+//                                Icons.Default.Check,
+//                                contentDescription = "Speichern"
+//                            )
+//                        }
+//                    } else {
+//                        IconButton(onClick = { isEditing = true }) {
+//                            Icon(
+//                                Icons.Default.Edit,
+//                                contentDescription = "Bearbeiten"
+//                            )
+//                        }
+//                    }
+//                }
             )
         }
     ) { innerPadding ->
@@ -138,7 +200,10 @@ fun EntryDetailScreen(
             Column(Modifier.fillMaxSize()) {
                 if (isEditing) {
                     if (isReversed) {
-                        TranslationSection(translationText = translatedText)
+                        TranslationSection(
+                            translationText = translatedText,
+                            echoColor = echoColor
+                        )
                         SwapDivider { isReversed = !isReversed }
                         EntrySection(
                             content = content,
@@ -158,7 +223,7 @@ fun EntryDetailScreen(
                             focusRequester = remember { FocusRequester() }
                         )
                         SwapDivider { isReversed = !isReversed }
-                        TranslationSection(translationText = translatedText)
+                        TranslationSection(translationText = translatedText, echoColor = echoColor)
                     }
                 } else {
                     if (isReversed) {
@@ -169,7 +234,8 @@ fun EntryDetailScreen(
                                     Text(
                                         text = line,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                        color = echoColor
                                     )
                                     if (idx < translatedText.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
                                 }
@@ -179,10 +245,10 @@ fun EntryDetailScreen(
                                 .forEachIndexed { idx, line ->
                                     Text(
                                         text = line,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
+                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(3.dp))
                                 }
                         }
                     } else {
@@ -192,10 +258,10 @@ fun EntryDetailScreen(
                                 .forEachIndexed { idx, line ->
                                     Text(
                                         text = line,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
+                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(3.dp))
                                 }
                             SwapDivider { isReversed = !isReversed }
                             translatedText
@@ -204,7 +270,8 @@ fun EntryDetailScreen(
                                     Text(
                                         text = line,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                        color = echoColor
                                     )
                                     if (idx < translatedText.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
                                 }

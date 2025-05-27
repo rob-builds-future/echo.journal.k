@@ -42,7 +42,7 @@ fun EntryListScreen(
     var showFavoritesOnly by remember { mutableStateOf(false) }
     var showInspirationPopover by remember { mutableStateOf(false) }
 
-    val titleText = user?.let { "${it.username}’s Journal" } ?: "Dein Journal"
+    val titleText = user?.let { "${it.username}’s echo" } ?: "Dein Journal"
 
     Scaffold(
         topBar = {

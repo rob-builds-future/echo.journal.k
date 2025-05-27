@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import ColorManager
 import android.app.DatePickerDialog
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -37,18 +38,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
 import com.example.echojournal.ui.viewModel.EntryViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /**
  * Hauptscreen zum Hinzufügen eines Journal-Eintrags.
@@ -63,6 +68,10 @@ fun AddEntryScreen(
     // ViewModels holen
     val entryViewModel: EntryViewModel = koinViewModel()
     val translationViewModel: TranslationViewModel = koinViewModel()
+    // PrefsViewModel holen, um das aktuelle Theme auszulesen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = ColorManager.getColor(themeName)
 
     // Lokale UI-States
     var content by remember { mutableStateOf("") }
@@ -73,6 +82,11 @@ fun AddEntryScreen(
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val weekday = remember(entryDate) {
+        entryDate.dayOfWeek
+            .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
+            .replaceFirstChar { it.uppercase() }
+    }
 
     val entryFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -102,8 +116,10 @@ fun AddEntryScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = entryDate.format(dateFormatter),
-                        modifier = Modifier.clickable { showDatePicker = true }
+                        text = "$weekday, ${entryDate.format(dateFormatter)}",
+                        modifier = Modifier.clickable { showDatePicker = true },
+                        fontSize = 16.sp,
+                        color = echoColor
                     )
                 },
                 navigationIcon = {
@@ -114,11 +130,11 @@ fun AddEntryScreen(
                 actions = {
                     val isEnabled = content.isNotBlank()
                     val backgroundColor =
-                        if (isEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
+                        if (isEnabled) echoColor else MaterialTheme.colorScheme.onSurface.copy(
                             alpha = 0.12f
                         )
                     val iconTint =
-                        if (isEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                        if (isEnabled) Color.White else MaterialTheme.colorScheme.onSurface.copy(
                             alpha = 0.38f
                         )
                     Box(
@@ -162,7 +178,10 @@ fun AddEntryScreen(
                 //verticalArrangement = Arrangement.Top
             ) {
                 if (isReversed) {
-                    TranslationSection(translationText = translationText)
+                    TranslationSection(
+                        translationText = translationText,
+                        echoColor = echoColor
+                    )
                     SwapDivider { isReversed = !isReversed }
                     EntrySection(
                         content = content,
@@ -184,7 +203,10 @@ fun AddEntryScreen(
                         focusRequester = entryFocusRequester
                     )
                     SwapDivider { isReversed = !isReversed }
-                    TranslationSection(translationText = translationText)
+                    TranslationSection(
+                        translationText = translationText,
+                        echoColor = echoColor
+                    )
                 }
                 Spacer(Modifier.weight(1f))
             }

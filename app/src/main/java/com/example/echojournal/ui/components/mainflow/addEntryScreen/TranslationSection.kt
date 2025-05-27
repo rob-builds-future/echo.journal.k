@@ -1,30 +1,45 @@
 package com.example.echojournal.ui.components.mainflow.addEntryScreen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
- * Übersetzungsbereich mit ScrollView.
+ * Übersetzungsbereich
  */
 @Composable
 fun TranslationSection(
-    translationText: String
+    translationText: String,
+    echoColor: Color
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
-        Text(
-            text = translationText.ifEmpty { "Hier wird übersetzt..." },
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 150.dp)
-                .padding(8.dp)
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+    ) {
+        // Splitting text on manual line breaks to preserve paragraph spacing
+        val lines = if (translationText.isEmpty()) listOf("Hier wird übersetzt...")
+        else translationText.split("\n")
+        lines.forEachIndexed { idx, line ->
+            Text(
+                text = line,
+                style = MaterialTheme.typography.bodyMedium,
+                color = echoColor,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+            if (idx < lines.lastIndex) {
+                Spacer(modifier = Modifier.height(6.dp))
+            }
+        }
     }
 }
