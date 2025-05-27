@@ -48,7 +48,6 @@ android {
 
 dependencies {
 
-    implementation(libs.firebase.firestore)
     // Desugaring-Bibliothek für Java 8-APIs
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
@@ -74,6 +73,8 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    // Firebase Firestore
+    implementation(libs.firebase.firestore)
     // extended icons
     implementation(libs.androidx.compose.material.icons.extended)
     // viewmodel

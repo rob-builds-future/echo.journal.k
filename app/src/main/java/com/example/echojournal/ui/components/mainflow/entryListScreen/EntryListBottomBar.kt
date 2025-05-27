@@ -1,7 +1,10 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
+import ColorManager
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,10 +18,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EntryListBottomBar(
@@ -27,6 +34,12 @@ fun EntryListBottomBar(
     onAddClick: () -> Unit,
     onInspirationClick: () -> Unit
 ) {
+
+    // PrefsViewModel holen, um das aktuelle Theme auszulesen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = ColorManager.getColor(themeName)
+
     BottomAppBar(
         containerColor = Color.Transparent,
         contentColor   = MaterialTheme.colorScheme.onBackground
@@ -51,8 +64,23 @@ fun EntryListBottomBar(
             }
         }
         Spacer(Modifier.weight(1f))
-        IconButton(onClick = onInspirationClick) {
-            Text("e.", fontWeight = FontWeight.Bold)
+        Surface(
+            modifier     = Modifier
+                .padding(end = 16.dp)
+                .size(40.dp),
+            shape        = androidx.compose.foundation.shape.CircleShape,
+            color        = echoColor,
+            contentColor = Color.White
+        ) {
+            IconButton(
+                onClick = onInspirationClick,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Text(
+                    text = "e.",
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

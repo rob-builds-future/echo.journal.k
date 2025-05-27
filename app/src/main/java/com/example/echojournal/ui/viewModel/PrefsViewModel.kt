@@ -3,30 +3,31 @@ package com.example.echojournal.ui.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echojournal.data.repository.PrefsRepo
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel für Onboarding-Status.
+ * ViewModel für Onboarding-Prefs, persistent gespeichert via DataStore.
  */
 class PrefsViewModel(
     private val prefsRepo: PrefsRepo
 ) : ViewModel() {
-    private val _onboarded = MutableStateFlow(false)
-    val onboarded: StateFlow<Boolean> = _onboarded.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            _onboarded.value = prefsRepo.isOnboarded()
-        }
-    }
+    // onboarded als StateFlow
+    val onboarded: StateFlow<Boolean> = prefsRepo.onboarded
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    // theme als StateFlow
+    val theme: StateFlow<String> = prefsRepo.theme
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "Wolkenlos")
 
     fun setOnboarded(value: Boolean) {
-        viewModelScope.launch {
-            prefsRepo.setOnboarded(value)
-            _onboarded.value = value
-        }
+        viewModelScope.launch { prefsRepo.setOnboarded(value) }
+    }
+
+    fun setTheme(value: String) {
+        viewModelScope.launch { prefsRepo.setTheme(value) }
     }
 }

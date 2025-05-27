@@ -1,5 +1,3 @@
-package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,54 +8,42 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import com.example.echojournal.R
-
-/**
- * Screen zur Auswahl der Echo-Farbe. Zeigt fünf vordefinierte Farbalternativen,
- * jeweils mit Echo-Icon auf farbigem Hintergrund, Bezeichnung und RadioButton.
- *
- * @param initialColorName Name der vorgewählten Farbe
- * @param onSelect Callback mit dem Namen der ausgewählten Farbe
- */
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileSettingTheme(
-    initialColorName: String,
-    onSelect: (String) -> Unit
+    prefsViewModel: PrefsViewModel = koinViewModel()
 ) {
-    // Fünf Beispiel-Farben
+    // Aktuellen Theme-Namen aus ViewModel
+    val currentTheme by prefsViewModel.theme.collectAsState()
     val options = listOf(
-        "Smaragd" to colorResource(id = R.color.Smaragdgrün),
-        "Wolkenlos" to colorResource(id = R.color.Lichtblau),
-        "Vintage" to colorResource(id = R.color.Vintagepurpur),
-        "Koralle" to colorResource(id = R.color.Korallorange),
-        "Bernstein" to colorResource(id = R.color.Bernsteingelb)
+        "Smaragd", "Wolkenlos", "Vintage", "Koralle", "Bernstein"
     )
-    var selected by remember { mutableStateOf(initialColorName) }
 
-    Column {
+    Column(modifier = Modifier.padding(16.dp)) {
         Text("Deine Echo-Farbe wählen:")
-        Spacer(modifier = Modifier.height(16.dp))
-        options.forEach { (name, color) ->
+        Spacer(Modifier.height(16.dp))
+        options.forEach { name ->
+            // Compose Color aus Ressourcen via ColorManager
+            val color = ColorManager.getColor(name)
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .clickable {
-                        selected = name
-                        onSelect(name)
+                        prefsViewModel.setTheme(name)
                     }
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -65,22 +51,13 @@ fun ProfileSettingTheme(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(color = color, shape = RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-//                        Image(
-//                            painter = painterResource(id = R.drawable.ic_echo),
-//                            contentDescription = "Echo Icon"
-//                        )
-                }
-                Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+                        .background(color = color, shape = RoundedCornerShape(8.dp))
+                )
+                Spacer(Modifier.width(16.dp))
                 Text(text = name, modifier = Modifier.weight(1f))
                 RadioButton(
-                    selected = name == selected,
-                    onClick = {
-                        selected = name
-                        onSelect(name)
-                    }
+                    selected = name == currentTheme,
+                    onClick  = { prefsViewModel.setTheme(name) }
                 )
             }
         }

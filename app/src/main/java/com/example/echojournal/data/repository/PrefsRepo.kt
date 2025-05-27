@@ -1,6 +1,11 @@
 package com.example.echojournal.data.repository
 
+import kotlinx.coroutines.flow.Flow
+
 interface PrefsRepo {
-    suspend fun isOnboarded(): Boolean
-    suspend fun setOnboarded(onboarded: Boolean)
+    val onboarded: Flow<Boolean>
+    suspend fun setOnboarded(value: Boolean)
+
+    val theme: Flow<String>
+    suspend fun setTheme(value: String)
 }

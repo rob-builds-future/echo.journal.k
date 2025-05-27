@@ -21,6 +21,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -79,7 +80,7 @@ val appModule = module {
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single<UserAuthRepo> { UserAuthRepoImpl(get(), get()) }
     viewModel { AuthViewModel(get(), get()) }
-    single<PrefsRepo> { PrefsRepoImpl() }
+    single<PrefsRepo> { PrefsRepoImpl(androidContext()) }
     viewModel { PrefsViewModel(get()) }
 
     single<FirebaseFirestore> { FirebaseFirestore.getInstance() }

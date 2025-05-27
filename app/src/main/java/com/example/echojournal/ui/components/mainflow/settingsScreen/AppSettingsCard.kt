@@ -8,14 +8,22 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.settingsScreen.SettingItem
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppSettingsCard(
     onNavigateToAppSetting: (SettingType) -> Unit
 ) {
+    // Preferences holen, um Theme dynamisch anzuzeigen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val currentTheme by prefsViewModel.theme.collectAsState()
+
 // App Einstellungen Card
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -29,12 +37,12 @@ fun AppSettingsCard(
         Column {
             SettingItem(
                 label = "Echo-Farbe",
-                value = "Wolkenlos",
+                value = currentTheme,
                 onClick = { onNavigateToAppSetting(SettingType.Theme) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Geführtes Tagebuchschreiben",
+                label = "Geführtes\nTagebuchschreiben",
                 value = "Reflexion am Abend",
                 onClick = { onNavigateToAppSetting(SettingType.Templates) }
             )

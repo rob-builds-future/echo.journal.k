@@ -6,6 +6,7 @@ import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.data.repository.JournalRepo
 import com.example.echojournal.data.repository.TranslationApiRepo
 import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,7 @@ class EntryViewModel(
         .map { it?.id }            // liefert jetzt String? – also auch null
         .distinctUntilChanged()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val entries: StateFlow<List<JournalEntry>> = userFlow
         .flatMapLatest { uid ->
             if (uid != null) {

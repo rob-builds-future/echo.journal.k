@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
+import ColorManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +17,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun StatisticsHeader(
@@ -28,6 +33,11 @@ fun StatisticsHeader(
     totalWords: Int = 1234,
     totalMinutes: Int = 56
 ) {
+    // Theme aus DataStore holen
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = ColorManager.getColor(themeName)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -46,7 +56,7 @@ fun StatisticsHeader(
                 imageVector    = Icons.Default.FormatQuote,
                 contentDescription = null,
                 modifier       = Modifier.size(16.dp),
-                tint           = MaterialTheme.colorScheme.primary
+                tint = echoColor
             )
             Spacer(Modifier.width(4.dp))
             Text(
@@ -83,7 +93,7 @@ fun StatisticsHeader(
                 imageVector    = Icons.Default.Timer,
                 contentDescription = null,
                 modifier       = Modifier.size(16.dp),
-                tint           = MaterialTheme.colorScheme.primary
+                tint = echoColor
             )
             Spacer(Modifier.width(4.dp))
             Text(

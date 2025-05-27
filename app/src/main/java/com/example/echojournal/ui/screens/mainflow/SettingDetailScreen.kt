@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import ProfileSettingTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,14 +17,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingLanguage
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingReminder
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTemplate
-import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTheme
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.viewModel.AuthViewModel
-import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,12 +109,7 @@ fun SettingDetailScreen(
                 }
 
                 SettingType.Theme -> {
-                    ProfileSettingTheme(
-                        initialColorName = "Wolkenlos",
-                        onSelect = { theme ->
-                            // hier die Auswahl speichern
-                        }
-                    )
+                    ProfileSettingTheme()
                 }
 
                 SettingType.Templates -> {
