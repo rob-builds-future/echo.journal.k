@@ -42,22 +42,48 @@ fun EntryListScreen(
     val authViewModel: AuthViewModel = koinViewModel()
     val user by authViewModel.user.collectAsState()
     val viewModel: EntryViewModel = koinViewModel()
-    val allEntries by viewModel.entries.collectAsState()
     // PrefsViewModel holen, um das aktuelle Theme auszulesen
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
 
-    // Lokale UI-States
+    val allEntries by viewModel.entries.collectAsState()
+
+    // Favoriten Filter State und Filterung
     var showFavoritesOnly by remember { mutableStateOf(false) }
+    val displayed = remember(allEntries, showFavoritesOnly) {
+        allEntries.filter { !showFavoritesOnly || it.isFavorite }
+    }
+
+    // Inspiration Popover State
     var showInspirationPopover by remember { mutableStateOf(false) }
 
+    // Gesamt-Wortzahl und -Minuten berechnen
+    val totalWords = remember(displayed) {
+        displayed.sumOf { entry ->
+            entry.content
+                .trim()
+                .split("\\s+".toRegex())
+                .filter { it.isNotBlank() }
+                .size
+        }
+    }
+    val totalMinutes = remember(displayed) {
+        displayed.sumOf { it.duration }
+    }
+
+    // Titel mit echo Styling
     val title = buildAnnotatedString {
         // alles vor "echo"
         val userName = user?.username ?: "Dein"
         append("$userName’s ")
         // jetzt "echo" mit Farbe und bold
-        withStyle(style = SpanStyle(color = echoColor, fontWeight = FontWeight.Bold)) {
+        withStyle(
+            style = SpanStyle(
+                color = echoColor,
+                fontWeight = FontWeight.Bold
+            )
+        ) {
             append("echo")
         }
     }
@@ -84,19 +110,21 @@ fun EntryListScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            val displayed = remember(allEntries, showFavoritesOnly) {
-                allEntries.filter { !showFavoritesOnly || it.isFavorite }
-            }
 
             LazyColumn {
-                item { StatisticsHeader() }
+                item {
+                    StatisticsHeader(
+                        totalWords = totalWords,
+                        totalMinutes = totalMinutes
+                    )
+                }
 
                 items(displayed) { entry ->
                     EntryRow(
-                        entry            = entry,
-                        onClick          = { onEntryClick(entry) },
+                        entry = entry,
+                        onClick = { onEntryClick(entry) },
                         onToggleFavorite = { viewModel.updateEntry(entry.copy(isFavorite = !entry.isFavorite)) },
-                        onDelete         = { viewModel.deleteEntry(entry.id) }
+                        onDelete = { viewModel.deleteEntry(entry.id) }
                     )
                 }
             }

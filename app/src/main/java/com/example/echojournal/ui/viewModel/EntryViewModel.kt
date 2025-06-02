@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.data.repository.JournalRepo
 import com.example.echojournal.data.repository.TranslationApiRepo
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -119,5 +120,15 @@ class EntryViewModel(
 
     fun clearDeleteResult() {
         _deleteResult.value = null
+    }
+
+    fun addDurationToEntry(entry: JournalEntry, extraMinutes: Int) {
+        viewModelScope.launch {
+            val updated = entry.copy(
+                duration = entry.duration + extraMinutes,
+                updatedAt = Timestamp.now()
+            )
+            journalRepo.updateEntry(entry.userId, updated)
+        }
     }
 }

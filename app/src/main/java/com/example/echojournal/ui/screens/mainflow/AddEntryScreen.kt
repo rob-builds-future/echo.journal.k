@@ -88,6 +88,8 @@ fun AddEntryScreen(
             .replaceFirstChar { it.uppercase() }
     }
 
+    val startTimeMs = remember { System.currentTimeMillis() }
+
     val entryFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -145,9 +147,12 @@ fun AddEntryScreen(
                             .clip(RoundedCornerShape(15.dp))
                             .background(backgroundColor)
                             .clickable(enabled = isEnabled) {
+                                val elapsedMs =
+                                    System.currentTimeMillis() - startTimeMs
+                                val durationMinutes = (elapsedMs / 1000 / 60).toInt()
                                 entryViewModel.createEntry(
                                     rawContent = content,
-                                    duration = 0, // actual duration logik noch machen
+                                    duration = durationMinutes,  // oder /1000 für Sekunden
                                     sourceLang = "de",
                                     targetLang = "en"
                                 )
@@ -217,7 +222,13 @@ fun AddEntryScreen(
                 onDismissRequest = { showAlert = false },
                 title = { Text("Änderungen verwerfen?") },
                 text = { Text("Möchtest du die Änderungen wirklich verwerfen?") },
-                confirmButton = { TextButton(onClick = { showAlert = false }) { Text("Abbrechen") } },
+                confirmButton = {
+                    TextButton(onClick = { showAlert = false }) {
+                        Text(
+                            "Abbrechen"
+                        )
+                    }
+                },
                 dismissButton = { TextButton(onClick = onDismiss) { Text("Verwerfen") } }
             )
         }

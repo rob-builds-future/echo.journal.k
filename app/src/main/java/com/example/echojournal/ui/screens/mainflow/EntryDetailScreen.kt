@@ -1,4 +1,6 @@
+package com.example.echojournal.ui.screens.mainflow
 
+import ColorManager
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -92,11 +94,21 @@ fun EntryDetailScreen(
     var showDiscardDialog by remember { mutableStateOf(false) }
     val translatedText by translationViewModel.translatedText.collectAsState()
 
+    // für Timer:
+    var editStartMs by remember { mutableStateOf<Long?>(null) }
+
     // initiale Übersetzung vorladen
     LaunchedEffect(entry.id) {
         translationViewModel.onTextChanged(content)
     }
 
+    LaunchedEffect(isEditing) {
+        if (isEditing) {
+            editStartMs = System.currentTimeMillis()
+        }
+    }
+
+    // sobald Edit-Modus gehen, Stoppuhr starten
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -129,15 +141,30 @@ fun EntryDetailScreen(
                                 .clip(RoundedCornerShape(15.dp))
                                 .background(
                                     if (isEnabled) echoColor
-                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                                    else MaterialTheme.colorScheme.onSurface.copy(
+                                        alpha = 0.12f
+                                    )
                                 )
                                 .clickable(enabled = isEnabled) {
+                                    // 1) stoppe die Stoppuhr
+                                    val extraMin = editStartMs?.let { start ->
+                                        ((System.currentTimeMillis() - start) / 1000 / 60).toInt()
+                                    } ?: 0
+
+                                    // 2) erzeuge EIN einziges updated-Objekt,
+                                    //    das sowohl content, translatedContent als auch duration enthält
                                     val updated = entry.copy(
-                                        content = content,
+                                        content           = content,
                                         translatedContent = translatedText,
-                                        updatedAt = Timestamp.now()
+                                        duration          = entry.duration + extraMin,
+                                        updatedAt         = Timestamp.now()
                                     )
+
+                                    // 3) genau **einmal** in die ViewModel-Methode
                                     entryViewModel.updateEntry(updated)
+
+                                    // 4) aufräumen und zurück
+                                    editStartMs = null
                                     onDismiss()
                                 },
                             contentAlignment = Alignment.Center
@@ -159,35 +186,7 @@ fun EntryDetailScreen(
                         }
                     }
                 }
-//                actions = {
-//                    if (isEditing) {
-//                        IconButton(
-//                            enabled = content.isNotBlank(),
-//                            onClick = {
-//                                // Update auslösen
-//                                val updated = entry.copy(
-//                                    content = content,
-//                                    translatedContent = translatedText,
-//                                    updatedAt = Timestamp.now()
-//                                )
-//                                entryViewModel.updateEntry(updated)
-//                                onDismiss()
-//                            }
-//                        ) {
-//                            Icon(
-//                                Icons.Default.Check,
-//                                contentDescription = "Speichern"
-//                            )
-//                        }
-//                    } else {
-//                        IconButton(onClick = { isEditing = true }) {
-//                            Icon(
-//                                Icons.Default.Edit,
-//                                contentDescription = "Bearbeiten"
-//                            )
-//                        }
-//                    }
-//                }
+
             )
         }
     ) { innerPadding ->
@@ -223,7 +222,10 @@ fun EntryDetailScreen(
                             focusRequester = remember { FocusRequester() }
                         )
                         SwapDivider { isReversed = !isReversed }
-                        TranslationSection(translationText = translatedText, echoColor = echoColor)
+                        TranslationSection(
+                            translationText = translatedText,
+                            echoColor = echoColor
+                        )
                     }
                 } else {
                     if (isReversed) {
@@ -237,7 +239,9 @@ fun EntryDetailScreen(
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
-                                    if (idx < translatedText.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
+                                    if (idx < translatedText.split("\n").lastIndex) Spacer(
+                                        modifier = Modifier.height(6.dp)
+                                    )
                                 }
                             SwapDivider { isReversed = !isReversed }
                             content
@@ -246,9 +250,14 @@ fun EntryDetailScreen(
                                     Text(
                                         text = line,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                        modifier = Modifier.padding(
+                                            horizontal = 8.dp,
+                                            vertical = 3.dp
+                                        )
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(3.dp))
+                                    if (idx < content.split("\n").lastIndex) Spacer(
+                                        modifier = Modifier.height(3.dp)
+                                    )
                                 }
                         }
                     } else {
@@ -259,9 +268,14 @@ fun EntryDetailScreen(
                                     Text(
                                         text = line,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                        modifier = Modifier.padding(
+                                            horizontal = 8.dp,
+                                            vertical = 3.dp
+                                        )
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(modifier = Modifier.height(3.dp))
+                                    if (idx < content.split("\n").lastIndex) Spacer(
+                                        modifier = Modifier.height(3.dp)
+                                    )
                                 }
                             SwapDivider { isReversed = !isReversed }
                             translatedText
@@ -273,14 +287,16 @@ fun EntryDetailScreen(
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
-                                    if (idx < translatedText.split("\n").lastIndex) Spacer(modifier = Modifier.height(6.dp))
+                                    if (idx < translatedText.split("\n").lastIndex) Spacer(
+                                        modifier = Modifier.height(6.dp)
+                                    )
                                 }
                         }
                     }
                     Spacer(Modifier.weight(1f))
                 }
 
-// Datum-Picker
+                // Datum-Picker
                 if (showDatePicker) {
                     DatePickerDialog(
                         LocalContext.current,
@@ -294,7 +310,7 @@ fun EntryDetailScreen(
                     ).show()
                 }
 
-// Verwerfen-Dialog
+                // Verwerfen-Dialog
                 if (showDiscardDialog) {
                     AlertDialog(
                         onDismissRequest = { showDiscardDialog = false },
@@ -302,12 +318,20 @@ fun EntryDetailScreen(
                         text = { Text("Möchtest du deine Änderungen verwerfen?") },
                         confirmButton = {
                             TextButton(onClick = {
+                                // Abbrechen: nur Dialog schließen, im Edit-Modus bleiben
                                 showDiscardDialog = false
-                                isEditing = false
                             }) { Text("Abbrechen") }
                         },
                         dismissButton = {
-                            TextButton(onClick = onDismiss) { Text("Verwerfen") }
+                            TextButton(onClick = {
+                                // Verwerfen: Modus verlassen, Timer verwerfen
+                                showDiscardDialog = false
+                                isEditing = false
+                                editStartMs = null
+                                onDismiss()
+                            }) {
+                                Text("Verwerfen")
+                            }
                         }
                     )
                 }

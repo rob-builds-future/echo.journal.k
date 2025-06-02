@@ -44,19 +44,6 @@ fun EntrySection(
     val inspirationText = "Deine Inspiration erscheint hier…"
     var showInspiration by remember { mutableStateOf(true) }
 
-//    // Dein Basis-TextStyle für das Eingabefeld:
-//    val baseStyle = MaterialTheme.typography.bodyMedium
-//        .copy(color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
-//
-//    // Rechne dir den Absatz-Abstand aus:
-//    val normalLH = baseStyle.lineHeight.value            // z.B. 20
-//    val paragraphLH = (normalLH + 8f).sp                  // 20 + 8 = 28.sp
-//
-//    // Erzeuge einmalig deine Transformation:
-//    val paragraphTransform = remember(baseStyle, paragraphLH) {
-//        ParagraphLineHeightTransformation(baseStyle, paragraphLH)
-//    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,21 +80,23 @@ fun EntrySection(
                             modifier = Modifier
                                 .align(Alignment.TopStart),
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                color = MaterialTheme.colorScheme.onSurface.copy(
+                                    alpha = 0.5f
+                                )
                             )
                         )
                     }
                 }
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "$wordCount Worte",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.End
+            )
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "$wordCount Worte",
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.End
-        )
     }
 }

@@ -1,6 +1,5 @@
 package com.example.echojournal.navigation
 
-import EntryDetailScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,6 +16,7 @@ import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import com.example.echojournal.ui.screens.authflow.SignInScreen
 import com.example.echojournal.ui.screens.authflow.SignUpScreen
 import com.example.echojournal.ui.screens.mainflow.AddEntryScreen
+import com.example.echojournal.ui.screens.mainflow.EntryDetailScreen
 import com.example.echojournal.ui.screens.mainflow.EntryListScreen
 import com.example.echojournal.ui.screens.mainflow.SettingDetailScreen
 import com.example.echojournal.ui.screens.mainflow.SettingsScreen

@@ -30,8 +30,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun StatisticsHeader(
     modifier: Modifier = Modifier,
-    totalWords: Int = 1234,
-    totalMinutes: Int = 56
+    totalWords: Int,
+    totalMinutes: Int
 ) {
     // Theme aus DataStore holen
     val prefsViewModel: PrefsViewModel = koinViewModel()
