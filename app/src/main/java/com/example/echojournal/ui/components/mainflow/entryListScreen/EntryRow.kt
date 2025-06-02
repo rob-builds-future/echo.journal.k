@@ -40,9 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.remote.model.JournalEntry
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.example.echojournal.util.formatDate
 
 @Composable
 fun EntryRow(
@@ -59,15 +57,7 @@ fun EntryRow(
         .filter { it.isNotBlank() }
         .size
 
-    val dateFormatter = DateTimeFormatter.ofPattern("d. MMM yyyy", Locale.GERMAN)
-    // Timestamp → Date → Instant → ZonedDateTime → String
-    val dateStr = entry.createdAt
-        ?.toDate()                          // Timestamp → java.util.Date
-        ?.toInstant()                       // Date → Instant
-        ?.atZone(ZoneId.systemDefault())   // Instant → ZonedDateTime
-        ?.format(dateFormatter)             // → String
-        ?: ""
-
+    val dateStr = formatDate(entry.createdAt)
 
     Card(
         modifier = Modifier

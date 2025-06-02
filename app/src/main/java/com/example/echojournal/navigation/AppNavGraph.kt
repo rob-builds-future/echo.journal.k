@@ -171,9 +171,7 @@ fun AppNavGraph(
             // Detail-View für jede Setting-Unterseite für jede Setting-Unterseite
             composable(
                 route = SettingDetailRoute.route,
-                arguments = listOf(
-                    navArgument("type") { type = NavType.StringType }
-                )
+                arguments = listOf(navArgument("type") { type = NavType.StringType })
             ) { backStackEntry ->
                 val typeName = backStackEntry.arguments?.getString("type")!!
                 val type = SettingType.valueOf(typeName)

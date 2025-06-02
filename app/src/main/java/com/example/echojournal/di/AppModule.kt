@@ -88,7 +88,7 @@ val appModule = module {
 
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single<UserAuthRepo> { UserAuthRepoImpl(get(), get()) }
-    viewModel { AuthViewModel(get(), get()) }
+    viewModel { AuthViewModel(get(), get(), prefsViewModel = get())}
 
     single<PrefsRepo> { PrefsRepoImpl(androidContext()) }
     viewModel { PrefsViewModel(get()) }

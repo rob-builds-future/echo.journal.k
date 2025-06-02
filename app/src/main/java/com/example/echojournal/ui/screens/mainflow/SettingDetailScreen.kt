@@ -87,12 +87,7 @@ fun SettingDetailScreen(
         ) {
             when (type) {
                 SettingType.Username -> {
-                    ProfileSettingUsername(
-                        initialUsername = "EchoUser",
-                        onSave = { newName ->
-                            // hier UserStore.updateName(newName) o.ä.
-                        }
-                    )
+                    ProfileSettingUsername()
                 }
 
                 SettingType.TargetLanguage -> {

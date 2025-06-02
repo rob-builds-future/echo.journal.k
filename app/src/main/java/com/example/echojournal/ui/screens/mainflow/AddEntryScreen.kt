@@ -44,15 +44,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
+import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 /**
@@ -74,11 +79,17 @@ fun AddEntryScreen(
     val echoColor = ColorManager.getColor(themeName)
 
     // Lokale UI-States
+    val context = LocalContext.current
     var content by remember { mutableStateOf("") }
     val translationText by translationViewModel.translatedText.collectAsState()
     val createResult by entryViewModel.createResult.collectAsState()
-
     var showAlert by remember { mutableStateOf(false) }
+    val startTimeMs = remember { System.currentTimeMillis() }
+
+    val entryFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    var isReversed by remember { mutableStateOf(false) }
+
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -87,22 +98,11 @@ fun AddEntryScreen(
             .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
             .replaceFirstChar { it.uppercase() }
     }
-
-    val startTimeMs = remember { System.currentTimeMillis() }
-
-    val entryFocusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val context = LocalContext.current
-    var isReversed by remember { mutableStateOf(false) }
-
-    LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
-    LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
-    BackHandler(enabled = true) { showAlert = true }
-
-    // Zeige DatePickerDialog bei Bedarf
+    // DatePicker kein Datum > heute
     if (showDatePicker) {
-        DatePickerDialog(
+        val dialog = DatePickerDialog(
             context,
+            R.style.NeutralDatePickerDialogTheme,
             { _, year, month, dayOfMonth ->
                 entryDate = LocalDate.of(year, month + 1, dayOfMonth)
                 showDatePicker = false
@@ -110,8 +110,20 @@ fun AddEntryScreen(
             entryDate.year,
             entryDate.monthValue - 1,
             entryDate.dayOfMonth
-        ).show()
+        )
+        dialog.datePicker.maxDate = Instant.now().toEpochMilli()
+
+        // OnDismissListener setzt showDatePicker = false, wenn der Nutzer „Abbrechen“ klickt
+        dialog.setOnDismissListener {
+            showDatePicker = false
+        }
+
+        dialog.show()
     }
+
+    LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
+    LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
+    BackHandler(enabled = true) { showAlert = true }
 
     Scaffold(
         topBar = {
@@ -150,11 +162,17 @@ fun AddEntryScreen(
                                 val elapsedMs =
                                     System.currentTimeMillis() - startTimeMs
                                 val durationMinutes = (elapsedMs / 1000 / 60).toInt()
+                                val dateInstant =
+                                    entryDate.atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                                val createdTimestamp =
+                                    Timestamp(Date.from(dateInstant))
                                 entryViewModel.createEntry(
                                     rawContent = content,
                                     duration = durationMinutes,  // oder /1000 für Sekunden
                                     sourceLang = "de",
-                                    targetLang = "en"
+                                    targetLang = "en",
+                                    createdAt = createdTimestamp
                                 )
                             },
                         contentAlignment = Alignment.Center
@@ -243,6 +261,5 @@ fun AddEntryScreen(
                 entryViewModel.clearCreateResult()
             }
         }
-
     }
 }

@@ -15,18 +15,16 @@ class PrefsViewModel(
     private val prefsRepo: PrefsRepo
 ) : ViewModel() {
 
-    // onboarded als StateFlow
     val onboarded: StateFlow<Boolean> = prefsRepo.onboarded
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    // theme als StateFlow
     val theme: StateFlow<String> = prefsRepo.theme
         .stateIn(viewModelScope, SharingStarted.Eagerly, "Wolkenlos")
-
     val currentLanguage = prefsRepo.currentLanguageCode
         .stateIn(viewModelScope, SharingStarted.Eagerly, "en")
     val sourceLanguage: StateFlow<String> = prefsRepo.sourceLanguageCode
         .stateIn(viewModelScope, SharingStarted.Eagerly, "de")
+    val username: StateFlow<String> = prefsRepo.username
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
     fun setOnboarded(value: Boolean) {
         viewModelScope.launch { prefsRepo.setOnboarded(value) }
@@ -38,5 +36,9 @@ class PrefsViewModel(
 
     fun setLanguage(code: String) = viewModelScope.launch {
         prefsRepo.setLanguageCode(code)
+    }
+
+    fun setUsername(name: String) = viewModelScope.launch {
+        prefsRepo.setUsername(name)
     }
 }

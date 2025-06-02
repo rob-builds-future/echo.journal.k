@@ -18,6 +18,7 @@ class PrefsRepoImpl(
         val THEME     = stringPreferencesKey("theme")
         val LANGUAGE  = stringPreferencesKey("language")
         val SOURCE_LANGUAGE = stringPreferencesKey("source_language")
+        val USERNAME  = stringPreferencesKey("username")
     }
 
     // 1. DataStore verwenden
@@ -47,5 +48,14 @@ class PrefsRepoImpl(
 
     override suspend fun setSourceLanguageCode(value: String) {
         ds.edit { prefs -> prefs[Keys.SOURCE_LANGUAGE] = value }
+    }
+
+    override val username: Flow<String> = context.dataStore.data
+        .map { prefs -> prefs[Keys.USERNAME] ?: "" }
+
+    override suspend fun setUsername(name: String) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.USERNAME] = name
+        }
     }
 }

@@ -79,6 +79,13 @@ class UserAuthRepoImpl(
             .await()
     }
 
+    override suspend fun updateUsername(userId: String, newUsername: String) {
+        db.collection("users")
+            .document(userId)
+            .update("username", newUsername)
+            .await()
+    }
+
     override fun signOut() {
         auth.signOut()
     }

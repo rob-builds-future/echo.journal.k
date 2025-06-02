@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Neutraler DatePickerDialog-Theme -->
+    <style name="NeutralDatePickerDialogTheme" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+        <!-- Buttons und Auswahlkreis in Schwarz (oder dunkler Grauton) -->
+        <item name="android:colorAccent">@android:color/black</item>
+        <item name="colorControlActivated">@android:color/black</item>
+        <!-- Eigener datePickerStyle, um Header-Hintergrund dunkel zu machen -->
+        <item name="android:datePickerStyle">@style/NeutralDatePickerStyle</item>
+    </style>
+
+    <!-- datePickerStyle, um nur den Header dunkel zu färben -->
+    <style name="NeutralDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <!-- Header-Hintergrund in Schwarz setzen -->
+        <item name="android:headerBackground">@android:color/black</item>
+        <!-- Header-Textfarbe lassen wir weg, sodass die Plattform
+             sie automatisch in Weiß oder hell genug zeichnet -->
+    </style>
+
+</resources>

@@ -16,39 +16,56 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-
-/**
- * Screen zum Ändern des Benutzernamens.
- * @param initialUsername aktueller Benutzername zum Vorbefüllen
- * @param onSave Callback mit neuem Benutzernamen
- */
 @Composable
 fun ProfileSettingUsername(
-    initialUsername: String,
-    onSave: (String) -> Unit,
+    prefsViewModel: PrefsViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
-    var username by remember { mutableStateOf(initialUsername) }
+    // Aktuellen Username aus Prefs holen
+    val currentUsername by prefsViewModel.username.collectAsState()
+
+    // Lokaler Text-State, der in das TextField bindet
+    var textFieldValue by remember { mutableStateOf(currentUsername) }
+
+    // Flag für den Erfolgs-Dialog
     var showDialog by remember { mutableStateOf(false) }
 
-    Column {
+    // Damit sich das TextField anpasst, sobald sich PrefsFlow ändert
+    LaunchedEffect(currentUsername) {
+        textFieldValue = currentUsername
+    }
+
+    // CoroutineScope zum Aufrufen des suspend‐Fun‐Updates
+    val scope = rememberCoroutineScope()
+
+
+    Column(Modifier.padding(16.dp)) {
         Text(text = "Hier kannst du deinen Benutzernamen ändern.")
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Dein aktueller Benutzername: $initialUsername")
+        Text(text = "Aktueller Benutzername: ${currentUsername.ifBlank { "–" }}")
         Spacer(modifier = Modifier.height(32.dp))
 
+        // → value nimmt nun usernameState (non-nullable String)
         TextField(
-            value = username,
-            onValueChange = { username = it },
+            value = textFieldValue,
+            onValueChange = { textFieldValue = it },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Neuer Benutzername") },
             colors = OutlinedTextFieldDefaults.colors(
@@ -73,13 +90,20 @@ fun ProfileSettingUsername(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Speichern-Button
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
                 .clickable {
-                    onSave(username)
-                    showDialog = true
+                    if (textFieldValue.isNotBlank() && textFieldValue != currentUsername) {
+                        scope.launch {
+                            // 1) Update in Firestore + AuthViewModel (dies schreibt dann auch in Prefs)
+                            authViewModel.updateUsername(textFieldValue)
+                            // 2) Erfolgsdialog öffnen
+                            showDialog = true
+                        }
+                    }
                 },
             shape = RoundedCornerShape(12.dp),
             elevation = CardDefaults.cardElevation(4.dp),
@@ -97,10 +121,11 @@ fun ProfileSettingUsername(
         }
     }
 
+    // Dialog (erst nach Firestore + Prefs‐Update):
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            text = { Text("Dein Nutzername wurde geändert zu $username") },
+            text = { Text("Dein Nutzername wurde geändert zu „$textFieldValue“") },
             confirmButton = {
                 TextButton(onClick = { showDialog = false }) {
                     Text("OK")

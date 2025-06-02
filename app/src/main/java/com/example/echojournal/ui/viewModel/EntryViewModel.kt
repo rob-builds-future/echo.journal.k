@@ -60,12 +60,16 @@ class EntryViewModel(
     private val _deleteResult = MutableStateFlow<Result<Unit>?>(null)
     val deleteResult: StateFlow<Result<Unit>?> = _deleteResult.asStateFlow()
 
+    private val _localEntries = MutableStateFlow<List<JournalEntry>>(emptyList())
+    val localEntries: StateFlow<List<JournalEntry>> = _localEntries.asStateFlow()
+
     /** Erstellt einen neuen Eintrag inkl. Übersetzung. */
     fun createEntry(
         rawContent: String,
         duration: Int,
         sourceLang: String,
-        targetLang: String
+        targetLang: String,
+        createdAt: Timestamp
     ) {
         viewModelScope.launch {
             _createResult.value = runCatching {
@@ -82,7 +86,9 @@ class EntryViewModel(
                     translatedContent = translatedText,
                     sourceLang = sourceLang,
                     targetLang = targetLang,
-                    duration = duration
+                    duration = duration,
+                    isFavorite = false,
+                    createdAt = createdAt
                 )
                 journalRepo.createEntry(userId, entry)
             }
@@ -129,6 +135,30 @@ class EntryViewModel(
                 updatedAt = Timestamp.now()
             )
             journalRepo.updateEntry(entry.userId, updated)
+        }
+    }
+
+    fun toggleFavorite(entry: JournalEntry) {
+        val updatedEntry = entry.copy(isFavorite = !entry.isFavorite)
+
+        viewModelScope.launch {
+            try {
+                journalRepo.updateEntry(updatedEntry.userId, updatedEntry)
+
+                // UI-Update
+                _localEntries.value = _localEntries.value.map {
+                    if (it.id == updatedEntry.id) updatedEntry else it
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    init {
+        viewModelScope.launch {
+            entries.collect { updatedEntries ->
+                _localEntries.value = updatedEntries
+            }
         }
     }
 }

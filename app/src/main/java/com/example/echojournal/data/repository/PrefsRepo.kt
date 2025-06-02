@@ -14,4 +14,7 @@ interface PrefsRepo {
 
     val sourceLanguageCode: Flow<String>
     suspend fun setSourceLanguageCode(code: String)
+
+    val username: Flow<String>
+    suspend fun setUsername(name: String)
 }

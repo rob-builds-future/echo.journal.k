@@ -43,6 +43,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.R
 import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
@@ -52,9 +53,11 @@ import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,9 +74,14 @@ fun EntryDetailScreen(
     val echoColor = ColorManager.getColor(themeName)
 
     // — UI-State —
+    val context = LocalContext.current
     var isEditing by remember { mutableStateOf(false) }
     var isReversed by remember { mutableStateOf(false) }
     var content by remember { mutableStateOf(entry.content) }
+
+    val translatedText by translationViewModel.translatedText.collectAsState()
+
+    // Dates
     var entryDate by remember {
         mutableStateOf(
             entry.createdAt
@@ -92,9 +100,36 @@ fun EntryDetailScreen(
     }
     var showDatePicker by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
-    val translatedText by translationViewModel.translatedText.collectAsState()
+    // Sobald showDatePicker true wird, erzeugen wir einen einzelnen DatePickerDialog:
+    if (showDatePicker) {
+        // 1) Dialog anlegen mit Listener für ON_DATE_SET
+        val dialog = DatePickerDialog(
+            context,
+            R.style.NeutralDatePickerDialogTheme, // falls Du einen eigenen Style nutzt
+            { _, year, month, dayOfMonth ->
+                // Nutzer hat aktiv ein Datum bestätigt → State updaten:
+                entryDate = LocalDate.of(year, month + 1, dayOfMonth)
+                // showDatePicker false reicht, weil der Listener danach geschlossen wird:
+                showDatePicker = false
+            },
+            entryDate.year,
+            entryDate.monthValue - 1,
+            entryDate.dayOfMonth
+        )
+        // 2) MaxDate setzen, damit keine Zukunft gewählt werden kann:
+        dialog.datePicker.maxDate = Instant.now().toEpochMilli()
+        // 3) HIER setze ich OnDismissListener, um showDatePicker
+        //    auch dann auf false zu setzen, wenn der User den Dialog
+        //    per Back-Taste oder außerhalb tippen schließt:
+        dialog.setOnDismissListener {
+            // Dialog wurde geschlossen, ohne dass Datum bestätigt wurde
+            showDatePicker = false
+        }
+        // 4) Zeige den Dialog:
+        dialog.show()
+    }
 
-    // für Timer:
+    // Timer:
     var editStartMs by remember { mutableStateOf<Long?>(null) }
 
     // initiale Übersetzung vorladen
@@ -146,24 +181,30 @@ fun EntryDetailScreen(
                                     )
                                 )
                                 .clickable(enabled = isEnabled) {
-                                    // 1) stoppe die Stoppuhr
+                                    // 1) Dauer berechnen
                                     val extraMin = editStartMs?.let { start ->
                                         ((System.currentTimeMillis() - start) / 1000 / 60).toInt()
                                     } ?: 0
 
-                                    // 2) erzeuge EIN einziges updated-Objekt,
-                                    //    das sowohl content, translatedContent als auch duration enthält
+                                    // 2) LocalDate → Timestamp
+                                    val dateInstant = entryDate
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                                    val newCreatedAt = Timestamp(Date.from(dateInstant))
+
+                                    // 3) Ein einziges updated-Objekt inklusive createdAt
                                     val updated = entry.copy(
-                                        content           = content,
+                                        content = content,
                                         translatedContent = translatedText,
-                                        duration          = entry.duration + extraMin,
-                                        updatedAt         = Timestamp.now()
+                                        duration = entry.duration + extraMin,
+                                        createdAt = newCreatedAt,  // <- hier überschreiben wir den alten Timestamp
+                                        updatedAt = Timestamp.now()
                                     )
 
-                                    // 3) genau **einmal** in die ViewModel-Methode
+                                    // 4) Einmalig in die ViewModel-Methode rufen:
                                     entryViewModel.updateEntry(updated)
 
-                                    // 4) aufräumen und zurück
+                                    // 5) aufräumen & zurück
                                     editStartMs = null
                                     onDismiss()
                                 },
@@ -296,20 +337,6 @@ fun EntryDetailScreen(
                     Spacer(Modifier.weight(1f))
                 }
 
-                // Datum-Picker
-                if (showDatePicker) {
-                    DatePickerDialog(
-                        LocalContext.current,
-                        { _, y, m, d ->
-                            entryDate = LocalDate.of(y, m + 1, d)
-                            showDatePicker = false
-                        },
-                        entryDate.year,
-                        entryDate.monthValue - 1,
-                        entryDate.dayOfMonth
-                    ).show()
-                }
-
                 // Verwerfen-Dialog
                 if (showDiscardDialog) {
                     AlertDialog(
@@ -328,7 +355,6 @@ fun EntryDetailScreen(
                                 showDiscardDialog = false
                                 isEditing = false
                                 editStartMs = null
-                                onDismiss()
                             }) {
                                 Text("Verwerfen")
                             }

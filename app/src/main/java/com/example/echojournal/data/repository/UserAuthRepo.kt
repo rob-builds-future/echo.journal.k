@@ -21,6 +21,8 @@ interface UserAuthRepo {
 
     suspend fun updatePreferredLanguage(userId: String, newLang: String)
 
+    suspend fun updateUsername(userId: String, newUsername: String)
+
     fun signOut()
 
     suspend fun getCurrentUser(): User?

@@ -1,6 +1,7 @@
 package com.example.echojournal.ui.screens.mainflow
 
 import ColorManager
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -27,9 +29,9 @@ import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryRow
 import com.example.echojournal.ui.components.mainflow.entryListScreen.GradientOverlay
 import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopoverPlaceholder
 import com.example.echojournal.ui.components.mainflow.entryListScreen.StatisticsHeader
-import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
+import com.example.echojournal.util.formatDate
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,16 +40,14 @@ fun EntryListScreen(
     onAddClick: () -> Unit,
     onSettingsClick: () -> Unit = {}
 ) {
-    // AuthViewModel und EntryViewModel holen
-    val authViewModel: AuthViewModel = koinViewModel()
-    val user by authViewModel.user.collectAsState()
+    // ViewModels und Eigenschaften holen
     val viewModel: EntryViewModel = koinViewModel()
-    // PrefsViewModel holen, um das aktuelle Theme auszulesen
+    val allEntries by viewModel.localEntries.collectAsState()
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
+    val username by prefsViewModel.username.collectAsState()
 
-    val allEntries by viewModel.entries.collectAsState()
 
     // Favoriten Filter State und Filterung
     var showFavoritesOnly by remember { mutableStateOf(false) }
@@ -72,21 +72,17 @@ fun EntryListScreen(
         displayed.sumOf { it.duration }
     }
 
-    // Titel mit echo Styling
+    // Titel nun aus PrefsViewModel.username statt aus AuthViewModel.user
     val title = buildAnnotatedString {
-        // alles vor "echo"
-        val userName = user?.username ?: "Dein"
+        val userName = if (username.isNotBlank()) username else "Dein"
         append("$userName’s ")
-        // jetzt "echo" mit Farbe und bold
-        withStyle(
-            style = SpanStyle(
-                color = echoColor,
-                fontWeight = FontWeight.Bold
-            )
-        ) {
+        withStyle(style = SpanStyle(color = echoColor, fontWeight = FontWeight.Bold)) {
             append("echo")
         }
     }
+
+    // Context für date
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -123,7 +119,13 @@ fun EntryListScreen(
                     EntryRow(
                         entry = entry,
                         onClick = { onEntryClick(entry) },
-                        onToggleFavorite = { viewModel.updateEntry(entry.copy(isFavorite = !entry.isFavorite)) },
+                        onToggleFavorite = {
+                            viewModel.toggleFavorite(entry)
+
+                            val dateString = formatDate(entry.createdAt)
+                            val action = if (!entry.isFavorite) "favorisiert" else "aus Favoriten entfernt"
+                            Toast.makeText(context, "$dateString $action.", Toast.LENGTH_SHORT).show()
+                        },
                         onDelete = { viewModel.deleteEntry(entry.id) }
                     )
                 }

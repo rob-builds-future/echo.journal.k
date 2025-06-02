@@ -1,6 +1,7 @@
 package com.example.echojournal.ui.viewModel
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
  */
 class AuthViewModel(
     private val repo: UserAuthRepo,
-    private val context: Context
+    private val context: Context,
+    private val prefsViewModel: PrefsViewModel
 ) : ViewModel() {
 
     val email = MutableStateFlow("")
@@ -48,7 +50,10 @@ class AuthViewModel(
         // Versuch, beim Start einen eingeloggten Nutzer zu laden
         viewModelScope.launch {
             _loading.value = true
+            // beim Start erst aus Firestore laden
             _user.value = repo.getCurrentUser()
+            // und falls wir einen Firestore-User haben, schreiben wir den auch in Prefs:
+            _user.value?.username?.let { prefsViewModel.setUsername(it) }
             _loading.value = false
         }
     }
@@ -169,6 +174,23 @@ class AuthViewModel(
             repo.updatePreferredLanguage(current.id, newLang)
             // 2) lokalen State aktualisieren
             _user.value = current.copy(preferredLanguage = newLang)
+        }
+    }
+
+    fun updateUsername(newName: String) {
+        val currentUser = _user.value ?: return
+        viewModelScope.launch {
+            try {
+                // 1) Firestore updaten
+                repo.updateUsername(currentUser.id, newName)
+                // 2) lokalen StateFlow updaten
+                _user.value = currentUser.copy(username = newName)
+                // 3) PrefsViewModel aktualisieren – damit alle Composables, die nur PrefsViewModel.username
+                //    lesen, sofort recomposen.
+                prefsViewModel.setUsername(newName)
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "UpdateUsername fehlgeschlagen", e)
+            }
         }
     }
 
