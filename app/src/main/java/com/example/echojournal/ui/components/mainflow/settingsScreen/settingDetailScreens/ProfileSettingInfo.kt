@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,21 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
-
-private const val dummyMemberSince = "01.01.2023"
-private const val dummyUsername = "EchoUser"
-private const val dummyLanguage = "Deutsch"
-private const val dummyTheme = "Schwarz & Weiß"
-private const val dummyTemplates = "3 Vorlagen"
 private const val dummyReminders = "Aus"
 
-/**
- * Profil-Info Screen: zeigt Mitglied seit und Zusammenfassung der Einstellungen,
- * sowie Button zum Löschen des Profils.
- *
- * @param onDeleteProfile Callback, wenn "Profil Löschen" bestätigt wird
- */
 @Composable
 fun ProfileSettingInfo(
     memberSince: String,
@@ -45,6 +36,10 @@ fun ProfileSettingInfo(
     language: String,
     onDeleteProfile: () -> Unit
 ) {
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val currentTheme by prefsViewModel.theme.collectAsState()
+    val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
+
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column  {
@@ -75,12 +70,12 @@ fun ProfileSettingInfo(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
-            Text(text = "Farbschema: $dummyTheme",
+            Text(text = "Echo-Farbe: $currentTheme",
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
-            Text(text = "Vorlagen: $dummyTemplates",
+            Text(text = "Vorlage: ${currentTemplate.ifBlank { "Keine Vorlage" }}",
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium

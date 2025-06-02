@@ -25,6 +25,8 @@ class PrefsViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, "de")
     val username: StateFlow<String> = prefsRepo.username
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
+    val currentTemplate: StateFlow<String> = prefsRepo.currentTemplateName
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "Keine Vorlage")
 
     fun setOnboarded(value: Boolean) {
         viewModelScope.launch { prefsRepo.setOnboarded(value) }
@@ -40,5 +42,11 @@ class PrefsViewModel(
 
     fun setUsername(name: String) = viewModelScope.launch {
         prefsRepo.setUsername(name)
+    }
+
+    fun setTemplate(name: String) {
+        viewModelScope.launch {
+            prefsRepo.setTemplateName(name)
+        }
     }
 }

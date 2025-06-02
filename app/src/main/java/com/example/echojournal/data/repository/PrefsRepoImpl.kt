@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.echojournal.data.repository.PrefsRepoImpl.Keys.DATASTORE_TEMPLATE_KEY
 import com.example.echojournal.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,6 +20,7 @@ class PrefsRepoImpl(
         val LANGUAGE  = stringPreferencesKey("language")
         val SOURCE_LANGUAGE = stringPreferencesKey("source_language")
         val USERNAME  = stringPreferencesKey("username")
+        val DATASTORE_TEMPLATE_KEY = stringPreferencesKey("template_name")
     }
 
     // 1. DataStore verwenden
@@ -56,6 +58,15 @@ class PrefsRepoImpl(
     override suspend fun setUsername(name: String) {
         context.dataStore.edit { prefs ->
             prefs[Keys.USERNAME] = name
+        }
+    }
+
+    override val currentTemplateName: Flow<String> = ds.data
+        .map { prefs -> prefs[DATASTORE_TEMPLATE_KEY] ?: "Keine Vorlage" }
+
+    override suspend fun setTemplateName(name: String) {
+        ds.edit { prefs ->
+            prefs[DATASTORE_TEMPLATE_KEY] = name
         }
     }
 }

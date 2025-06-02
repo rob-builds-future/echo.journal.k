@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import LanguageViewModel
 import ProfileSettingLanguage
 import ProfileSettingTheme
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,11 @@ fun SettingDetailScreen(
 
     // PrefsViewModel holen, um aktuelle Sprache aus DataStore zu lesen
     val prefsViewModel: PrefsViewModel = koinViewModel()
-    val currentLanguage by prefsViewModel.currentLanguage.collectAsState()
+    val currentLanguageCode by prefsViewModel.currentLanguage.collectAsState()
+
+    // LanguageViewModel für die Liste aller Sprachen
+    val languageViewModel: LanguageViewModel = koinViewModel()
+    val allLanguages by languageViewModel.languages.collectAsState()
 
     // Formatierer für Datum
     val dateFormatter = remember {
@@ -95,10 +100,16 @@ fun SettingDetailScreen(
                 }
 
                 SettingType.ProfileInfo -> {
+                    val languageName = allLanguages
+                        .firstOrNull { it.code == currentLanguageCode }
+                        ?.name
+                    // Fall‐Back, falls kein Name gefunden:
+                        ?: if (currentLanguageCode.isBlank()) "–" else currentLanguageCode
+
                     ProfileSettingInfo(
                         memberSince     = memberSince,
                         username        = user?.username ?: "–",
-                        language        = currentLanguage,
+                        language        = languageName,
                         onDeleteProfile = { /* … */ }
                     )
                 }
@@ -108,12 +119,7 @@ fun SettingDetailScreen(
                 }
 
                 SettingType.Templates -> {
-                    ProfileSettingTemplate(
-                        initialTemplateName = "Reflexion am Abend",
-                        onSelect = { template ->
-                            // hier die Vorlage speichern
-                        }
-                    )
+                    ProfileSettingTemplate()
                 }
 
                 SettingType.Reminders -> {

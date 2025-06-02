@@ -12,6 +12,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,20 +23,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-
-/**
- * Screen zur Auswahl einer Journaling-Vorlage.
- * Zeigt vier Optionen: Keine Vorlage und drei Leitfäden.
- *
- * @param initialTemplateName der aktuell ausgewählte Vorlagenname
- * @param onSelect Callback mit dem Namen der gewählten Vorlage
- */
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProfileSettingTemplate(
-    initialTemplateName: String,
-    onSelect: (String) -> Unit,
-) {
+fun ProfileSettingTemplate() {
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
+
+    // selected beginnt mit dem Wert aus DataStore
+    var selected by remember { mutableStateOf(currentTemplate) }
+
+    // Wenn sich prefsViewModel.currentTemplate ändert, updaten wir local selected:
+    LaunchedEffect(currentTemplate) {
+        selected = currentTemplate
+    }
+
+    // beim Anklicken merken + in DataStore schreiben + callback:
+    val onSelectLocal: (String) -> Unit = { name ->
+        selected = name
+        prefsViewModel.setTemplate(name)
+    }
+
     // Vorlagen-Optionen mit kurzem Vorschautext
     val noneOption = "Keine Vorlage" to "Starte mit leerer Seite."
     val morningOptions = listOf(
@@ -45,12 +55,6 @@ fun ProfileSettingTemplate(
         "Reflexion am Abend" to "Was habe ich heute erlebt? Wie fühle ich mich? Wofür bin ich dankbar?",
         "Dankbarkeits-Check" to "Nenne drei Dinge, für die du heute dankbar bist."
     )
-
-    var selected by remember { mutableStateOf(initialTemplateName) }
-    val onSelectLocal: (String) -> Unit = { name ->
-        selected = name
-        onSelect(name)
-    }
 
     Column {
         // Keine Vorlage

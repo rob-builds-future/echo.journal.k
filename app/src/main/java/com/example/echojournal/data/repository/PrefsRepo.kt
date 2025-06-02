@@ -17,4 +17,8 @@ interface PrefsRepo {
 
     val username: Flow<String>
     suspend fun setUsername(name: String)
+
+    val currentTemplateName: Flow<String>
+    suspend fun setTemplateName(name: String)
+
 }

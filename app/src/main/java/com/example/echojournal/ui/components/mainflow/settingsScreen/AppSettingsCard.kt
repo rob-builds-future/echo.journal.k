@@ -23,6 +23,7 @@ fun AppSettingsCard(
     // Preferences holen, um Theme dynamisch anzuzeigen
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val currentTheme by prefsViewModel.theme.collectAsState()
+    val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
 
 // App Einstellungen Card
     Card(
@@ -43,7 +44,7 @@ fun AppSettingsCard(
             HorizontalDivider()
             SettingItem(
                 label = "Geführtes\nTagebuchschreiben",
-                value = "Reflexion am Abend",
+                value = currentTemplate.ifBlank { "Keine Vorlage" },
                 onClick = { onNavigateToAppSetting(SettingType.Templates) }
             )
             HorizontalDivider()
