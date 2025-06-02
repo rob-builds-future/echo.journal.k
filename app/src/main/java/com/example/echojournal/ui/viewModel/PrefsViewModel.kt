@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel für Onboarding-Prefs, persistent gespeichert via DataStore.
+ * ViewModel für lokale User Prefs, persistent gespeichert via DataStore.
  */
 class PrefsViewModel(
     private val prefsRepo: PrefsRepo
@@ -27,6 +27,10 @@ class PrefsViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
     val currentTemplate: StateFlow<String> = prefsRepo.currentTemplateName
         .stateIn(viewModelScope, SharingStarted.Eagerly, "Keine Vorlage")
+    val savedReminders: StateFlow<Map<String, Pair<Boolean, String>>> =
+        prefsRepo.getReminderSettings()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
+
 
     fun setOnboarded(value: Boolean) {
         viewModelScope.launch { prefsRepo.setOnboarded(value) }
@@ -47,6 +51,18 @@ class PrefsViewModel(
     fun setTemplate(name: String) {
         viewModelScope.launch {
             prefsRepo.setTemplateName(name)
+        }
+    }
+
+    fun setReminderEnabled(label: String, enabled: Boolean) {
+        viewModelScope.launch {
+            prefsRepo.updateReminderEnabled(label, enabled)
+        }
+    }
+
+    fun setReminderTime(label: String, time: String) {
+        viewModelScope.launch {
+            prefsRepo.updateReminderTime(label, time)
         }
     }
 }

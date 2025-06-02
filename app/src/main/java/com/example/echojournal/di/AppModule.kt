@@ -13,6 +13,7 @@ import com.example.echojournal.data.repository.TranslationApiRepo
 import com.example.echojournal.data.repository.TranslationApiRepoImpl
 import com.example.echojournal.data.repository.UserAuthRepo
 import com.example.echojournal.data.repository.UserAuthRepoImpl
+import com.example.echojournal.service.EchoNotificationService
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -90,7 +91,7 @@ val appModule = module {
     single<UserAuthRepo> { UserAuthRepoImpl(get(), get()) }
     viewModel { AuthViewModel(get(), get(), prefsViewModel = get())}
 
-    single<PrefsRepo> { PrefsRepoImpl(androidContext()) }
+    single<PrefsRepo> { PrefsRepoImpl(androidContext(), get()) }
     viewModel { PrefsViewModel(get()) }
 
     single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
@@ -100,4 +101,7 @@ val appModule = module {
         journalRepo         = get(),
         translationApiRepo  = get()
     ) }
+
+    // EchoNotificationService verfügbar machen
+    single { EchoNotificationService(androidContext()) }
 }
