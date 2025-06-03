@@ -38,6 +38,7 @@ fun SwapDivider(onClick: () -> Unit) {
         )
         Box(
             modifier = Modifier
+                .align(Alignment.CenterEnd)
                 .padding(end = 16.dp)
                 .height(30.dp)
                 .width(30.dp)

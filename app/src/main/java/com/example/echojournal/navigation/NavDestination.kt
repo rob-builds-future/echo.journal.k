@@ -18,6 +18,8 @@ interface NavDestination {
 }
 @Serializable object EntryDetailRoute    : NavDestination { override val route = "entry_detail" }
 
+@Serializable object StatisticsRoute     : NavDestination { override val route = "statistics" }
+
 @Serializable object AuthRootRoute       : NavDestination { override val route = "auth_root" }
 @Serializable object SignInRoute         : NavDestination { override val route = "sign_in" }
 @Serializable object SignUpRoute         : NavDestination { override val route = "sign_up" }

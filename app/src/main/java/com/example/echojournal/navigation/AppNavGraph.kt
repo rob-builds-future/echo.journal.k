@@ -1,9 +1,14 @@
 package com.example.echojournal.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,11 +25,13 @@ import com.example.echojournal.ui.screens.mainflow.EntryDetailScreen
 import com.example.echojournal.ui.screens.mainflow.EntryListScreen
 import com.example.echojournal.ui.screens.mainflow.SettingDetailScreen
 import com.example.echojournal.ui.screens.mainflow.SettingsScreen
+import com.example.echojournal.ui.screens.mainflow.StatisticsScreen
 import com.example.echojournal.ui.screens.onboardingflow.PrefsSetupScreen
 import com.example.echojournal.ui.screens.onboardingflow.WelcomeScreen
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
@@ -32,32 +39,40 @@ fun AppNavGraph(
     prefsViewModel: PrefsViewModel,
     onInstagramClick: () -> Unit = {}
 ) {
+    // User- und Onboard-State abholen
     val user by authViewModel.user.collectAsState()
     val onboarded by prefsViewModel.onboarded.collectAsState()
 
+    // Einmal-Flag, damit wir den Routing-Code nur beim ersten Composable-Aufbau ausführen
+    var hasNavigatedOnce by rememberSaveable { mutableStateOf(false) }
+
     LaunchedEffect(user, onboarded) {
-        when {
-            user == null -> {
-                navController.navigate(AuthRootRoute.route) {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
+        if (!hasNavigatedOnce) {
+            // Erstes Mal, solange noch nichts navigiert wurde:
+            when {
+                user == null -> {
+                    navController.navigate(AuthRootRoute.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+                !onboarded -> {
+                    navController.navigate(OnboardingRootRoute.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+                else -> {
+                    navController.navigate(MainRootRoute.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             }
-
-            !onboarded -> {
-                navController.navigate(OnboardingRootRoute.route) {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
-
-            else -> {
-                navController.navigate(MainRootRoute.route) {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
+            hasNavigatedOnce = true
         }
+        // Wenn hasNavigatedOnce true ist, tut LaunchedEffect nichts mehr,
+        // egal ob user/onboarded sich später ändern.
     }
 
     NavHost(
@@ -128,6 +143,9 @@ fun AppNavGraph(
                     onAddClick = { navController.navigate(AddEntryRoute.route) },
                     onSettingsClick = {
                         navController.navigateTo(SettingsRoute)
+                    },
+                    onStatsClick = {
+                        navController.navigate(StatisticsRoute.route)
                     }
                 )
             }
@@ -143,7 +161,8 @@ fun AppNavGraph(
                     ?.savedStateHandle
                     ?.get<JournalEntry>("entry")
                 if (entry != null) {
-                    EntryDetailScreen(entry = entry,
+                    EntryDetailScreen(
+                        entry = entry,
                         onDismiss = { navController.popBackStack() })
                 }
             }
@@ -151,6 +170,7 @@ fun AppNavGraph(
             // Settings-Übersicht
             typedComposable<SettingsRoute> {
                 SettingsScreen(
+                    onBack = { navController.popBackStack() },
                     onNavigateToProfile = { type ->
                         navController.navigate(SettingDetailRoute.createRoute(type))
                     },
@@ -177,6 +197,13 @@ fun AppNavGraph(
                 val type = SettingType.valueOf(typeName)
                 SettingDetailScreen(
                     type = type,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            // Statistics-Screen
+            typedComposable<StatisticsRoute> {
+                StatisticsScreen(
                     onBack = { navController.popBackStack() }
                 )
             }

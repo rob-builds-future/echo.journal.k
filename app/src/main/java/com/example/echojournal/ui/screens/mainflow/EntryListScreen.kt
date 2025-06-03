@@ -27,7 +27,7 @@ import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListB
 import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListTopBar
 import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryRow
 import com.example.echojournal.ui.components.mainflow.entryListScreen.GradientOverlay
-import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopoverPlaceholder
+import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopover
 import com.example.echojournal.ui.components.mainflow.entryListScreen.StatisticsHeader
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -38,7 +38,8 @@ import org.koin.androidx.compose.koinViewModel
 fun EntryListScreen(
     onEntryClick: (JournalEntry) -> Unit,
     onAddClick: () -> Unit,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onStatsClick: () -> Unit
 ) {
     // ViewModels und Eigenschaften holen
     val viewModel: EntryViewModel = koinViewModel()
@@ -89,7 +90,7 @@ fun EntryListScreen(
             EntryListTopBar(
                 title = title,
                 onSettingsClick = onSettingsClick,
-                onStatsClick = {}
+                onStatsClick = onStatsClick
             )
         },
         bottomBar = {
@@ -138,7 +139,7 @@ fun EntryListScreen(
         }
 
         if (showInspirationPopover) {
-            InspirationPopoverPlaceholder(onDismiss = {
+            InspirationPopover(onDismiss = {
                 showInspirationPopover = false
             })
         }

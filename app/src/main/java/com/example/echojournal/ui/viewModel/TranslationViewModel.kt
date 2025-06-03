@@ -77,4 +77,21 @@ class TranslationViewModel(
             Log.e("TranslationVM", "Error translating text", err)
         }
     }
+
+    suspend fun translateOnce(text: String): String {
+        val targetLang = prefsViewModel.currentLanguage.value.lowercase()
+        val sourceLang = prefsViewModel.sourceLanguage.value.lowercase()
+        return runCatching {
+            translationRepository.translate(
+                text = text,
+                from = sourceLang,
+                to = targetLang
+            )
+        }.getOrElse { err ->
+            if (err is CancellationException) throw err
+            Log.e("TranslationVM", "Error in translateOnce", err)
+            // Bei Fehler einfach den Originaltext zurückgeben
+            text
+        }
+    }
 }

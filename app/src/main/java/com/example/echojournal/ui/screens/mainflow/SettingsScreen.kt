@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    onBack: () -> Unit,
     onNavigateToProfile: (SettingType) -> Unit = {},
     onNavigateToAppSetting: (SettingType) -> Unit = {},
     onInstagramClick: () -> Unit = {},
@@ -54,7 +58,20 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Deine Einstellungen", style = MaterialTheme.typography.titleMedium) }
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Zurück"
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        text = "Deine Einstellungen",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             )
         }
     ) { innerPadding ->

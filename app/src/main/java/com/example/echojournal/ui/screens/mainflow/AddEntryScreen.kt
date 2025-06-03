@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -45,6 +46,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echojournal.R
+import com.example.echojournal.ui.components.mainflow.addEntryScreen.CombinedRowUnderEntry
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
@@ -62,7 +64,6 @@ import java.util.Locale
 
 /**
  * Hauptscreen zum Hinzufügen eines Journal-Eintrags.
- * Tauscht zwischen EntrySection und TranslationSection.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,23 +74,28 @@ fun AddEntryScreen(
     // ViewModels holen
     val entryViewModel: EntryViewModel = koinViewModel()
     val translationViewModel: TranslationViewModel = koinViewModel()
-    // PrefsViewModel holen, um das aktuelle Theme auszulesen
     val prefsViewModel: PrefsViewModel = koinViewModel()
+
+    // Theme & Farbe
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
 
-    // Lokale UI-States
+    // UI-States
     val context = LocalContext.current
     var content by remember { mutableStateOf("") }
     val translationText by translationViewModel.translatedText.collectAsState()
     val createResult by entryViewModel.createResult.collectAsState()
-    var showAlert by remember { mutableStateOf(false) }
-    val startTimeMs = remember { System.currentTimeMillis() }
+    var showDiscardAlert by remember { mutableStateOf(false) }
+    var showInstructionDialog by remember { mutableStateOf(false) }
 
+    // Fokus-Handling
     val entryFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    var isReversed by remember { mutableStateOf(false) }
 
+    // Entry - Translation Swap
+    var isReversed by remember { mutableStateOf(true) }
+
+    // Datum
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -98,7 +104,21 @@ fun AddEntryScreen(
             .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
             .replaceFirstChar { it.uppercase() }
     }
-    // DatePicker kein Datum > heute
+    val startTimeMs = remember { System.currentTimeMillis() }
+
+    // Template und Dropdown Guided Journaling
+    val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
+    var templateMenuExpanded by remember { mutableStateOf(false) }
+    // Liste aller Vorlagen-Namen (muss mit PrefsViewModel übereinstimmen)
+    val templateOptions = listOf(
+        "Keine Vorlage",
+        "Produktiver Morgen",
+        "Ziele im Blick",
+        "Reflexion am Abend",
+        "Dankbarkeits-Check"
+    )
+
+    // DatePicker-Dialog
     if (showDatePicker) {
         val dialog = DatePickerDialog(
             context,
@@ -112,18 +132,15 @@ fun AddEntryScreen(
             entryDate.dayOfMonth
         )
         dialog.datePicker.maxDate = Instant.now().toEpochMilli()
-
-        // OnDismissListener setzt showDatePicker = false, wenn der Nutzer „Abbrechen“ klickt
-        dialog.setOnDismissListener {
-            showDatePicker = false
-        }
-
+        dialog.setOnDismissListener { showDatePicker = false }
         dialog.show()
     }
 
+    // Fokus immer auf EntrySection
     LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
     LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
-    BackHandler(enabled = true) { showAlert = true }
+
+    BackHandler(enabled = true) { showDiscardAlert = true }
 
     Scaffold(
         topBar = {
@@ -137,11 +154,12 @@ fun AddEntryScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { showAlert = true }) {
+                    IconButton(onClick = { showDiscardAlert = true }) {
                         Icon(Icons.Default.Close, contentDescription = "Schließen")
                     }
                 },
                 actions = {
+                    // Save-Button
                     val isEnabled = content.isNotBlank()
                     val backgroundColor =
                         if (isEnabled) echoColor else MaterialTheme.colorScheme.onSurface.copy(
@@ -170,7 +188,7 @@ fun AddEntryScreen(
                                 entryViewModel.createEntry(
                                     rawContent = content,
                                     duration = durationMinutes,  // oder /1000 für Sekunden
-                                    sourceLang = "de",
+                                    sourceLang = "auto",
                                     targetLang = "en",
                                     createdAt = createdTimestamp
                                 )
@@ -196,16 +214,18 @@ fun AddEntryScreen(
             contentAlignment = Alignment.TopStart
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                //verticalArrangement = Arrangement.Top
+                modifier = Modifier.fillMaxSize()
             ) {
+                // Entry - Translation Swap + Sections
                 if (isReversed) {
+                    // Wenn reversed: zuerst Translation, dann SwapDivider, dann Entry + CombinedRow
                     TranslationSection(
                         translationText = translationText,
                         echoColor = echoColor
                     )
                     SwapDivider { isReversed = !isReversed }
+
+                    // EntrySection
                     EntrySection(
                         content = content,
                         onContentChange = {
@@ -215,7 +235,23 @@ fun AddEntryScreen(
                         },
                         focusRequester = entryFocusRequester
                     )
+
+                    // direkt darunter die kombinierte Zeile:
+                    CombinedRowUnderEntry(
+                        content = content,
+                        currentTemplate = currentTemplate,
+                        onTemplateSelected = { option ->
+                            prefsViewModel.setTemplate(option)
+                        },
+                        templateOptions = templateOptions,
+                        templateMenuExpanded = templateMenuExpanded,
+                        onTemplateMenuToggle = { templateMenuExpanded = it },
+                        onShowInstructions = { showInstructionDialog = true },
+                        echoColor = echoColor
+                    )
+
                 } else {
+                    // 1. Wenn nicht reversed: zuerst Entry + CombinedRow, dann SwapDivider, dann Translation
                     EntrySection(
                         content = content,
                         onContentChange = {
@@ -225,23 +261,40 @@ fun AddEntryScreen(
                         },
                         focusRequester = entryFocusRequester
                     )
+
+                    // 2. → Direkt darunter die kombinierte Zeile:
+                    CombinedRowUnderEntry(
+                        content = content,
+                        currentTemplate = currentTemplate,
+                        onTemplateSelected = { option ->
+                            prefsViewModel.setTemplate(option)
+                        },
+                        templateOptions = templateOptions,
+                        templateMenuExpanded = templateMenuExpanded,
+                        onTemplateMenuToggle = { templateMenuExpanded = it },
+                        onShowInstructions = { showInstructionDialog = true },
+                        echoColor = echoColor
+                    )
+
+                    // 3. Dann SwapDivider + TranslationSection
                     SwapDivider { isReversed = !isReversed }
                     TranslationSection(
                         translationText = translationText,
                         echoColor = echoColor
                     )
                 }
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
 
-        if (showAlert) {
+        // Discard-Alert
+        if (showDiscardAlert) {
             AlertDialog(
-                onDismissRequest = { showAlert = false },
+                onDismissRequest = { showDiscardAlert = false },
                 title = { Text("Änderungen verwerfen?") },
                 text = { Text("Möchtest du die Änderungen wirklich verwerfen?") },
                 confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
+                    TextButton(onClick = { showDiscardAlert = false }) {
                         Text(
                             "Abbrechen"
                         )
@@ -251,15 +304,70 @@ fun AddEntryScreen(
             )
         }
 
-        LaunchedEffect(createResult) {
-            createResult?.onSuccess {
-                entryViewModel.clearCreateResult()
-                onDismiss()
-            }
-            createResult?.onFailure {
-                // show error logik ergänzen
-                entryViewModel.clearCreateResult()
-            }
+        // Instruction Dialog
+        if (showInstructionDialog) {
+            AlertDialog(
+                onDismissRequest = { showInstructionDialog = false },
+                title = { Text("Anleitung: $currentTemplate") },
+                text = {
+                    // Selection Container für Kopierbarkeit
+                    SelectionContainer {
+                        // Je nachdem, welche Vorlage aktuell ausgewählt ist, zeigen wir unterschiedliche Anleitungen
+                        val instructionText = when (currentTemplate) {
+                            "Produktiver Morgen" -> buildString {
+                                append("1. Überlege dir, was heute dein Hauptziel ist.\n")
+                                append("2. Lege drei Prioritäten fest, die dir am wichtigsten sind.\n")
+                                append("3. Notiere mögliche Ablenkungsfaktoren und wie du sie minimierst.\n")
+                                append("\nTipp: Versuche, jede Priorität in einem Satz zu beschreiben.")
+                            }
+
+                            "Ziele im Blick" -> buildString {
+                                append("1. Definiere dein langfristiges Ziel (z. B. in den nächsten 6 Monaten).\n")
+                                append("2. Schreibe auf, was du heute konkret dafür getan hast.\n")
+                                append("3. Überlege, welche nächsten Schritte du morgen gehen kannst.\n")
+                                append("\nTipp: Halte deine Gedanken in kurzen Stichpunkten fest.")
+                            }
+
+                            "Reflexion am Abend" -> buildString {
+                                append("1. Beschreibe in wenigen Sätzen, was heute besonders war.\n")
+                                append("2. Wie fühlst du dich jetzt? Notiere aktuelle Eindrücke.\n")
+                                append("3. Was hast du aus den heutigen Erfahrungen gelernt?\n")
+                                append("\nTipp: Versuche, ehrlich und ohne Bewertung zu schreiben.")
+                            }
+
+                            "Dankbarkeits-Check" -> buildString {
+                                append("1. Denke an drei Dinge, für die du heute dankbar bist.\n")
+                                append("2. Schreibe jeden Punkt kurz mit ein bis zwei Sätzen aus.\n")
+                                append("3. Reflektiere, warum dir gerade diese Dinge wichtig sind.\n")
+                                append("\nTipp: Dankbarkeit kann auch in kleinen Alltagsmomenten stecken.")
+                            }
+                            // Wenn "Keine Vorlage" oder leer, eine generische Anleitung:
+                            else -> buildString {
+                                append("Du hast aktuell keine Vorlage ausgewählt.\n")
+                                append("Hier kannst du frei schreiben, was dir gerade wichtig ist.\n")
+                                append("Wenn du später gezieltere Fragen möchtest, wähle oben eine Vorlage aus.\n")
+                            }
+                        }
+                        Text(text = instructionText)
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showInstructionDialog = false }) {
+                        Text("Schließen")
+                    }
+                }
+            )
+        }
+    }
+    // Create-Result-Handling
+    LaunchedEffect(createResult) {
+        createResult?.onSuccess {
+            entryViewModel.clearCreateResult()
+            onDismiss()
+        }
+        createResult?.onFailure {
+            // show error logik ergänzen
+            entryViewModel.clearCreateResult()
         }
     }
 }
