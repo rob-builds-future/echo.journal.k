@@ -1,23 +1,41 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
 import com.example.echojournal.ui.components.mainflow.statisticsScreen.CalendarView
+import com.example.echojournal.ui.components.mainflow.statisticsScreen.StreakStatistic
+import com.example.echojournal.ui.components.mainflow.statisticsScreen.TopWordsStatistic
 import com.example.echojournal.ui.components.mainflow.statisticsScreen.TotalEntriesStatistic
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.StatisticsViewModel
@@ -35,20 +53,25 @@ fun StatisticsScreen(
     // 1. Alle Journal-Eintrag-Dates
     val entryDates by statsViewModel.entryDates.collectAsState()
 
-    // 2. Aktuellen User vom AuthViewModel
+    // 2. Aktuellen User
     val user by authViewModel.user.collectAsState()
 
-    // 3. Wenn user != null, wandeln wir user.createdAt (Firebase-Timestamp) zu LocalDate um
+    // 3. Mitgliedsdatum zu LocalDate konvertieren
     val minDate: LocalDate? = user
-        ?.createdAt           // com.google.firebase.Timestamp
-        ?.toInstant()         // → Instant
+        ?.createdAt
+        ?.toInstant()
         ?.atZone(ZoneId.systemDefault())
-        ?.toLocalDate()       // → LocalDate
+        ?.toLocalDate()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Deine Statistiken") },
+                title = {
+                    Text(
+                        text = "Deine Erfolge",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.Close, contentDescription = "Zurück")
@@ -57,24 +80,125 @@ fun StatisticsScreen(
             )
         },
         content = { paddingValues ->
-            Column(
+            // Wir verwenden ein Box-Layout, um alles zu stapeln
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(paddingValues) // Abstand einhalten, den Scaffold vorgibt
             ) {
-                TotalEntriesStatistic()
+                // 1. Der scrollbare Content im Hintergrund
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // 1/3: Streak
+                        StreakStatistic(
+                            statsViewModel = statsViewModel,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        )
+                        // 2/3: Gesamterfolge
+                        TotalEntriesStatistic(
+                            statsViewModel = statsViewModel,
+                            modifier = Modifier.weight(2f)
+                        )
+                    }
 
-                // 4. CalendarView erhält jetzt das tatsächliche „Mitgliedsdatum“ als minDate
-                CalendarView(
-                    entryDates = entryDates,
-                    minDate = minDate,
-                    onDayClick = { date ->
-                        // Optional: reagiert, wenn der Nutzer auf einen Datumstag klickt
-                    },
-                    cellSize = 36.dp
-                )
+                    // Kalender‐Card
+                    ShadowCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        onClick = { /* nicht klickbar */ },
+                        elevation = 4.dp
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(vertical = 8.dp, horizontal = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Tracker",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 4.dp)
+                            )
+                            CalendarView(
+                                entryDates = entryDates,
+                                minDate = minDate,
+                                onDayClick = { /* … */ },
+                                cellSize = 36.dp
+                            )
+                        }
+                    }
+
+                    TopWordsStatistic()
+                    // (Falls euer Content noch länger ist, wird er hier automatisch scrollen)
+                }
+
+                // Gradient Overlay oben
+                // Damit der Overlay tatsächlich über dem scrollbaren Content liegt,
+                // benutzen wir BoxScope.align und zIndex.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(32.dp)
+                        .align(Alignment.TopCenter)
+                        .zIndex(1f)
+                ) {
+                    // Der Gradient sollte von Hintergrund-Farbe oben -> transparent nach unten laufen
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp)
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.background,
+                                        Color.Transparent
+                                    )
+                                )
+                            )
+                    )
+                }
+
+                // Gradient Overlay unten
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(32.dp)
+                        .align(Alignment.BottomCenter)
+                        .zIndex(1f)
+                ) {
+                    // Gradient von transparent oben -> Hintergrund unten
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .height(32.dp)
+                            .zIndex(1f)
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        MaterialTheme.colorScheme.background
+                                    )
+                                )
+                            )
+                    )
+                }
             }
         }
     )

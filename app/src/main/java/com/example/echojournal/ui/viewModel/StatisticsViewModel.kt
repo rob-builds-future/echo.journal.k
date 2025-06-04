@@ -17,10 +17,10 @@ class StatisticsViewModel(
     entryViewModel: EntryViewModel
 ) : ViewModel() {
 
-    // 1. Basis: Flow aller Einträge
+    // Basis: Flow aller Einträge
     private val entriesFlow = entryViewModel.entries
 
-    // 2. entryDates = Set aller LocalDate, an denen ein Journal-Eintrag existiert
+    // entryDates = Set aller LocalDate, an denen ein Journal-Eintrag existiert
     val entryDates: StateFlow<Set<LocalDate>> =
         entriesFlow
             .map { listOfEntries ->
@@ -37,15 +37,56 @@ class StatisticsViewModel(
                 initialValue = emptySet()
             )
 
-    // 3. minEntryDate = das früheste Datum aus entryDates (oder null, wenn keine Einträge)
-    val minEntryDate: StateFlow<LocalDate?> =
+    // daysWithEntries = Anzahl der eindeutigen Tage mit mindestens einem Eintrag
+    val daysWithEntries: StateFlow<Int> =
         entryDates
-            .map { dates ->
-                dates.minOrNull()
+            .map { it.size }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = 0
+            )
+
+    // totalWords = Summe aller Worte in allen Einträgen
+    val totalWords: StateFlow<Int> =
+        entriesFlow
+            .map { listOfEntries ->
+                listOfEntries.sumOf { entry ->
+                    entry.content
+                        .trim()
+                        .split("\\s+".toRegex())
+                        .count { it.isNotBlank() }
+                }
             }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = null
+                initialValue = 0
             )
+
+    // totalDuration = Summe aller durations (in Minuten)
+    val totalDuration: StateFlow<Int> =
+        entriesFlow
+            .map { listOfEntries ->
+                listOfEntries.sumOf { it.duration }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = 0
+            )
+
+    // Aktueller Streak (Tage in Folge bis heute)
+    val currentStreak: StateFlow<Int> =
+        entryDates
+            .map { dates ->
+                var streak = 0
+                var day = LocalDate.now()
+                while (dates.contains(day)) {
+                    streak++
+                    day = day.minusDays(1)
+                }
+                streak
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
 }

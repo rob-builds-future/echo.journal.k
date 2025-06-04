@@ -6,6 +6,7 @@ import android.graphics.RectF
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -23,8 +24,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShadowCard(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     elevation: Dp = 8.dp,
+    fillHeight: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val isDark = isSystemInDarkTheme()
@@ -33,7 +36,7 @@ fun ShadowCard(
     val elevationPx = with(LocalDensity.current) { elevation.toPx() }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp)
             .drawBehind {
                 val cornerSize = shape.topStart
@@ -52,9 +55,15 @@ fun ShadowCard(
             }
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+            modifier = if (fillHeight) {
+                Modifier
+                    .fillMaxSize()
+                    .clickable { onClick() }
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick() }
+            },
             shape = shape,
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             colors = CardDefaults.cardColors(

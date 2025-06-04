@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatQuote
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -67,7 +67,7 @@ fun StatisticsHeader(
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text     = "Wörter",
+                text     = "Worte",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color    = MaterialTheme.colorScheme.onBackground
@@ -90,7 +90,7 @@ fun StatisticsHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector    = Icons.Default.Timer,
+                imageVector    = Icons.Default.Schedule,
                 contentDescription = null,
                 modifier       = Modifier.size(16.dp),
                 tint = echoColor

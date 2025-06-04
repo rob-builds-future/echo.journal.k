@@ -96,7 +96,7 @@ fun CombinedRowUnderEntry(
 
         // Rechts: Wortzähler
         Text(
-            text = "$wordCount Wörter",
+            text = "$wordCount Worte",
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.End
         )

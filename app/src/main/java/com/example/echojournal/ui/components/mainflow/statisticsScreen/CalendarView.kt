@@ -87,7 +87,7 @@ fun CalendarView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .padding(bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -184,7 +184,7 @@ fun CalendarView(
                                 shape = MaterialTheme.shapes.small
                             )
                             isMinDate -> Modifier.background(
-                                color = echoColor.copy(alpha = 0.4f),
+                                color = Color(0xFFFFD700).copy(alpha = 0.4f),
                                 shape = MaterialTheme.shapes.small
                             )
                             isMarked -> Modifier.background(
