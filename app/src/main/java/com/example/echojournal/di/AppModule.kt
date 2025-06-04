@@ -17,6 +17,7 @@ import com.example.echojournal.service.EchoNotificationService
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
+import com.example.echojournal.ui.viewModel.StatisticsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -79,28 +80,23 @@ val appModule = module {
 
     single<LibreTranslateService> { get<Retrofit>().create(LibreTranslateService::class.java) }
     single<TranslationApiRepo> { TranslationApiRepoImpl(get()) }
-    viewModel { TranslationViewModel(
-        translationRepository = get(),
-        prefsViewModel        = get()
-    ) }
+    viewModel { TranslationViewModel(get(), get()) }
 
     single<LanguageRepo> { LanguageRepoImpl(get()) }
     viewModel { LanguageViewModel(get()) }
 
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single<UserAuthRepo> { UserAuthRepoImpl(get(), get()) }
-    viewModel { AuthViewModel(get(), get(), prefsViewModel = get())}
+    viewModel { AuthViewModel(get(), get(), get())}
 
     single<PrefsRepo> { PrefsRepoImpl(androidContext(), get()) }
     viewModel { PrefsViewModel(get()) }
 
     single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
-    single<JournalRepo> { JournalRepoImpl(db = get()) }
-    viewModel { EntryViewModel(
-        authViewModel       = get(),
-        journalRepo         = get(),
-        translationApiRepo  = get()
-    ) }
+    single<JournalRepo> { JournalRepoImpl(get()) }
+    viewModel { EntryViewModel(get(), get(), get()) }
+
+    viewModel { StatisticsViewModel(get()) }
 
     // EchoNotificationService verfügbar machen
     single { EchoNotificationService(androidContext()) }

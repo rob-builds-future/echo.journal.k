@@ -80,6 +80,8 @@ fun AddEntryScreen(
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
 
+    val userTargetLang = prefsViewModel.currentLanguage.collectAsState().value
+
     // UI-States
     val context = LocalContext.current
     var content by remember { mutableStateOf("") }
@@ -189,7 +191,7 @@ fun AddEntryScreen(
                                     rawContent = content,
                                     duration = durationMinutes,  // oder /1000 für Sekunden
                                     sourceLang = "auto",
-                                    targetLang = "en",
+                                    targetLang = userTargetLang.lowercase(),
                                     createdAt = createdTimestamp
                                 )
                             },

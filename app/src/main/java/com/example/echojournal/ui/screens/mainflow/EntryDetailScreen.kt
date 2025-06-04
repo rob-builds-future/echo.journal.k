@@ -79,6 +79,7 @@ fun EntryDetailScreen(
     var isReversed by remember { mutableStateOf(false) }
     var content by remember { mutableStateOf(entry.content) }
 
+    // Live‐State aus dem TranslationViewModel; wird nur im Edit‐Modus genutzt
     val translatedText by translationViewModel.translatedText.collectAsState()
 
     // Dates
@@ -238,6 +239,7 @@ fun EntryDetailScreen(
                 .pointerInput(Unit) { detectTapGestures { /* clear focus */ } }
         ) {
             Column(Modifier.fillMaxSize()) {
+                // Edit Modus
                 if (isEditing) {
                     if (isReversed) {
                         TranslationSection(
@@ -269,9 +271,10 @@ fun EntryDetailScreen(
                         )
                     }
                 } else {
+                    // Lese Modus
                     if (isReversed) {
                         DisableSelection {
-                            translatedText
+                            entry.translatedContent
                                 .split("\n")
                                 .forEachIndexed { idx, line ->
                                     Text(
@@ -280,12 +283,12 @@ fun EntryDetailScreen(
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
-                                    if (idx < translatedText.split("\n").lastIndex) Spacer(
+                                    if (idx < entry.translatedContent.split("\n").lastIndex) Spacer(
                                         modifier = Modifier.height(6.dp)
                                     )
                                 }
                             SwapDivider { isReversed = !isReversed }
-                            content
+                            entry.content
                                 .split("\n")
                                 .forEachIndexed { idx, line ->
                                     Text(
@@ -296,14 +299,14 @@ fun EntryDetailScreen(
                                             vertical = 3.dp
                                         )
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(
+                                    if (idx < entry.content.split("\n").lastIndex) Spacer(
                                         modifier = Modifier.height(3.dp)
                                     )
                                 }
                         }
                     } else {
                         DisableSelection {
-                            content
+                            entry.content
                                 .split("\n")
                                 .forEachIndexed { idx, line ->
                                     Text(
@@ -314,12 +317,12 @@ fun EntryDetailScreen(
                                             vertical = 3.dp
                                         )
                                     )
-                                    if (idx < content.split("\n").lastIndex) Spacer(
+                                    if (idx < entry.content.split("\n").lastIndex) Spacer(
                                         modifier = Modifier.height(3.dp)
                                     )
                                 }
                             SwapDivider { isReversed = !isReversed }
-                            translatedText
+                            entry.translatedContent
                                 .split("\n")
                                 .forEachIndexed { idx, line ->
                                     Text(
@@ -328,7 +331,7 @@ fun EntryDetailScreen(
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
-                                    if (idx < translatedText.split("\n").lastIndex) Spacer(
+                                    if (idx < entry.translatedContent.split("\n").lastIndex) Spacer(
                                         modifier = Modifier.height(6.dp)
                                     )
                                 }

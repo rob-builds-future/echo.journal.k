@@ -12,7 +12,7 @@ data class JournalEntry(
     val sourceLang: String = "auto",
     val targetLang: String = "en",
     val duration: Int = 0,
-    val isFavorite: Boolean = false,
+    val favorite: Boolean = false,
     @ServerTimestamp val createdAt: Timestamp? = null,
     @ServerTimestamp val updatedAt: Timestamp? = null
 ) : Serializable

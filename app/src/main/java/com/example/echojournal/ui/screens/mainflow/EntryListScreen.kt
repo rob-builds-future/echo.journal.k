@@ -53,7 +53,7 @@ fun EntryListScreen(
     // Favoriten Filter State und Filterung
     var showFavoritesOnly by remember { mutableStateOf(false) }
     val displayed = remember(allEntries, showFavoritesOnly) {
-        allEntries.filter { !showFavoritesOnly || it.isFavorite }
+        allEntries.filter { !showFavoritesOnly || it.favorite }
     }
 
     // Inspiration Popover State
@@ -124,7 +124,7 @@ fun EntryListScreen(
                             viewModel.toggleFavorite(entry)
 
                             val dateString = formatDate(entry.createdAt)
-                            val action = if (!entry.isFavorite) "favorisiert" else "aus Favoriten entfernt"
+                            val action = if (!entry.favorite) "favorisiert" else "aus Favoriten entfernt"
                             Toast.makeText(context, "$dateString $action.", Toast.LENGTH_SHORT).show()
                         },
                         onDelete = { viewModel.deleteEntry(entry.id) }

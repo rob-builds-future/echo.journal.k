@@ -87,7 +87,7 @@ class EntryViewModel(
                     sourceLang = sourceLang,
                     targetLang = targetLang,
                     duration = duration,
-                    isFavorite = false,
+                    favorite = false,
                     createdAt = createdAt
                 )
                 journalRepo.createEntry(userId, entry)
@@ -139,24 +139,30 @@ class EntryViewModel(
     }
 
     fun toggleFavorite(entry: JournalEntry) {
-        val updatedEntry = entry.copy(isFavorite = !entry.isFavorite)
+        // 1) Lokales “optimistic” Update für die UI
+        val updatedEntry = entry.copy(favorite = !entry.favorite)
+        _localEntries.value = _localEntries.value.map {
+            if (it.id == updatedEntry.id) updatedEntry else it
+        }
 
+        // 2) Asynchrone Persistenz in Firestore
         viewModelScope.launch {
-            try {
+            runCatching {
                 journalRepo.updateEntry(updatedEntry.userId, updatedEntry)
-
-                // UI-Update
-                _localEntries.value = _localEntries.value.map {
-                    if (it.id == updatedEntry.id) updatedEntry else it
+            }.onFailure {
+                // Optional: Beim Fehler das lokale Flag wieder zurückrollen oder eine Fehlermeldung anzeigen
+                _localEntries.value = _localEntries.value.map { current ->
+                    if (current.id == entry.id) entry else current
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
     init {
         viewModelScope.launch {
             entries.collect { updatedEntries ->
+                // Logge vorab, welche Values hier ankommen
+                updatedEntries.forEach { entry ->
+                }
                 _localEntries.value = updatedEntries
             }
         }

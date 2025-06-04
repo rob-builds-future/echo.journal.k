@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +20,6 @@ import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -59,21 +56,9 @@ fun EntryRow(
 
     val dateStr = formatDate(entry.createdAt)
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onClick() },
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        )
+    ShadowCard(
+        onClick = { onClick() },
+        elevation = 3.dp
     ) {
         Box {
             // Datum-Badge oben links
@@ -168,7 +153,7 @@ fun EntryRow(
                         )
                         DropdownMenuItem(
                             text = {
-                                Text(if (entry.isFavorite) "Unfavorite" else "Favorite")
+                                Text(if (entry.favorite) "Unfavorite" else "Favorite")
                             },
                             onClick = {
                                 menuExpanded = false
@@ -176,7 +161,7 @@ fun EntryRow(
                             },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = if (entry.isFavorite)
+                                    imageVector = if (entry.favorite)
                                         Icons.Default.BookmarkRemove
                                     else
                                         Icons.Default.Bookmark,
@@ -206,7 +191,7 @@ fun EntryRow(
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (entry.isFavorite) {
+                if (entry.favorite) {
                     Icon(
                         imageVector = Icons.Default.Bookmark,
                         contentDescription = null,
