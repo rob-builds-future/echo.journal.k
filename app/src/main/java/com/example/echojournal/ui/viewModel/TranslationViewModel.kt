@@ -29,13 +29,11 @@ class TranslationViewModel(
     private val textInput = MutableSharedFlow<String>(replay = 1)
 
     init {
-        // hier später fetchUserPreferredLanguage() aufrufen, wenn UserAuthRepo verfügbar ist
-
         // Collector für debounced Input
         viewModelScope.launch {
             textInput
-                .debounce(500)              // 500 ms warten nach letzter Eingabe
-                .filter { it.isNotBlank() } // leere Eingaben ignorieren
+                .debounce(300)
+                .filter { it.isNotBlank() }
                 .collectLatest { txt ->
                     Log.d("TranslationVM", "debounced txt = $txt")
                     translateText(txt)

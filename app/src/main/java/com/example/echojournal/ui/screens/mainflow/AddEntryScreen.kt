@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -76,6 +79,7 @@ fun AddEntryScreen(
     // Theme & Farbe
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
+    val isLightTheme = themeName.equals("Light", ignoreCase = true)
 
     val userTargetLang = prefsViewModel.currentLanguage.collectAsState().value
 
@@ -246,11 +250,12 @@ fun AddEntryScreen(
                         templateMenuExpanded = templateMenuExpanded,
                         onTemplateMenuToggle = { templateMenuExpanded = it },
                         onShowInstructions = { showInstructionDialog = true },
-                        echoColor = echoColor
+                        echoColor = echoColor,
+                        isLightTheme = isLightTheme
                     )
 
                 } else {
-                    // 1. Wenn nicht reversed: zuerst Entry + CombinedRow, dann SwapDivider, dann Translation
+                    // Wenn nicht reversed: zuerst Entry + CombinedRow, dann SwapDivider, dann Translation
                     EntrySection(
                         content = content,
                         onContentChange = {
@@ -261,7 +266,7 @@ fun AddEntryScreen(
                         focusRequester = entryFocusRequester
                     )
 
-                    // 2. → Direkt darunter die kombinierte Zeile:
+                    // Direkt darunter die kombinierte Zeile:
                     CombinedRowUnderEntry(
                         content = content,
                         currentTemplate = currentTemplate,
@@ -272,10 +277,11 @@ fun AddEntryScreen(
                         templateMenuExpanded = templateMenuExpanded,
                         onTemplateMenuToggle = { templateMenuExpanded = it },
                         onShowInstructions = { showInstructionDialog = true },
-                        echoColor = echoColor
+                        echoColor = echoColor,
+                        isLightTheme = isLightTheme
                     )
 
-                    // 3. Dann SwapDivider + TranslationSection
+                    // Dann SwapDivider + TranslationSection
                     SwapDivider { isReversed = !isReversed }
                     TranslationSection(
                         translationText = translationText,
@@ -286,32 +292,74 @@ fun AddEntryScreen(
             }
         }
 
-        // Discard-Alert
+        // Discard-Alert (Änderungen verwerfen?)
         if (showDiscardAlert) {
             AlertDialog(
                 onDismissRequest = { showDiscardAlert = false },
-                title = { Text("Änderungen verwerfen?") },
-                text = { Text("Möchtest du die Änderungen wirklich verwerfen?") },
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = if (isLightTheme) Color.Gray else Color.LightGray,
+                        shape = AlertDialogDefaults.shape // oder z.B. RoundedCornerShape(16.dp)
+                    ),
+                containerColor = MaterialTheme.colorScheme.surface,
+                title = {
+                    Text(
+                        text = "Änderungen verwerfen?",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Möchtest du die Änderungen wirklich verwerfen?",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
                 confirmButton = {
-                    TextButton(onClick = { showDiscardAlert = false }) {
-                        Text(
-                            "Abbrechen"
+                    TextButton(
+                        onClick = { showDiscardAlert = false },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurface
                         )
+                    ) {
+                        Text("Abbrechen")
                     }
                 },
-                dismissButton = { TextButton(onClick = onDismiss) { Text("Verwerfen") } }
+                dismissButton = {
+                    TextButton(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
+                        Text("Verwerfen")
+                    }
+                }
             )
         }
 
-        // Instruction Dialog
+        // Instruction Dialog (Anleitung: ...)
         if (showInstructionDialog) {
             AlertDialog(
                 onDismissRequest = { showInstructionDialog = false },
-                title = { Text("Anleitung: $currentTemplate") },
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = if (isLightTheme) Color.Gray else Color.LightGray,
+                        shape = AlertDialogDefaults.shape // oder z.B. RoundedCornerShape(16.dp)
+                    ),
+                containerColor = MaterialTheme.colorScheme.surface,
+                title = {
+                    Text(
+                        text = "Anleitung: $currentTemplate",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 text = {
-                    // Selection Container für Kopierbarkeit
                     SelectionContainer {
-                        // Je nachdem, welche Vorlage aktuell ausgewählt ist, zeigen wir unterschiedliche Anleitungen
                         val instructionText = when (currentTemplate) {
                             "Produktiver Morgen" -> buildString {
                                 append("1. Überlege dir, was heute dein Hauptziel ist.\n")
@@ -340,18 +388,27 @@ fun AddEntryScreen(
                                 append("3. Reflektiere, warum dir gerade diese Dinge wichtig sind.\n")
                                 append("\nTipp: Dankbarkeit kann auch in kleinen Alltagsmomenten stecken.")
                             }
-                            // Wenn "Keine Vorlage" oder leer, eine generische Anleitung:
+
                             else -> buildString {
                                 append("Du hast aktuell keine Vorlage ausgewählt.\n")
                                 append("Hier kannst du frei schreiben, was dir gerade wichtig ist.\n")
                                 append("Wenn du später gezieltere Fragen möchtest, wähle oben eine Vorlage aus.\n")
                             }
                         }
-                        Text(text = instructionText)
+                        Text(
+                            text = instructionText,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 },
                 confirmButton = {
-                    TextButton(onClick = { showInstructionDialog = false }) {
+                    TextButton(
+                        onClick = { showInstructionDialog = false },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
                         Text("Schließen")
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.mainflow.addEntryScreen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,8 @@ fun CombinedRowUnderEntry(
     templateMenuExpanded: Boolean,
     onTemplateMenuToggle: (Boolean) -> Unit,
     onShowInstructions: () -> Unit,
-    echoColor: Color
+    echoColor: Color,
+    isLightTheme: Boolean
 ) {
     // Wortanzahl berechnen
     val wordCount = remember(content) {
@@ -78,7 +80,15 @@ fun CombinedRowUnderEntry(
         // dropdown-Menü (wird unsichtbar, sobald onDismissRequest gerufen)
         DropdownMenu(
             expanded = templateMenuExpanded,
-            onDismissRequest = { onTemplateMenuToggle(false) }
+            onDismissRequest = { onTemplateMenuToggle(false) },
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = if (isLightTheme) Color.Black else Color.LightGray,
+                    shape = MaterialTheme.shapes.medium
+                ),
+            containerColor = if (isLightTheme) Color.White else MaterialTheme.colorScheme.surface,
+            shape = MaterialTheme.shapes.medium
         ) {
             templateOptions.forEach { option ->
                 DropdownMenuItem(

@@ -14,31 +14,53 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.EntryViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
+import com.example.echojournal.ui.viewModel.TranslationViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TopWordsStatistic(
-    entryViewModel: EntryViewModel = koinViewModel()
+    entryViewModel: EntryViewModel = koinViewModel(),
+    translationViewModel: TranslationViewModel = koinViewModel(),
+    prefsViewModel: PrefsViewModel = koinViewModel()
 ) {
-    // 1. Alle Einträge sammeln
+    // Echo-Farbe aus den Preferences holen
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = ColorManager.getColor(themeName)
+
+    // Alle Einträge sammeln
     val entries by entryViewModel.entries.collectAsState()
 
-    // 2. Worthäufigkeiten berechnen (Wörter mit mindestens 4 Buchstaben)
+    //val stemmer = remember { PorterStemmerEn() }
+
+    // Worthäufigkeiten berechnen (Wörter mit mindestens 4 Buchstaben)
     val topWordEntries = remember(entries) {
         entries
             .flatMap { entry ->
                 entry.content
                     .split("\\s+".toRegex())
-                    .map { it.trim().lowercase() }
+                    .map { raw ->
+                        raw
+                            .trim()
+                            .lowercase()
+                            // Entfernt führende und abschließende Nicht-Buchstaben
+                            .replace(Regex("^[^\\p{L}]+|[^\\p{L}]+\$"), "")
+                    }
                     .filter { it.length >= 4 }
+                    //.map { raw -> stemmer.stem(raw) }
             }
             .groupingBy { it }
             .eachCount()
@@ -79,13 +101,37 @@ fun TopWordsStatistic(
                 val endIndex = minOf(startIndex + 10, topWordEntries.size)
                 Column(modifier = Modifier.padding(vertical = 4.dp)) {
                     for (i in startIndex until endIndex) {
-                        val (word, count) = topWordEntries[i]
-                        val displayWord = word.replaceFirstChar { it.uppercase() }
-                        Text(
-                            text = "$displayWord ($count)",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                            modifier = Modifier.padding(vertical = 2.dp)
-                        )
+                        val (rawWord, count) = topWordEntries[i]
+                        // Großschreiben: nur erster Buchstabe
+                        val displayWord = rawWord.replaceFirstChar { it.uppercaseChar() }
+
+                        // Übersetzung holen
+                        var translation by remember { mutableStateOf<String?>(null) }
+                        LaunchedEffect(rawWord) {
+                            translation = translationViewModel.translateOnce(rawWord)
+                        }
+
+                        // Zeige Original und Übersetzung in einer Zeile
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 2.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "$displayWord ($count)",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                            )
+                            translation?.let {
+                                Text(
+                                    text = it.replaceFirstChar { c -> c.uppercaseChar() },
+                                    color = echoColor,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
                     }
                 }
             }

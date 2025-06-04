@@ -149,16 +149,13 @@ fun StatisticsScreen(
                 }
 
                 // Gradient Overlay oben
-                // Damit der Overlay tatsächlich über dem scrollbaren Content liegt,
-                // benutzen wir BoxScope.align und zIndex.
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(32.dp)
+                        .height(24.dp)
                         .align(Alignment.TopCenter)
                         .zIndex(1f)
                 ) {
-                    // Der Gradient sollte von Hintergrund-Farbe oben -> transparent nach unten laufen
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -182,7 +179,6 @@ fun StatisticsScreen(
                         .align(Alignment.BottomCenter)
                         .zIndex(1f)
                 ) {
-                    // Gradient von transparent oben -> Hintergrund unten
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
