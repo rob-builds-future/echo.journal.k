@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.components.mainflow.statisticsScreen
 
-import ColorManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.DayOfWeek
@@ -39,19 +39,6 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
-/**
- * Kompakter Monats-Kalender mit eigener Monats-Navigation.
- *
- * - Alle Tage < [minDate] (Mitgliedsdatum) sind ausgegraut und nicht klickbar.
- * - Der [minDate]-Tag selbst wird besonders hervorgehoben (Echo-Farbe, fetter Text).
- * - Tage in [entryDates] (Journal-Einträge) werden in Echo-Farbe hinterlegt.
- * - Alle anderen Tage (>= minDate und nicht in entryDates) bleiben normal.
- *
- * @param entryDates Menge aller LocalDate, die in Echo-Farbe markiert werden sollen.
- * @param minDate Optional: Mitgliedsdatum. Tage < minDate sind grau und nicht klickbar.
- * @param onDayClick Callback, wenn ein zulässiger Tag (>= minDate) angeklickt wird.
- * @param cellSize Breite/Höhe jeder Tageszelle (z. B. 36.dp).
- */
 @Composable
 fun CalendarView(
     entryDates: Set<LocalDate>,

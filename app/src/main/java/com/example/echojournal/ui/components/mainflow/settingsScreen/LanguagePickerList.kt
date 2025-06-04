@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.remote.model.util.LanguageDto
 import com.example.echojournal.ui.viewModel.PrefsViewModel
+import com.example.echojournal.ui.viewModel.LanguageViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

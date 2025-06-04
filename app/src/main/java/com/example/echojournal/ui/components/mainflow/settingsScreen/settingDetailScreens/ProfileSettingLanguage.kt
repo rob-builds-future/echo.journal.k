@@ -1,6 +1,7 @@
 
 import androidx.compose.runtime.Composable
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 

@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.screens.mainflow
 
-import ColorManager
 import android.app.DatePickerDialog
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -50,6 +49,7 @@ import com.example.echojournal.ui.components.mainflow.addEntryScreen.CombinedRow
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
@@ -62,9 +62,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-/**
- * Hauptscreen zum Hinzufügen eines Journal-Eintrags.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEntryScreen(

@@ -1,3 +1,5 @@
+package com.example.echojournal.ui.viewModel
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echojournal.data.repository.TranslationApiRepo

@@ -9,10 +9,6 @@ import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 import java.time.ZoneId
 
-/**
- * StatisticsViewModel liest aus EntryViewModel die Liste aller JournalEntry und stellt daraus
- * ein Set<LocalDate> bereit, das an den CalendarView übergeben werden kann.
- */
 class StatisticsViewModel(
     entryViewModel: EntryViewModel
 ) : ViewModel() {

@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.screens.mainflow
 
-import ColorManager
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,6 +47,7 @@ import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.SwapDivider
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.TranslationSection
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel

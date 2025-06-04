@@ -1,6 +1,5 @@
 package com.example.echojournal.di
 
-import LanguageViewModel
 import com.example.echojournal.data.remote.BASE_URL
 import com.example.echojournal.data.remote.LibreTranslateService
 import com.example.echojournal.data.repository.JournalRepo
@@ -16,6 +15,7 @@ import com.example.echojournal.data.repository.UserAuthRepoImpl
 import com.example.echojournal.service.EchoNotificationService
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.EntryViewModel
+import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.StatisticsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel

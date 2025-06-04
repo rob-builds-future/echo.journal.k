@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.screens.mainflow
 
-import ColorManager
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,6 +34,7 @@ import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListT
 import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryRow
 import com.example.echojournal.ui.components.mainflow.entryListScreen.InspirationPopover
 import com.example.echojournal.ui.components.mainflow.entryListScreen.StatisticsHeader
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.util.formatDate

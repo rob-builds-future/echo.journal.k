@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.mainflow.settingsScreen.AppSettingsCard
 import com.example.echojournal.ui.components.mainflow.settingsScreen.InstaButton
 import com.example.echojournal.ui.components.mainflow.settingsScreen.ProfileSettingsCard
-import com.example.echojournal.ui.components.settingsScreen.SettingItem
+import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingItem
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
 import org.koin.androidx.compose.koinViewModel

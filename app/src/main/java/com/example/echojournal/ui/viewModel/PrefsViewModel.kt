@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel für lokale User Prefs, persistent gespeichert via DataStore.
- */
 class PrefsViewModel(
     private val prefsRepo: PrefsRepo
 ) : ViewModel() {

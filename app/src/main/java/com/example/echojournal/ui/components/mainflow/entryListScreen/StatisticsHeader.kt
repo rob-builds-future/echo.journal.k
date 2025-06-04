@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
-import ColorManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -33,7 +33,6 @@ fun StatisticsHeader(
     totalWords: Int,
     totalMinutes: Int
 ) {
-    // Theme aus DataStore holen
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)

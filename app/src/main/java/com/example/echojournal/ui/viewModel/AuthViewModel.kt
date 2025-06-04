@@ -18,9 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel für Sign In / Sign Up.
- */
 class AuthViewModel(
     private val repo: UserAuthRepo,
     private val context: Context,

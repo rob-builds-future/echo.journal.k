@@ -54,10 +54,6 @@ import com.example.echojournal.ui.components.authflow.SignInWithGoogle
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
-/**
- * Sign-In Screen mit Feldern am unteren Rand.
- * Wichtig: windowSoftInputMode="adjustResize" in AndroidManifest setzen.
- */
 @Composable
 fun SignInScreen(
     onSignedIn: () -> Unit,

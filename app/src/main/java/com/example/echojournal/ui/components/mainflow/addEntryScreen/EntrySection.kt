@@ -24,9 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
-/**
- * Schreibbereich mit Inspiration-Overlay und Wortzähler.
- */
 @Composable
 fun EntrySection(
     content: String,
@@ -41,15 +38,6 @@ fun EntrySection(
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(text = content))
     }
-
-//    // Wortanzahl berechnen
-//    val wordCount = remember(textState.text) {
-//        textState.text
-//            .trim()
-//            .split("\\s+".toRegex())
-//            .filter { it.isNotBlank() }
-//            .size
-//    }
 
     // Je nach gewähltem Template den Placeholder‐Text setzen
     val placeholderText = when (currentTemplate) {

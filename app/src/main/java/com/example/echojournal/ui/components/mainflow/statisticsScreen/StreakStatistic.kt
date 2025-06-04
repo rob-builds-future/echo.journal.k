@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.components.mainflow.statisticsScreen
 
-import ColorManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
+import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.StatisticsViewModel
 import org.koin.androidx.compose.koinViewModel

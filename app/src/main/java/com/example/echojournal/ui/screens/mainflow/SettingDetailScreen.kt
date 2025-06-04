@@ -1,6 +1,5 @@
 package com.example.echojournal.ui.screens.mainflow
 
-import LanguageViewModel
 import ProfileSettingLanguage
 import ProfileSettingTheme
 import android.os.Build
@@ -27,6 +26,7 @@ import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDeta
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
 import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 

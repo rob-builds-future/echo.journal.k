@@ -26,9 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Einstellungsbildschirm im Onboarding für Grundoptionen.
- */
 @Composable
 fun PrefsSetupScreen(
     step: Int = 2,

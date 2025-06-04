@@ -1,12 +1,10 @@
+package com.example.echojournal.ui.theme
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.example.echojournal.R
 
-/**
- * ColorManager liefert Farben basierend auf Theme-Namen.
- * Die Farben werden aus den Ressourcen via colorResource() geladen.
- */
 object ColorManager {
     // Map von Theme-Namen zu Resource IDs
     private val themes: Map<String, Int> = mapOf(

@@ -25,9 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.example.echojournal.R
 import com.example.echojournal.ui.components.authflow.EchoSymbol
 
-/**
- * Begrüßungsbildschirm im Onboarding.
- */
 @Composable
 fun WelcomeScreen(
     step: Int = 1,

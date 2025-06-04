@@ -22,9 +22,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Ein vollständig anpassbares Text-Input-Feld basierend auf BasicTextField.
- */
 @Composable
 fun CustomTextEditor(
     value: TextFieldValue,
