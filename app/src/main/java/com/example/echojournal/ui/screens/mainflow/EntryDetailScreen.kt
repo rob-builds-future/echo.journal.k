@@ -1,15 +1,21 @@
 package com.example.echojournal.ui.screens.mainflow
 
 import android.app.DatePickerDialog
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -17,7 +23,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +51,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echojournal.R
@@ -51,6 +63,7 @@ import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
+import com.example.echojournal.util.LanguageUtil
 import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
@@ -68,18 +81,19 @@ fun EntryDetailScreen(
 ) {
     val entryViewModel: EntryViewModel = koinViewModel()
     val translationViewModel: TranslationViewModel = koinViewModel()
-    // Theme aus DataStore holen
     val prefsViewModel: PrefsViewModel = koinViewModel()
+
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
+
+    // Preferred Language (ISO‐Code, z.B. "de", "en", "fr")
+    val preferredLang by prefsViewModel.currentLanguage.collectAsState()
 
     // — UI-State —
     val context = LocalContext.current
     var isEditing by remember { mutableStateOf(false) }
     var isReversed by remember { mutableStateOf(false) }
     var content by remember { mutableStateOf(entry.content) }
-
-    // Live‐State aus dem TranslationViewModel; wird nur im Edit‐Modus genutzt
     val translatedText by translationViewModel.translatedText.collectAsState()
 
     // Dates
@@ -103,7 +117,7 @@ fun EntryDetailScreen(
     var showDiscardDialog by remember { mutableStateOf(false) }
     // Sobald showDatePicker true wird, erzeugen wir einen einzelnen DatePickerDialog:
     if (showDatePicker) {
-        // 1) Dialog anlegen mit Listener für ON_DATE_SET
+        // Dialog anlegen mit Listener für ON_DATE_SET
         val dialog = DatePickerDialog(
             context,
             R.style.NeutralDatePickerDialogTheme, // falls Du einen eigenen Style nutzt
@@ -117,9 +131,9 @@ fun EntryDetailScreen(
             entryDate.monthValue - 1,
             entryDate.dayOfMonth
         )
-        // 2) MaxDate setzen, damit keine Zukunft gewählt werden kann:
+        // MaxDate setzen, damit keine Zukunft gewählt werden kann:
         dialog.datePicker.maxDate = Instant.now().toEpochMilli()
-        // 3) HIER setze ich OnDismissListener, um showDatePicker
+        //    OnDismissListener setzen, um showDatePicker
         //    auch dann auf false zu setzen, wenn der User den Dialog
         //    per Back-Taste oder außerhalb tippen schließt:
         dialog.setOnDismissListener {
@@ -142,6 +156,107 @@ fun EntryDetailScreen(
         if (isEditing) {
             editStartMs = System.currentTimeMillis()
         }
+    }
+
+    // 2) Halte die TTS-Instanz und ob sie initialisiert ist
+    var tts by remember { mutableStateOf<TextToSpeech?>(null) }
+    var ttsInitialized by remember { mutableStateOf(false) }    // erst true, wenn onInit kam
+    var ttsLocale by remember { mutableStateOf<Locale?>(null) }
+
+    var hasShownUnsupportedToast by remember { mutableStateOf(false) }
+    var isSpeaking by remember { mutableStateOf(false) }
+    var showInfoDialog by remember { mutableStateOf(false) }
+
+    // --- Schritt A: TTS-Engine anlegen, OnInit setzen ---
+    LaunchedEffect(Unit) {
+        tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                ttsInitialized = true
+                Log.d("EntryDetailScreen", "TTS-Engine initialisiert")
+            } else {
+                Log.d("EntryDetailScreen", "TTS-Init fehlgeschlagen, status=$status")
+            }
+        }
+    }
+
+    // --- Schritt B: Sobald TTS initialisiert ist UND preferredLang sich ändert,
+    //                 prüfen wir Verfügbarkeit und setzen die Sprache ---
+    LaunchedEffect(ttsInitialized, preferredLang) {
+        if (!ttsInitialized) return@LaunchedEffect
+        val engine = tts ?: return@LaunchedEffect
+
+        // a) Bestimme BCP-47-Tag per Utility (z.B. "pb" → "pt-BR")
+        val desiredTag = LanguageUtil.mapLibreToBcp47(preferredLang)
+        Log.d("EntryDetailScreen", "mapped $preferredLang → $desiredTag")
+
+        // b) Erstelle Locale und prüfe Verfügbarkeit
+        val candidateLocale = Locale.forLanguageTag(desiredTag)
+        when (engine.isLanguageAvailable(candidateLocale)) {
+            TextToSpeech.LANG_AVAILABLE,
+            TextToSpeech.LANG_COUNTRY_AVAILABLE,
+            TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
+                engine.setLanguage(candidateLocale)
+                ttsLocale = candidateLocale
+                hasShownUnsupportedToast = false
+                Log.d("EntryDetailScreen", "TTS-Locale gesetzt auf $desiredTag")
+                return@LaunchedEffect
+            }
+        }
+
+        // c) Fallback: wenn desiredTag "pt-BR", probiere generisches "pt"
+        if (desiredTag.startsWith("pt", ignoreCase = true)) {
+            val genericPt = Locale.forLanguageTag("pt")
+            if (engine.isLanguageAvailable(genericPt) in listOf(
+                    TextToSpeech.LANG_AVAILABLE,
+                    TextToSpeech.LANG_COUNTRY_AVAILABLE,
+                    TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE)
+            ) {
+                engine.setLanguage(genericPt)
+                ttsLocale = genericPt
+                hasShownUnsupportedToast = false
+                Log.d("EntryDetailScreen", "TTS-Fallback auf generisches pt")
+                return@LaunchedEffect
+            }
+        }
+
+        // d) Wenn gar nichts passte: ttsLocale = null, Toast (nur einmal)
+        ttsLocale = null
+        if (!hasShownUnsupportedToast) {
+            Toast.makeText(
+                context,
+                "Keine passende TTS-Sprachdatei für $desiredTag gefunden",
+                Toast.LENGTH_SHORT
+            ).show()
+            hasShownUnsupportedToast = true
+            Log.d("EntryDetailScreen", "Toast: keine passende Sprachdatei für $desiredTag")
+        }
+    }
+
+    // --- Schritt C: TTS-Engine wieder freigeben, wenn der Composable verschwindet ---
+    DisposableEffect(Unit) {
+        onDispose {
+            Log.d("EntryDetailScreen", "TTS-Engine herunterfahren")
+            tts?.stop()
+            tts?.shutdown()
+        }
+    }
+
+    // --- TextToSpeech-Playback-Logik (Listener, um isSpeaking zu steuern) ---
+    LaunchedEffect(tts) {
+        tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+            override fun onStart(utteranceId: String?) {
+                // Sobald TTS wirklich startet, setzen wir isSpeaking = true
+                isSpeaking = true
+            }
+            override fun onDone(utteranceId: String?) {
+                // Wiedergabe beendet – isSpeaking wieder false
+                isSpeaking = false
+            }
+            override fun onError(utteranceId: String?) {
+                // Im Fehlerfall ebenfalls zurücksetzen
+                isSpeaking = false
+            }
+        })
     }
 
     // sobald Edit-Modus gehen, Stoppuhr starten
@@ -279,7 +394,9 @@ fun EntryDetailScreen(
                                 .forEachIndexed { idx, line ->
                                     Text(
                                         text = line,
-                                        style = MaterialTheme.typography.bodyMedium,
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.Bold
+                                        ),
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
@@ -327,7 +444,9 @@ fun EntryDetailScreen(
                                 .forEachIndexed { idx, line ->
                                     Text(
                                         text = line,
-                                        style = MaterialTheme.typography.bodyMedium,
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.Bold
+                                        ),
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                         color = echoColor
                                     )
@@ -337,8 +456,90 @@ fun EntryDetailScreen(
                                 }
                         }
                     }
-                    Spacer(Modifier.weight(1f))
+                    Spacer(Modifier.height(32.dp))
+
+                    // ── Button-Reihe: Vorlesen + Info ──
+                    if (entry.translatedContent.isNotBlank()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(8.dp)
+                        ) {
+                            // 1) Vorlesen/Stop-Button
+                            Button(
+                                onClick = {
+                                    if (isSpeaking) {
+                                        // Wenn aktuell abgespielt wird: Stoppen
+                                        tts?.stop()
+                                        isSpeaking = false
+                                    } else {
+                                        // Ansonsten Vorlesen starten
+                                        tts?.speak(
+                                            entry.translatedContent,
+                                            TextToSpeech.QUEUE_FLUSH,
+                                            null,
+                                            "ENTRY_TTS_ID"
+                                        )
+                                    }
+                                },
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                    containerColor = echoColor,
+                                    contentColor = Color.White
+                                ),
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                            ) {
+                                Icon(
+                                    imageVector = if (isSpeaking) Icons.Default.Stop else Icons.Default.PlayArrow,
+                                    contentDescription = if (isSpeaking) "Stoppen" else "Vorlesen",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = if (isSpeaking) "Stoppen" else "Vorlesen",
+                                    fontSize = 14.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            // 2) Info-Button für Hinweise
+                            IconButton(onClick = { showInfoDialog = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = "Hinweis zur Sprachausgabe",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
+
+                    // ── Info-Dialog anzeigen, wenn showInfoDialog == true ──
+                    if (showInfoDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showInfoDialog = false },
+                            title = { Text("Sprachpaket installieren") },
+                            text = {
+                                Text(
+                                    "Um eine native Stimme für deine Zielsprache zu bekommen, " +
+                                            "muss das entsprechende Sprachpaket in den Android-Einstellungen " +
+                                            "heruntergeladen werden.\n\n" +
+                                            "Gehe dazu auf:\n" +
+                                            "Einstellungen → System → Sprache & Eingabe → " +
+                                            "Text-zu-Sprache-Ausgabe → Sprachdaten installieren → " +
+                                            "<Gewünschte Sprache> herunterladen."
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showInfoDialog = false }) {
+                                    Text("Verstanden")
+                                }
+                            }
+                        )
+                    }
                 }
+
 
                 // Verwerfen-Dialog
                 if (showDiscardDialog) {
