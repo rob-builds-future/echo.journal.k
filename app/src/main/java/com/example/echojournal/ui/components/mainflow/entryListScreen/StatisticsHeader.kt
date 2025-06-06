@@ -1,6 +1,7 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +21,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -53,7 +56,7 @@ fun StatisticsHeader(
         ) {
             Icon(
                 imageVector    = Icons.Default.FormatQuote,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.contentdesc_quote),
                 modifier       = Modifier.size(16.dp),
                 tint = echoColor
             )
@@ -66,7 +69,7 @@ fun StatisticsHeader(
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text     = "Worte",
+                text     = stringResource(R.string.text_words),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color    = MaterialTheme.colorScheme.onBackground
@@ -90,7 +93,7 @@ fun StatisticsHeader(
         ) {
             Icon(
                 imageVector    = Icons.Default.Schedule,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.contentdesc_timer),
                 modifier       = Modifier.size(16.dp),
                 tint = echoColor
             )
@@ -103,7 +106,7 @@ fun StatisticsHeader(
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text     = "Minuten",
+                text     = stringResource(R.string.text_minutes),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color    = MaterialTheme.colorScheme.onBackground

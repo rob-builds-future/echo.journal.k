@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkRemove
@@ -34,9 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.data.remote.model.JournalEntry
+import com.example.echojournal.util.customCornerShape
 import com.example.echojournal.util.formatDate
 
 @Composable
@@ -53,8 +58,10 @@ fun EntryRow(
         .split("\\s+".toRegex())
         .filter { it.isNotBlank() }
         .size
-
-    val dateStr = formatDate(entry.createdAt)
+    // LocalContext holen, um an die richtige Locale zu kommen:
+    val context = LocalContext.current
+    val locale = context.resources.configuration.locales.get(0)
+    val dateStr: String = formatDate(entry.createdAt, locale)
 
     ShadowCard(
         onClick = { onClick() },
@@ -65,7 +72,7 @@ fun EntryRow(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .width(100.dp)
+                    .wrapContentWidth()
                     .background(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = customCornerShape(
@@ -92,7 +99,7 @@ fun EntryRow(
                         .padding(horizontal = 8.dp)
                 ) {
                     Column {
-                        // Paragraph logic for manual line breaks
+                        // Paragraph-Logik für manuelle Zeilenumbrüche
                         val lines = entry.content.split("\n")
                         lines.forEachIndexed { idx, line ->
                             Text(
@@ -110,7 +117,7 @@ fun EntryRow(
                 }
                 Spacer(Modifier.height(8.dp))
 
-                // Menü Button
+                // Menü-Button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -130,7 +137,7 @@ fun EntryRow(
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More",
+                            contentDescription = stringResource(R.string.contentdesc_more),
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
@@ -139,7 +146,7 @@ fun EntryRow(
                         onDismissRequest = { menuExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Show Entry") },
+                            text = { Text(stringResource(R.string.menu_show_entry)) },
                             onClick = {
                                 menuExpanded = false
                                 onClick()
@@ -147,13 +154,18 @@ fun EntryRow(
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.Visibility,
-                                    contentDescription = null
+                                    contentDescription = stringResource(R.string.contentdesc_show_entry)
                                 )
                             }
                         )
                         DropdownMenuItem(
                             text = {
-                                Text(if (entry.favorite) "Unfavorite" else "Favorite")
+                                Text(
+                                    if (entry.favorite)
+                                        stringResource(R.string.menu_unfavorite)
+                                    else
+                                        stringResource(R.string.menu_favorite)
+                                )
                             },
                             onClick = {
                                 menuExpanded = false
@@ -165,19 +177,25 @@ fun EntryRow(
                                         Icons.Default.BookmarkRemove
                                     else
                                         Icons.Default.Bookmark,
-                                    contentDescription = null
+                                    contentDescription = if (entry.favorite)
+                                        stringResource(R.string.contentdesc_unfavorite)
+                                    else
+                                        stringResource(R.string.contentdesc_favorite)
                                 )
                             }
                         )
                         HorizontalDivider()
                         DropdownMenuItem(
-                            text = { Text("Delete") },
+                            text = { Text(stringResource(R.string.menu_delete)) },
                             onClick = {
                                 menuExpanded = false
                                 onDelete()
                             },
                             leadingIcon = {
-                                Icon(Icons.Default.Delete, contentDescription = null)
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = stringResource(R.string.contentdesc_delete)
+                                )
                             }
                         )
                     }
@@ -194,7 +212,7 @@ fun EntryRow(
                 if (entry.favorite) {
                     Icon(
                         imageVector = Icons.Default.Bookmark,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.contentdesc_favorite),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -209,13 +227,13 @@ fun EntryRow(
                 }
                 Icon(
                     imageVector = Icons.Default.FormatQuote,
-                    contentDescription = "Quote",
+                    contentDescription = stringResource(R.string.contentdesc_quote),
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = "$count",
+                    text = count.toString(),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -230,13 +248,13 @@ fun EntryRow(
                 Spacer(Modifier.width(4.dp))
                 Icon(
                     imageVector = Icons.Default.Timer,
-                    contentDescription = "Timer",
+                    contentDescription = stringResource(R.string.contentdesc_timer),
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = "${entry.duration} min",
+                    text = "${entry.duration} ${stringResource(R.string.text_minutes)}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -79,7 +80,6 @@ fun SignInScreen(
             Toast
                 .makeText(context, error, Toast.LENGTH_SHORT)
                 .show()
-            // Optional: danach das Error-State wieder zurücksetzen
             viewModel.clearError()
         }
     }
@@ -97,7 +97,7 @@ fun SignInScreen(
 
     val backgroundPainter = painterResource(id = R.drawable.background)
 
-    // einheitliche TextField-Farben
+    // TextField-Farben
     val textFieldColors = TextFieldDefaults.colors(
         focusedContainerColor = MaterialTheme.colorScheme.surface,
         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -105,14 +105,13 @@ fun SignInScreen(
         unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
     )
 
-    // Button-Farben: primary / onPrimary drehen sich je nach Theme
+    // Button-Farben
     val buttonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         contentColor = MaterialTheme.colorScheme.primary
     )
 
     Scaffold { paddingValues ->
-        // Painter oder Video Player
         Box(Modifier.fillMaxSize()) {
             // ─── Hintergrundbild ───────────────────────────
             Image(
@@ -129,7 +128,7 @@ fun SignInScreen(
                     .background(Color.Black.copy(alpha = 0.5f))
             )
 
-            // ─── Bestehende UI ───────────────────────
+            // ─── UI im Vordergrund ───────────────────────
             Box(
                 Modifier
                     .fillMaxSize()
@@ -154,10 +153,12 @@ fun SignInScreen(
                         modifier = Modifier.padding(top = 32.dp)
                     )
                     Spacer(modifier = Modifier.weight(1f))
+
+                    // ─── E-Mail Feld ─────────────────────────
                     OutlinedTextField(
                         value = email,
                         onValueChange = { viewModel.email.value = it },
-                        label = { Text("Email") },
+                        label = { Text(stringResource(R.string.label_email)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -172,10 +173,11 @@ fun SignInScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // ─── Passwort Feld ───────────────────────
                     OutlinedTextField(
                         value = password,
                         onValueChange = { viewModel.password.value = it },
-                        label = { Text("Passwort") },
+                        label = { Text(stringResource(R.string.label_password)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(
@@ -196,6 +198,7 @@ fun SignInScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // ─── Anmelden-Button ──────────────────────
                     Button(
                         onClick = { viewModel.signIn() },
                         enabled = !loading,
@@ -206,24 +209,27 @@ fun SignInScreen(
                         colors = buttonColors,
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                     ) {
-                        if (loading) CircularProgressIndicator(
-                            modifier = Modifier.size(
-                                24.dp
-                            )
-                        )
-                        else Text("Anmelden")
+                        if (loading) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        } else {
+                            Text(stringResource(R.string.button_sign_in))
+                        }
                     }
+
                     Spacer(modifier = Modifier.height(32.dp))
 
+                    // ─── OR Separator ─────────────────────────
                     Text(
-                        text = "ODER",
+                        text = stringResource(R.string.text_or),
                         color = Color.White,
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(Alignment.CenterHorizontally)
                     )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // ─── Google Sign-In ───────────────────────
                     SignInWithGoogle(
                         onClick = { viewModel.signInWithGoogleOneTap(activity) },
                         modifier = Modifier
@@ -233,14 +239,14 @@ fun SignInScreen(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    // Wechsel zu Signup
+                    // ─── Wechsel zu Signup ───────────────────
                     TextButton(
                         onClick = { onSignUpClick() },
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Noch keinen Account? Registrieren",
-                            color = Color.White,
+                            text = stringResource(R.string.text_no_account_sign_up),
+                            color = Color.White
                         )
                     }
                 }

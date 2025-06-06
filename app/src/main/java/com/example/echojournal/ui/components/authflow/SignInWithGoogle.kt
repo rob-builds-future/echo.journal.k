@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.example.echojournal.R
 
 @Composable
@@ -21,7 +22,7 @@ fun SignInWithGoogle(
 
     Image(
         painter            = painterResource(id = res),
-        contentDescription = "Mit Google anmelden",
+        contentDescription = stringResource(R.string.contentdesc_sign_in_with_google),
         modifier           = modifier
             .clickable(onClick = onClick)
     )

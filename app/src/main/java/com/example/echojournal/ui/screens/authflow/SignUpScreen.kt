@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -70,26 +71,25 @@ fun SignUpScreen(
     val error by viewModel.error.collectAsState()
     val context = LocalContext.current
 
-    // Toast, wenn error sich ändert
     LaunchedEffect(error) {
         error?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            viewModel.clearError()  // damit der Toast nicht ständig neu feuert
+            viewModel.clearError()
         }
     }
 
-    // Focus- & Keyboard-Controller
+    // Fokus & Keyboard
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val emailRequester = remember { FocusRequester() }
     val passwordRequester = remember { FocusRequester() }
 
-    // Regex für Passwort-Validierung
+    // Passwort-Validierung
     val passwordValid = remember(password) {
         Regex("""^(?=.*[A-Z])(?=.*\d).{8,}$""").matches(password)
     }
 
-    // sobald eingeloggt, weiter
+    // Navigation nach erfolgreichem SignUp
     if (user != null) {
         onSignedUp()
         return
@@ -97,7 +97,6 @@ fun SignUpScreen(
 
     val backgroundPainter = painterResource(id = R.drawable.background)
 
-    // einheitliche TextField-Farben
     val textFieldColors = TextFieldDefaults.colors(
         focusedContainerColor   = MaterialTheme.colorScheme.surface,
         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -105,16 +104,14 @@ fun SignUpScreen(
         unfocusedLabelColor     = MaterialTheme.colorScheme.onSurface
     )
 
-    // Button-Farben: primary / onPrimary drehen sich je nach Theme
     val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor        = MaterialTheme.colorScheme.onPrimary,
         disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
-        contentColor   = MaterialTheme.colorScheme.primary,
-        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-        )
+        contentColor          = MaterialTheme.colorScheme.primary,
+        disabledContentColor  = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    )
 
     Scaffold { insets ->
-        // Painter oder Video Player
         Box(Modifier.fillMaxSize()) {
             // ─── Hintergrundbild ───────────────────────────
             Image(
@@ -131,12 +128,12 @@ fun SignUpScreen(
                     .background(Color.Black.copy(alpha = 0.5f))
             )
 
-            // ─── Bestehende UI ───────────────────────
+            // ─── UI im Vordergrund ───────────────────────
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(insets)
-                    .imePadding() // passt Layout bei geöffneter Tastatur an
+                    .imePadding()
                     .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp),
@@ -150,11 +147,12 @@ fun SignUpScreen(
                     modifier = Modifier.padding(top = 32.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                // Benutzername
+
+                // ─── Benutzername ───────────────────────────
                 OutlinedTextField(
                     value = username,
                     onValueChange = { viewModel.username.value = it },
-                    label = { Text("Benutzername") },
+                    label = { Text(stringResource(R.string.label_username)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -168,11 +166,11 @@ fun SignUpScreen(
                 )
                 Spacer(Modifier.height(8.dp))
 
-                // E-Mail
+                // ─── E-Mail ────────────────────────────────
                 OutlinedTextField(
                     value = email,
                     onValueChange = { viewModel.email.value = it },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.label_email)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -188,11 +186,11 @@ fun SignUpScreen(
                 )
                 Spacer(Modifier.height(8.dp))
 
-                // Passwort
+                // ─── Passwort ──────────────────────────────
                 OutlinedTextField(
                     value = password,
                     onValueChange = { viewModel.password.value = it },
-                    label = { Text("Passwort") },
+                    label = { Text(stringResource(R.string.label_password)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -211,13 +209,15 @@ fun SignUpScreen(
                     colors = textFieldColors
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                // ─── Passwort-Anforderungstext ────────────
                 Text(
-                    text = "Mindestens 8 Zeichen, 1 Großbuchstabe & 1 Zahl",
+                    text = stringResource(R.string.text_password_requirements),
                     style = MaterialTheme.typography.bodySmall,
                     color = when {
                         password.isEmpty() -> Color.White
-                        passwordValid -> colorResource(id = R.color.Smaragdgrün)
-                        else -> MaterialTheme.colorScheme.error
+                        passwordValid       -> colorResource(id = R.color.Smaragdgrün)
+                        else                -> MaterialTheme.colorScheme.error
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -225,14 +225,13 @@ fun SignUpScreen(
                 )
                 Spacer(Modifier.height(16.dp))
 
-                // Registrieren-Button nur aktiv, wenn alle Felder gefüllt & Passwort valid
+                // ─── Registrieren-Button ───────────────────
                 val canRegister =
                     username.isNotBlank() &&
                             email.isNotBlank() &&
                             passwordValid &&
                             !loading
 
-                // Registrieren-Button
                 Button(
                     onClick = { viewModel.signUp() },
                     enabled = canRegister,
@@ -243,21 +242,20 @@ fun SignUpScreen(
                     colors = buttonColors,
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
-                    if (loading) CircularProgressIndicator(
-                        modifier = Modifier.size(
-                            24.dp
-                        )
-                    )
-                    else Text("Registrieren")
+                    if (loading) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    } else {
+                        Text(stringResource(R.string.button_register))
+                    }
                 }
                 Spacer(Modifier.height(8.dp))
 
-                // Link zum Login
+                // ─── Link zum Login ────────────────────────
                 TextButton(onClick = { onSignInClick() }) {
                     Text(
-                        text = "Bereits registriert? Anmelden",
+                        text = stringResource(R.string.text_already_registered_sign_in),
                         color = Color.White
-                        )
+                    )
                 }
             }
         }

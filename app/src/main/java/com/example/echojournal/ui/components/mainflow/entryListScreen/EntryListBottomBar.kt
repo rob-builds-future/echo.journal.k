@@ -21,8 +21,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -46,7 +48,7 @@ fun EntryListBottomBar(
         IconButton(onClick = onToggleFavorites) {
             Icon(
                 imageVector = if (showFavoritesOnly) Icons.Default.BookmarkRemove else Icons.Default.Bookmark,
-                contentDescription = "Favoriten"
+                contentDescription = stringResource(R.string.contentdesc_favorites)
             )
         }
         Spacer(Modifier.weight(1f))
@@ -59,7 +61,10 @@ fun EntryListBottomBar(
             contentColor = MaterialTheme.colorScheme.onPrimary     // Weiß im Light, Schwarz im Dark
         ) {
             IconButton(onClick = onAddClick) {
-                Icon(Icons.Default.Add, contentDescription = "Neuer Eintrag")
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = stringResource(R.string.contentdesc_new_entry)
+                )
             }
         }
         Spacer(Modifier.weight(1f))

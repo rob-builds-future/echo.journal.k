@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.mainflow.entryListScreen
+package com.example.echojournal.util
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.Dp

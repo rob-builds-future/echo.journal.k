@@ -21,7 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.TranslationViewModel
@@ -32,110 +35,75 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import kotlin.random.Random
+import java.util.Locale
 
 @Composable
 fun InspirationPopover(
     onDismiss: () -> Unit
 ) {
-    // 1) Fetch TranslationViewModel via Koin
+    // 1) ViewModels holen
     val translationViewModel: TranslationViewModel = koinViewModel()
-    // 2) Fetch PrefsViewModel via Koin to read current theme
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()
-    // Get the “echo” color from ColorManager
     val echoColor = ColorManager.getColor(themeName)
-
-    // Determine whether we’re in “light mode” (you can adjust the string check if you use a different naming convention)
     val isLightTheme = themeName.equals("Light", ignoreCase = true)
 
-    // UI state: loading / result / error
+    // 2) Context + Locale
+    val context = LocalContext.current
+    // ab API 24: configuration.locales.get(0), sonst configuration.locale
+    val locale: Locale = context.resources.configuration.locales.get(0)
+
+    // 3) UI-State
     var isLoading by remember { mutableStateOf(true) }
-    var inspirationText by remember { mutableStateOf<String?>(null) }
+    var inspirationOriginal by remember { mutableStateOf<String?>(null) }
+    var inspirationTranslated by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    // Title state (original vs. translated)
-    val originalTitle = "Inspiration"
-    var translatedTitle by remember { mutableStateOf<String?>(null) }
-
-    // Content state (translated vs. original)
-    var translatedContent by remember { mutableStateOf<String?>(null) }
-
-    // Toggle: show original or translated?
     var showTranslated by remember { mutableStateOf(false) }
 
-    // 3) Load a random “inspiration” from Firestore exactly once
+    // 4) Titel‐Text (wird per strings.xml lokalisiert)
+    val defaultTitle = stringResource(R.string.title_inspiration)
+
+    // 5) Firestore‐Ladevorgang
     LaunchedEffect(Unit) {
         try {
             val firestore = FirebaseFirestore.getInstance()
-            val snapshot = firestore
-                .collection("inspirations")
-                .get()
-                .await()
-
+            val snapshot = firestore.collection("inspirations").get().await()
             if (snapshot.isEmpty) {
-                errorMessage = "Keine Inspirationen gefunden."
+                errorMessage = context.getString(R.string.error_no_inspirations)
             } else {
-                val textes = snapshot.documents.mapNotNull { doc ->
-                    doc.getString("text")
+                val randomDoc = snapshot.documents.random()
+                val tag = locale.toString().lowercase() // z. B. "de", "pt_br", "en_us"
+                inspirationOriginal = when {
+                    tag.startsWith("de")    -> randomDoc.getString("text_de")
+                    tag.startsWith("pt_br") -> randomDoc.getString("text_pt_BR")
+                    else                     -> randomDoc.getString("text_en")
                 }
-                if (textes.isEmpty()) {
-                    errorMessage = "Keine gültigen Texte."
-                } else {
-                    val randomIndex = Random.nextInt(textes.size)
-                    inspirationText = textes[randomIndex]
+                // Fallback auf Englisch, falls leer
+                if (inspirationOriginal.isNullOrBlank()) {
+                    inspirationOriginal = randomDoc.getString("text_en")
                 }
             }
         } catch (e: Exception) {
-            errorMessage = "Fehler beim Laden: ${e.localizedMessage}"
+            errorMessage = context.getString(
+                R.string.error_loading_inspiration,
+                e.localizedMessage ?: ""
+            )
         } finally {
             isLoading = false
         }
     }
 
-    // 4) Whenever the user toggles “Übersetzen”, trigger one‐time translation for both title & content
-    LaunchedEffect(showTranslated) {
-        if (showTranslated && !isLoading && errorMessage == null) {
-            // Translate title
-            CoroutineScope(Dispatchers.IO).launch {
-                val tTitle = translationViewModel.translateOnce(originalTitle)
-                withContext(Dispatchers.Main) {
-                    translatedTitle = tTitle
-                }
-            }
-            // Translate content, if present
-            inspirationText?.let { text ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    val tContent = translationViewModel.translateOnce(text)
-                    withContext(Dispatchers.Main) {
-                        translatedContent = tContent
-                    }
-                }
-            }
-        } else if (!showTranslated) {
-            translatedTitle = null
-            translatedContent = null
-        }
-    }
+    // 6) On-Demand-Übersetzung: Nur starten, wenn User klickt
+    //    => Wir binden diesen Code in den Button-OnClick statt in LaunchedEffect.
 
-    // 5) Show the AlertDialog with customized colors
+    // 7) AlertDialog-UI
     AlertDialog(
         onDismissRequest = onDismiss,
-        // Force background to white in light mode, black in dark mode:
         containerColor = if (isLightTheme) Color.White else Color.Black,
         title = {
-            // Decide which title to show, and which color:
-            val titleText = if (showTranslated && translatedTitle != null) translatedTitle!! else originalTitle
-            val titleColor = if (showTranslated) {
-                // Translated → always echoColor
-                echoColor
-            } else {
-                // Original → black in light, white in dark
-                if (isLightTheme) Color.Black else Color.White
-            }
             Text(
-                text = titleText,
-                color = titleColor,
+                text = defaultTitle,
+                color = if (isLightTheme) Color.Black else Color.White,
                 style = MaterialTheme.typography.titleMedium
             )
         },
@@ -146,7 +114,7 @@ fun InspirationPopover(
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = "Lade…",
+                            text = stringResource(R.string.text_loading),
                             color = if (isLightTheme) Color.Black else Color.White,
                             style = MaterialTheme.typography.bodyMedium
                         )
@@ -159,26 +127,22 @@ fun InspirationPopover(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                inspirationText != null -> {
-                    if (showTranslated) {
-                        // If translation is still in flight, show a placeholder
-                        val out = translatedContent ?: "Übersetzung wird geladen…"
-                        Text(
-                            text = out,
-                            color = echoColor,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
+                inspirationOriginal != null -> {
+                    // Hier entscheiden wir, ob Original oder bereits übersetzt angezeigt wird:
+                    val displayText = if (showTranslated && inspirationTranslated != null) {
+                        inspirationTranslated!!
                     } else {
-                        Text(
-                            text = inspirationText!!,
-                            color = if (isLightTheme) Color.Black else Color.White,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
+                        inspirationOriginal!!
                     }
+                    Text(
+                        text = displayText,
+                        color = if (isLightTheme) Color.Black else Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
                 else -> {
                     Text(
-                        text = "Unbekannter Fehler.",
+                        text = stringResource(R.string.error_unknown),
                         color = if (isLightTheme) Color.Black else Color.White,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -190,8 +154,29 @@ fun InspirationPopover(
                 modifier = Modifier.padding(end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 6) “Übersetzen” / “Original anzeigen” toggle button (only if we have text and no error)
-                if (inspirationText != null && !isLoading && errorMessage == null) {
+                // 8) Übersetzen-/Original-Toggle-Button
+                if (!isLoading && inspirationOriginal != null && inspirationTranslated == null) {
+                    // Erste Übersetzung noch nicht gemacht
+                    Button(
+                        onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val tContent = translationViewModel.translateOnce(inspirationOriginal!!)
+                                withContext(Dispatchers.Main) {
+                                    inspirationTranslated = tContent
+                                    showTranslated = true
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isLightTheme) Color.Black else Color.White,
+                            contentColor = if (isLightTheme) Color.White else Color.Black
+                        )
+                    ) {
+                        Text(text = stringResource(R.string.button_translate))
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                } else if (inspirationTranslated != null) {
+                    // Bereits übersetzt – hier Toggle zwischen Original & Übersetzung erlauben
                     Button(
                         onClick = { showTranslated = !showTranslated },
                         colors = ButtonDefaults.buttonColors(
@@ -200,14 +185,18 @@ fun InspirationPopover(
                         )
                     ) {
                         Text(
-                            text = if (showTranslated) "Original anzeigen" else "Übersetzen"
+                            text = if (showTranslated)
+                                stringResource(R.string.button_show_original)
+                            else
+                                stringResource(R.string.button_translate)
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
-                // 7) “OK”‐Button to close
+
+                // 9) OK-Button
                 Button(
                     onClick = onDismiss,
                     colors = ButtonDefaults.buttonColors(
@@ -215,7 +204,7 @@ fun InspirationPopover(
                         contentColor = if (isLightTheme) Color.White else Color.Black
                     )
                 ) {
-                    Text(text = "OK")
+                    Text(text = stringResource(R.string.button_ok))
                 }
             }
         }

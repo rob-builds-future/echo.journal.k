@@ -22,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.echojournal.R
 import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListBottomBar
 import com.example.echojournal.ui.components.mainflow.entryListScreen.EntryListTopBar
@@ -55,8 +57,7 @@ fun EntryListScreen(
     val echoColor = ColorManager.getColor(themeName)
     val username by prefsViewModel.username.collectAsState()
 
-
-    // Favoriten Filter State und Filterung
+    // Favoriten-Filter State
     var showFavoritesOnly by remember { mutableStateOf(false) }
     val displayed = remember(allEntries, showFavoritesOnly) {
         allEntries.filter { !showFavoritesOnly || it.favorite }
@@ -79,9 +80,9 @@ fun EntryListScreen(
         displayed.sumOf { it.duration }
     }
 
-    // Titel nun aus PrefsViewModel.username statt aus AuthViewModel.user
+    // Titel aus PrefsViewModel.username (vorerst unverändert gelassen)
     val title = buildAnnotatedString {
-        val userName = if (username.isNotBlank()) username else "Dein"
+        val userName = username.ifBlank { stringResource(R.string.text_your) }
         append("$userName’s ")
         withStyle(
             style = SpanStyle(
@@ -93,7 +94,7 @@ fun EntryListScreen(
         }
     }
 
-    // Context für date
+    // Context für Toast
     val context = LocalContext.current
 
     Scaffold(
@@ -119,6 +120,7 @@ fun EntryListScreen(
                 .fillMaxSize()
         ) {
             LazyColumn {
+
                 item {
                     StatisticsHeader(
                         totalWords = totalWords,
@@ -134,8 +136,12 @@ fun EntryListScreen(
                             viewModel.toggleFavorite(entry)
 
                             val dateString = formatDate(entry.createdAt)
-                            val action =
-                                if (!entry.favorite) "favorisiert" else "aus Favoriten entfernt"
+                            // Hier getString() statt stringResource() verwenden:
+                            val action = if (!entry.favorite)
+                                context.getString(R.string.action_favorited)
+                            else
+                                context.getString(R.string.action_unfavorited)
+
                             Toast.makeText(
                                 context,
                                 "$dateString $action.",

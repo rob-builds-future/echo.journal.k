@@ -9,7 +9,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import com.example.echojournal.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,15 +21,21 @@ fun EntryListTopBar(
     onStatsClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(title) } ,
+        title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = onStatsClick) {
-                Icon(imageVector = Icons.Default.Insights, contentDescription = "Erfolg & Meilensteine")
+                Icon(
+                    imageVector = Icons.Default.Insights,
+                    contentDescription = stringResource(R.string.contentdesc_stats)
+                )
             }
         },
         actions = {
             IconButton(onClick = onSettingsClick) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Settings")
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.contentdesc_settings)
+                )
             }
         }
     )

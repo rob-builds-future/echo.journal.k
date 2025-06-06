@@ -1,16 +1,63 @@
 <resources>
-
+    <!-- App-Name -->
     <string name="app_name">echo.journal</string>
 
-    <string name="error_user_not_found">Nutzerkonto nicht gefunden.</string>
-    <string name="error_invalid_password">Falsches Passwort.</string>
-    <string name="error_email_already_in_use">E-Mail wird schon verwendet.</string>
-    <string name="error_no_network">Keine Internetverbindung.</string>
-    <string name="error_generic">Ein Fehler ist aufgetreten.</string>
-    <string name="error_email_required">Bitte gib deine E-Mail ein.</string>
-    <string name="error_password_required">Bitte gib ein Passwort ein.</string>
-    <string name="error_invalid_email_format">Bitte gib eine gültige E-Mail ein.</string>
-    <string name="error_username_required">Bitte gib einen Benutzernamen ein.</string>
-    <string name="error_password_weak">Das Passwort ist zu schwach.</string>
+    <!-- Fehlermeldungen (bestehende Einträge) -->
+    <string name="error_user_not_found">User account not found.</string>
+    <string name="error_invalid_password">Invalid password.</string>
+    <string name="error_email_already_in_use">Email is already in use.</string>
+    <string name="error_no_network">No internet connection.</string>
+    <string name="error_generic">An error has occurred.</string>
+    <string name="error_email_required">Please enter your email.</string>
+    <string name="error_password_required">Please enter a password.</string>
+    <string name="error_invalid_email_format">Please enter a valid email.</string>
+    <string name="error_username_required">Please enter a username.</string>
+    <string name="error_password_weak">Password is too weak.</string>
 
+    <!-- Sign-In Screen -->
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="button_sign_in">Sign In</string>
+    <string name="text_or">OR</string>
+    <string name="text_no_account_sign_up">No account yet? Sign Up</string>
+    <string name="contentdesc_sign_in_with_google">Sign in with Google</string>
+
+    <!-- Sign-Up Screen -->
+    <string name="label_username">Username</string>
+    <string name="text_password_requirements">At least 8 characters, 1 uppercase letter &amp; 1 number</string>
+    <string name="button_register">Register</string>
+    <string name="text_already_registered_sign_in">Already registered? Sign In</string>
+
+    <!-- MainFlow Entry List -->
+    <string name="action_favorited">favorited</string>
+    <string name="action_unfavorited">removed from favorites</string>
+    <string name="contentdesc_favorites">Favorites</string>
+    <string name="contentdesc_new_entry">New entry</string>
+    <string name="contentdesc_stats">Stats &amp; milestones</string>
+    <string name="contentdesc_settings">Settings</string>
+    <string name="contentdesc_more">More</string>
+    <string name="contentdesc_show_entry">Show entry</string>
+    <string name="contentdesc_favorite">Favorite</string>
+    <string name="contentdesc_unfavorite">Unfavorite</string>
+    <string name="contentdesc_delete">Delete</string>
+    <string name="contentdesc_quote">Quote</string>
+    <string name="contentdesc_timer">Timer</string>
+    <string name="menu_show_entry">Show Entry</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_unfavorite">Unfavorite</string>
+    <string name="menu_delete">Delete</string>
+    <string name="text_words">Words</string>
+    <string name="text_minutes">Minutes</string>
+    <string name="text_your">Your</string>
+
+    <!-- Inspiration Popover -->
+    <string name="title_inspiration">Inspiration</string>
+    <string name="error_no_inspirations">No inspirations found.</string>
+    <string name="error_no_valid_texts">No valid texts.</string>
+    <string name="error_loading_inspiration">Error loading: %s</string>
+    <string name="text_loading">Loading…</string>
+    <string name="error_unknown">Unknown error.</string>
+    <string name="button_translate">Translate</string>
+    <string name="button_show_original">Show Original</string>
+    <string name="button_ok">OK</string>
 </resources>

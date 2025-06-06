@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     // Google für Firebase
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -48,6 +49,7 @@ android {
 
 dependencies {
 
+
     // Desugaring-Bibliothek für Java 8-APIs
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
@@ -75,6 +77,8 @@ dependencies {
     implementation(libs.googleid)
     // Firebase Firestore
     implementation(libs.firebase.firestore)
+    // Firebase Crashlytics
+    implementation(libs.firebase.crashlytics)
     // extended icons
     implementation(libs.androidx.compose.material.icons.extended)
     // viewmodel

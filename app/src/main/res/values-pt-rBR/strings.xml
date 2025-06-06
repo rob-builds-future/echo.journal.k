@@ -1,0 +1,63 @@
+<resources>
+    <!-- App-Name -->
+    <string name="app_name">echo.journal</string>
+
+    <!-- Fehlermeldungen (bestehende Einträge) -->
+    <string name="error_user_not_found">Conta de usuário não encontrada.</string>
+    <string name="error_invalid_password">Senha inválida.</string>
+    <string name="error_email_already_in_use">E-mail já está em uso.</string>
+    <string name="error_no_network">Sem conexão com a internet.</string>
+    <string name="error_generic">Ocorreu um erro.</string>
+    <string name="error_email_required">Por favor, insira seu e-mail.</string>
+    <string name="error_password_required">Por favor, insira uma senha.</string>
+    <string name="error_invalid_email_format">Por favor, insira um e-mail válido.</string>
+    <string name="error_username_required">Por favor, insira um nome de usuário.</string>
+    <string name="error_password_weak">A senha é muito fraca.</string>
+
+    <!-- Sign-In Screen -->
+    <string name="label_email">E-mail</string>
+    <string name="label_password">Senha</string>
+    <string name="button_sign_in">Entrar</string>
+    <string name="text_or">OU</string>
+    <string name="text_no_account_sign_up">Ainda não tem conta? Cadastre-se</string>
+    <string name="contentdesc_sign_in_with_google">Entrar com o Google</string>
+
+    <!-- Sign-Up Screen -->
+    <string name="label_username">Nome de usuário</string>
+    <string name="text_password_requirements">Pelo menos 8 caracteres, 1 letra maiúscula &amp; 1 número</string>
+    <string name="button_register">Registrar</string>
+    <string name="text_already_registered_sign_in">Já registrado? Entrar</string>
+
+    <!-- MainFlow Entry List -->
+    <string name="action_favorited">favoritado</string>
+    <string name="action_unfavorited">removido dos favoritos</string>
+    <string name="contentdesc_favorites">Favoritos</string>
+    <string name="contentdesc_new_entry">Nova entrada</string>
+    <string name="contentdesc_stats">Estatísticas e marcos</string>
+    <string name="contentdesc_settings">Configurações</string>
+    <string name="contentdesc_more">Mais</string>
+    <string name="contentdesc_show_entry">Mostrar entrada</string>
+    <string name="contentdesc_favorite">Favoritar</string>
+    <string name="contentdesc_unfavorite">Remover favorito</string>
+    <string name="contentdesc_delete">Excluir</string>
+    <string name="contentdesc_quote">Citação</string>
+    <string name="contentdesc_timer">Cronômetro</string>
+    <string name="menu_show_entry">Mostrar entrada</string>
+    <string name="menu_favorite">Favoritar</string>
+    <string name="menu_unfavorite">Remover favorito</string>
+    <string name="menu_delete">Excluir</string>
+    <string name="text_words">Palavras</string>
+    <string name="text_minutes">Minutos</string>
+    <string name="text_your">Seu</string>
+
+    <!-- Inspiration Popover -->
+    <string name="title_inspiration">Inspiração</string>
+    <string name="error_no_inspirations">Nenhuma inspiração encontrada.</string>
+    <string name="error_no_valid_texts">Nenhum texto válido.</string>
+    <string name="error_loading_inspiration">Erro ao carregar: %s</string>
+    <string name="text_loading">Carregando…</string>
+    <string name="error_unknown">Erro desconhecido.</string>
+    <string name="button_translate">Traduzir</string>
+    <string name="button_show_original">Mostrar original</string>
+    <string name="button_ok">OK</string>
+</resources>

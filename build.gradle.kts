@@ -5,5 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
    // Google für Firebase
     alias(libs.plugins.google.gms.google.services) apply false
+    alias(libs.plugins.google.firebase.crashlytics) apply false
 
 }
