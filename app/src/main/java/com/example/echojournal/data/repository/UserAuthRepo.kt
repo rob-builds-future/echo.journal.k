@@ -1,6 +1,6 @@
 package com.example.echojournal.data.repository
 
-import android.content.Context
+import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.data.remote.model.User
 
 /**
@@ -27,5 +27,8 @@ interface UserAuthRepo {
 
     suspend fun getCurrentUser(): User?
 
-    suspend fun signInWithGoogleOneTap(context: Context): Result<User>
+    suspend fun signInWithGoogleOneTap(activity: android.app.Activity): Result<User>
+
+    suspend fun getJournalEntries(userId: String): List<JournalEntry>
+
 }

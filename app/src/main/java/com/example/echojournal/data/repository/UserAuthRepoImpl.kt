@@ -1,16 +1,19 @@
 package com.example.echojournal.data.repository
 
-import android.content.Context
+import android.app.Activity
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import com.example.echojournal.R
+import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.data.remote.model.User
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import java.security.MessageDigest
 import java.util.Date
@@ -110,8 +113,21 @@ class UserAuthRepoImpl(
         )
     }
 
-    override suspend fun signInWithGoogleOneTap(context: Context): Result<User> = runCatching {
-        // 1) GetSignInWithGoogleOption bauen (One-Tap)
+    override suspend fun getJournalEntries(userId: String): List<JournalEntry> {
+        val snapshot = db
+            .collection("users")
+            .document(userId)
+            .collection("journalEntries")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
+            .await()
+        return snapshot.documents.map { doc ->
+            doc.toObject(JournalEntry::class.java)!!.copy(id = doc.id)
+        }
+    }
+
+    override suspend fun signInWithGoogleOneTap(activity: Activity): Result<User> = runCatching {
+        // 1) One-Tap-Option bauen (Benötigt keine Activity-speziﬁschen Aufrufe, nur das String-Resource)
         val rawNonce = UUID.randomUUID().toString()
         val hashedNonce = MessageDigest
             .getInstance("SHA-256")
@@ -119,7 +135,8 @@ class UserAuthRepoImpl(
             .joinToString("") { "%02x".format(it) }
 
         val oneTapOption = GetSignInWithGoogleOption.Builder(
-            context.getString(R.string.default_web_client_id)
+            // Zugriff auf String-Resource via activity.getString(…)
+            activity.getString(R.string.default_web_client_id)
         )
             .setNonce(hashedNonce)
             .build()
@@ -129,9 +146,11 @@ class UserAuthRepoImpl(
             .addCredentialOption(oneTapOption)
             .build()
 
-        // 3) Credentials abholen (suspend)
-        val credentialManager = CredentialManager.create(context)
-        val response = credentialManager.getCredential(context, request)
+        // 3) Credentials abholen – hier **Activity** statt „Context”
+        //    CredentialManager.create(...) braucht ebenfalls einen Context, aber für das One-Tap-UI
+        //    reicht es, dieselbe Activity zu übergeben.
+        val credentialManager = CredentialManager.create(activity)
+        val response = credentialManager.getCredential(activity, request)
 
         // 4) ID-Token extrahieren
         val custom = (response.credential as? CustomCredential)
@@ -143,12 +162,13 @@ class UserAuthRepoImpl(
         val authResult   = auth.signInWithCredential(firebaseCred).await()
         val userFb       = authResult.user!!
 
-        // 6) Firestore-Profil laden/erstellen
+        Log.d("AuthRepo", "FirebaseAuth: signInWithCredential erfolgreich, UID = ${userFb.uid}")
+
+        // 6) Firestore-Profil laden/erstellen (wie gehabt)
         val userDoc  = db.collection("users").document(userFb.uid)
         val snapshot = userDoc.get().await()
 
         val user = if (snapshot.exists()) {
-            // bereits da
             User(
                 id                = userFb.uid,
                 email             = snapshot.getString("email")!!,
@@ -157,7 +177,6 @@ class UserAuthRepoImpl(
                 createdAt         = snapshot.getTimestamp("createdAt")!!.toDate()
             )
         } else {
-            // neu anlegen
             val now = Date()
             val info = mapOf(
                 "email"             to (userFb.email ?: ""),

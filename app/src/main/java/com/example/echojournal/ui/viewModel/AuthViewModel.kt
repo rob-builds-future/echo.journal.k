@@ -1,14 +1,17 @@
 package com.example.echojournal.ui.viewModel
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echojournal.R
+import com.example.echojournal.data.remote.model.JournalEntry
 import com.example.echojournal.data.remote.model.User
 import com.example.echojournal.data.repository.UserAuthRepo
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -32,6 +35,9 @@ class AuthViewModel(
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
+    private val _journalEntries = MutableStateFlow<List<JournalEntry>>(emptyList())
+    val journalEntries: StateFlow<List<JournalEntry>> = _journalEntries.asStateFlow()
+
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
@@ -44,16 +50,27 @@ class AuthViewModel(
     val user: StateFlow<User?> = _user.asStateFlow()
 
     init {
-        // Versuch, beim Start einen eingeloggten Nutzer zu laden
         viewModelScope.launch {
             _loading.value = true
-            // beim Start erst aus Firestore laden
-            _user.value = repo.getCurrentUser()
-            // und falls wir einen Firestore-User haben, schreiben wir den auch in Prefs:
+
+            // Debug: Loggen, ob zur Startzeit schon ein User drin ist
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser == null) {
+                Log.d("AuthViewModel", "Init: Kein Firebase-User beim Start.")
+            } else {
+                Log.d("AuthViewModel", "Init: Firebase-User vorhanden: UID = ${firebaseUser.uid}")
+            }
+
+            // Dann lädst du den Firestore-User
+            _user.value = repo.getCurrentUser().also {
+                it?.let { u -> Log.d("AuthViewModel", "getCurrentUser() gibt User zurück mit UID ${u.id}") }
+            }
             _user.value?.username?.let { prefsViewModel.setUsername(it) }
+
             _loading.value = false
         }
     }
+
 
     fun signUp() {
         viewModelScope.launch {
@@ -196,17 +213,50 @@ class AuthViewModel(
         _user.value = null
     }
 
-    /** startet den One-Tap-Flow */
-    fun signInWithGoogleOneTap() {
+    fun signInWithGoogleOneTap(activity: Activity) {
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
 
-            repo.signInWithGoogleOneTap(context)
-                .onSuccess { _user.value = it }
-                .onFailure { _error.value = it.message }
+            repo.signInWithGoogleOneTap(activity)
+                .onSuccess { newUser ->
+                    _user.value = newUser
+                    Log.d("AuthViewModel", "signInWithGoogleOneTap.onSuccess: UID = ${newUser.id}")
+
+                    loadJournalEntriesForCurrentUser()
+                    prefsViewModel.setUsername(newUser.username)
+                }
+                .onFailure { ex ->
+                    _error.value = ex.message
+                    Log.e("AuthViewModel", "signInWithGoogleOneTap fehlgeschlagen", ex)
+                }
 
             _loading.value = false
+        }
+    }
+
+    fun loadJournalEntriesForCurrentUser() {
+        // DIREKTEN Zugriff nehmen – kein suspend nötig:
+        val firebaseAuthUser = FirebaseAuth.getInstance().currentUser
+        if (firebaseAuthUser == null) {
+            Log.w("AuthViewModel", "Kein angemeldeter User: journalEntries werden NICHT geladen.")
+            return
+        }
+
+        // Jetzt haben wir eine echte FirebaseUser-UID, kein suspend-Aufruf:
+        val uid = firebaseAuthUser.uid
+        Log.d("AuthViewModel", "User ist angemeldet. Lade journalEntries für UID = $uid")
+
+        // Ab hier in einer Coroutine die eigentliche Firestore-Abfrage machen:
+        viewModelScope.launch {
+            try {
+                val entries = repo.getJournalEntries(uid)
+                _journalEntries.value = entries
+                Log.d("AuthViewModel", "JournalEntries erfolgreich geladen: ${entries.size} Einträge.")
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "Fehler beim Laden der journalEntries", e)
+                _error.value = "Konnte Journal-Einträge nicht laden."
+            }
         }
     }
 }

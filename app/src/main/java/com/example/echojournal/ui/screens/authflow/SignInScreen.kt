@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.authflow
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -68,6 +69,11 @@ fun SignInScreen(
     // Error Handling
     val error by viewModel.error.collectAsState()
     val context = LocalContext.current
+    val activity = remember(context) {
+        context as? Activity
+            ?: throw IllegalStateException("SignInScreen muss in einer Activity gerendert werden!")
+    }
+
     LaunchedEffect(error) {
         if (error != null) {
             Toast
@@ -219,7 +225,7 @@ fun SignInScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     SignInWithGoogle(
-                        onClick = { viewModel.signInWithGoogleOneTap() },
+                        onClick = { viewModel.signInWithGoogleOneTap(activity) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp)
