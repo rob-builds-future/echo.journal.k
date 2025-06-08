@@ -1,3 +1,5 @@
+package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,7 +19,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -26,39 +30,56 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileSettingTheme(
     prefsViewModel: PrefsViewModel = koinViewModel()
 ) {
-    // Aktuellen Theme-Namen aus ViewModel
-    val currentTheme by prefsViewModel.theme.collectAsState()
-    val options = listOf(
-        "Smaragd", "Wolkenlos", "Vintage", "Koralle", "Bernstein"
+    // Interne Theme-Keys (werden gespeichert und von ColorManager genutzt)
+    val options = listOf("Smaragd","Wolkenlos","Vintage","Koralle","Bernstein")
+    // Mapping auf Resource-IDs für die Anzeige
+    val displayRes = mapOf(
+        "Smaragd"    to R.string.theme_display_emerald,
+        "Wolkenlos"  to R.string.theme_display_cloudless,
+        "Vintage"    to R.string.theme_display_vintage,
+        "Koralle"    to R.string.theme_display_coral,
+        "Bernstein"  to R.string.theme_display_amber
     )
 
+    val currentTheme by prefsViewModel.theme.collectAsState()
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Deine Echo-Farbe wählen:")
-        Spacer(Modifier.height(16.dp))
-        options.forEach { name ->
-            // Compose Color aus Ressourcen via ColorManager
-            val color = ColorManager.getColor(name)
+        // Überschrift
+        Text(
+            text = stringResource(R.string.profile_theme_title),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        options.forEach { key ->
+            // Farbe via internen Key
+            val color = ColorManager.getColor(key)
+            // übersetzter Display-Name
+            val displayName = stringResource(displayRes[key]!!)
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .clickable {
-                        prefsViewModel.setTheme(name)
-                    }
+                    .clickable { prefsViewModel.setTheme(key) }
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Farb-Box
                 Box(
                     modifier = Modifier
                         .size(40.dp)
                         .background(color = color, shape = RoundedCornerShape(8.dp))
                 )
                 Spacer(Modifier.width(16.dp))
-                Text(text = name, modifier = Modifier.weight(1f))
+                // Label
+                Text(
+                    text = displayName,
+                    modifier = Modifier.weight(1f)
+                )
+                // RadioButton
                 RadioButton(
-                    selected = name == currentTheme,
-                    onClick  = { prefsViewModel.setTheme(name) }
+                    selected = key == currentTheme,
+                    onClick  = { prefsViewModel.setTheme(key) }
                 )
             }
         }

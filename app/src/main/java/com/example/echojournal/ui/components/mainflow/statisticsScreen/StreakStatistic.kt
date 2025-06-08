@@ -19,8 +19,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -54,7 +56,7 @@ fun StreakStatistic(
         ) {
             // Überschrift
             Text(
-                text = "Aktuell",
+                text = stringResource(R.string.statistics_streak_title),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -73,7 +75,7 @@ fun StreakStatistic(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Whatshot,
-                        contentDescription = "Aktuelle Streak",
+                        contentDescription = stringResource(R.string.statistics_streak_contentdesc),
                         tint = echoColor,
                         modifier = Modifier.size(24.dp)
                     )
@@ -82,7 +84,7 @@ fun StreakStatistic(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "$currentStreak-Tages\nStreak",
+                        text = stringResource(R.string.statistics_streak_value, currentStreak),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
                         ),

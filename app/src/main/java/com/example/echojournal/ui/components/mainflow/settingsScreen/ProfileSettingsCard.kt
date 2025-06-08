@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -24,20 +26,14 @@ import java.util.Locale
 fun ProfileSettingsCard(
     onNavigateToProfile: (SettingType) -> Unit
 ) {
-    // Die ViewModels holen
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val languageViewModel: LanguageViewModel = koinViewModel()
-
-    // 1) Username jetzt aus PrefsViewModel lesen
     val username by prefsViewModel.username.collectAsState()
-
-    // 2) Sprache etc. (unverändert)
     val currentLanguageCode by prefsViewModel.currentLanguage.collectAsState()
     val allLanguages by languageViewModel.languages.collectAsState()
     val languageName = allLanguages
         .firstOrNull { it.code == currentLanguageCode }
         ?.name
-    // Falls kein Name gefunden oder Code leer, zeige Platzhalter
         ?: currentLanguageCode.ifBlank { "–" }
 
     val authViewModel: AuthViewModel = koinViewModel()
@@ -47,40 +43,34 @@ fun ProfileSettingsCard(
         ?.toInstant()
         ?.atZone(ZoneId.systemDefault())
         ?.toLocalDate()
-        ?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.GERMAN))
+        ?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault()))
         ?: "–"
 
-// Profil Einstellungen Card
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground,
-            contentColor = MaterialTheme.colorScheme.background
+            contentColor   = MaterialTheme.colorScheme.background
         )
     ) {
         Column {
-            // 6a. Benutzername
             SettingItem(
-                label = "Benutzername",
+                label = stringResource(R.string.label_username),
                 value = username.ifBlank { "–" },
                 onClick = { onNavigateToProfile(SettingType.Username) }
             )
             HorizontalDivider()
-
-            // 6b. Zielsprache (aus PrefsViewModel)
             SettingItem(
-                label = "Zielsprache",
+                label = stringResource(R.string.settings_profile_target_language),
                 value = languageName,
                 onClick = { onNavigateToProfile(SettingType.TargetLanguage) }
             )
             HorizontalDivider()
-
-            // 6c. Profil-Info (z.B. „Member since“)
             SettingItem(
-                label = "Profil Info",
-                value = "Member seit $memberSince",
+                label = stringResource(R.string.settings_profile_info),
+                value = stringResource(R.string.settings_profile_info_value, memberSince),
                 onClick = { onNavigateToProfile(SettingType.ProfileInfo) }
             )
         }

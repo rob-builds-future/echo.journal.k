@@ -29,13 +29,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.settingsScreen.AppSettingsCard
 import com.example.echojournal.ui.components.mainflow.settingsScreen.InstaButton
 import com.example.echojournal.ui.components.mainflow.settingsScreen.ProfileSettingsCard
 import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingItem
-import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
+import com.example.echojournal.ui.viewModel.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -49,10 +51,7 @@ fun SettingsScreen(
     onLogoutConfirmed: () -> Unit = {},
     version: String = "v1.0"
 ) {
-
-    // AuthViewModel für Logout
     val authViewModel: AuthViewModel = koinViewModel()
-
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -62,13 +61,13 @@ fun SettingsScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Zurück"
+                            contentDescription = stringResource(R.string.contentdesc_close)
                         )
                     }
                 },
                 title = {
                     Text(
-                        text = "Deine Einstellungen",
+                        text = stringResource(R.string.settings_title),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -82,28 +81,23 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // ───────── Profil-Einstellungen ─────────
+            // Profil-Einstellungen Abschnitt
             Text(
-                text = "Profil-Einstellungen",
+                text = stringResource(R.string.settings_section_profile),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 4.dp)
             )
-            ProfileSettingsCard(
-                onNavigateToProfile = onNavigateToProfile
-            )
+            ProfileSettingsCard(onNavigateToProfile = onNavigateToProfile)
 
-            // ───────── App-Einstellungen ─────────
+            // App-Einstellungen Abschnitt
             Text(
-                text = "App-Einstellungen",
+                text = stringResource(R.string.settings_section_app),
                 style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .padding(start = 4.dp, top = 12.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
-            AppSettingsCard(
-                onNavigateToAppSetting = onNavigateToAppSetting
-            )
+            AppSettingsCard(onNavigateToAppSetting = onNavigateToAppSetting)
 
-            // ───────── Abmelden ─────────
+            // Abmelden
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,11 +106,11 @@ fun SettingsScreen(
                 elevation = CardDefaults.cardElevation(4.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.Gray,
-                    contentColor   = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background
                 )
             ) {
                 SettingItem(
-                    label = "Abmelden",
+                    label = stringResource(R.string.settings_logout),
                     value = "",
                     onClick = { showLogoutDialog = true }
                 )
@@ -124,10 +118,9 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // ───────── Footer: Instagram + Version ─────────
+            // Footer: Instagram + Version
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = CenterHorizontally
             ) {
                 IconButton(onClick = onInstagramClick) {
@@ -140,25 +133,28 @@ fun SettingsScreen(
                 )
             }
 
+            // Logout-Bestätigungsdialog
             if (showLogoutDialog) {
                 AlertDialog(
                     onDismissRequest = { showLogoutDialog = false },
-                    title = { Text("Abmelden") },
-                    text = { Text("Möchtest du dich wirklich abmelden?") },
+                    title = {
+                        Text(stringResource(R.string.logout_dialog_title))
+                    },
+                    text = {
+                        Text(stringResource(R.string.logout_dialog_message))
+                    },
                     confirmButton = {
-                        TextButton(
-                            onClick = {
-                                showLogoutDialog = false
-                                // 1) Firebase-Logout
-                                authViewModel.signOut()
-                                // 2) Callback anraphen, um NavGraph zu informieren
-                                onLogoutConfirmed()
-                            }
-                        ) { Text("Ja") }
+                        TextButton(onClick = {
+                            showLogoutDialog = false
+                            authViewModel.signOut()
+                            onLogoutConfirmed()
+                        }) {
+                            Text(stringResource(R.string.button_yes))
+                        }
                     },
                     dismissButton = {
                         TextButton(onClick = { showLogoutDialog = false }) {
-                            Text("Nein")
+                            Text(stringResource(R.string.button_no))
                         }
                     }
                 )

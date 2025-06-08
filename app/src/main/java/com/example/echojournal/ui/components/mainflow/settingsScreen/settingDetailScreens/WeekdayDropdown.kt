@@ -1,4 +1,3 @@
-// Datei: WeekdayDropdown.kt
 package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
 
 import androidx.compose.foundation.layout.fillMaxWidth

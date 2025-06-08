@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.echojournal.R
 import com.example.echojournal.dataStore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -75,7 +76,7 @@ class PrefsRepoImpl(
 
     // ─── Theme ─────────────────────────────────────────────────────────────────
     override val theme: Flow<String> = ds.data
-        .map { it[Keys.THEME] ?: "Wolkenlos" }
+        .map { it[Keys.THEME] ?: context.getString(R.string.default_theme) }
 
     override suspend fun setTheme(value: String) {
         ds.edit { it[Keys.THEME] = value }
@@ -106,7 +107,7 @@ class PrefsRepoImpl(
 
     // ─── Template-Name ───────────────────────────────────────────────────────────
     override val currentTemplateName: Flow<String> = ds.data
-        .map { it[Keys.TEMPLATE_NAME] ?: "Keine Vorlage" }
+        .map { it[Keys.TEMPLATE_NAME] ?: context.getString(R.string.template_none) }
 
     override suspend fun setTemplateName(name: String) {
         ds.edit { it[Keys.TEMPLATE_NAME] = name }

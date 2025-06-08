@@ -44,6 +44,7 @@ fun InspirationPopover(
     // 1) ViewModels holen
     val translationViewModel: TranslationViewModel = koinViewModel()
     val prefsViewModel: PrefsViewModel = koinViewModel()
+
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
     val isLightTheme = themeName.equals("Light", ignoreCase = true)
@@ -134,9 +135,14 @@ fun InspirationPopover(
                     } else {
                         inspirationOriginal!!
                     }
+                    val displayColor = when {
+                        showTranslated && inspirationTranslated != null -> echoColor
+                        isLightTheme                                 -> Color.Black
+                        else                                         -> Color.White
+                    }
                     Text(
                         text = displayText,
-                        color = if (isLightTheme) Color.Black else Color.White,
+                        color = displayColor,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

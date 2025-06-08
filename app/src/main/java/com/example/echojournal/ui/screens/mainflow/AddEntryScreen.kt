@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echojournal.R
@@ -62,8 +63,9 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.format.TextStyle
 import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,25 +103,32 @@ fun AddEntryScreen(
     // Datum
     var entryDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
-    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val locale = context.resources.configuration.locales.get(0)
     val weekday = remember(entryDate) {
         entryDate.dayOfWeek
-            .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
-            .replaceFirstChar { it.uppercase() }
+            .getDisplayName(TextStyle.FULL, locale)
+            .replaceFirstChar { it.uppercase(locale) }
     }
+    val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(locale)
     val startTimeMs = remember { System.currentTimeMillis() }
 
     // Template und Dropdown Guided Journaling
     val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
     var templateMenuExpanded by remember { mutableStateOf(false) }
     // Liste aller Vorlagen-Namen (muss mit PrefsViewModel übereinstimmen)
-    val templateOptions = listOf(
-        "Keine Vorlage",
-        "Produktiver Morgen",
-        "Ziele im Blick",
-        "Reflexion am Abend",
-        "Dankbarkeits-Check"
+    // 1) Liste der Res-IDs
+    val templateResIds = listOf(
+        R.string.template_none,
+        R.string.template_productive_morning,
+        R.string.template_goals,
+        R.string.template_evening_reflection,
+        R.string.template_gratitude
     )
+    // 2) Lokalisierte Strings draus bauen
+    val templateOptions = templateResIds.map { id ->
+        stringResource(id)
+    }
 
     // DatePicker-Dialog
     if (showDatePicker) {
@@ -158,7 +167,7 @@ fun AddEntryScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { showDiscardAlert = true }) {
-                        Icon(Icons.Default.Close, contentDescription = "Schließen")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.contentdesc_close))
                     }
                 },
                 actions = {
@@ -200,7 +209,7 @@ fun AddEntryScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Speichern",
+                            contentDescription = stringResource(R.string.contentdesc_save),
                             tint = iconTint
                         )
                     }
@@ -305,14 +314,14 @@ fun AddEntryScreen(
                 containerColor = MaterialTheme.colorScheme.surface,
                 title = {
                     Text(
-                        text = "Änderungen verwerfen?",
+                        text = (stringResource(R.string.discard_changes_title)),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 text = {
                     Text(
-                        text = "Möchtest du die Änderungen wirklich verwerfen?",
+                        text = stringResource(R.string.discard_changes_message),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -324,7 +333,7 @@ fun AddEntryScreen(
                             contentColor = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
-                        Text("Abbrechen")
+                        Text(stringResource(R.string.button_cancel))
                     }
                 },
                 dismissButton = {
@@ -334,69 +343,43 @@ fun AddEntryScreen(
                             contentColor = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
-                        Text("Verwerfen")
+                        Text(stringResource(R.string.button_discard))
                     }
                 }
             )
         }
 
-        // Instruction Dialog (Anleitung: ...)
+        // Instruction Dialog (Anleitung)
         if (showInstructionDialog) {
+            // Ermittel das richtige Instruction‐String-Res anhand des aktuellen Templates
+            val instructionsRes = when (currentTemplate) {
+                stringResource(R.string.template_productive_morning)      -> R.string.instructions_productive_morning
+                stringResource(R.string.template_goals)                   -> R.string.instructions_goals
+                stringResource(R.string.template_evening_reflection)      -> R.string.instructions_evening_reflection
+                stringResource(R.string.template_gratitude)               -> R.string.instructions_gratitude
+                else                                                      -> R.string.instructions_none
+            }
+
             AlertDialog(
                 onDismissRequest = { showInstructionDialog = false },
                 modifier = Modifier
                     .border(
                         width = 1.dp,
                         color = if (isLightTheme) Color.Gray else Color.LightGray,
-                        shape = AlertDialogDefaults.shape // oder z.B. RoundedCornerShape(16.dp)
+                        shape = AlertDialogDefaults.shape
                     ),
                 containerColor = MaterialTheme.colorScheme.surface,
                 title = {
                     Text(
-                        text = "Anleitung: $currentTemplate",
+                        text = stringResource(R.string.instructions_title, currentTemplate),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 text = {
                     SelectionContainer {
-                        val instructionText = when (currentTemplate) {
-                            "Produktiver Morgen" -> buildString {
-                                append("1. Überlege dir, was heute dein Hauptziel ist.\n")
-                                append("2. Lege drei Prioritäten fest, die dir am wichtigsten sind.\n")
-                                append("3. Notiere mögliche Ablenkungsfaktoren und wie du sie minimierst.\n")
-                                append("\nTipp: Versuche, jede Priorität in einem Satz zu beschreiben.")
-                            }
-
-                            "Ziele im Blick" -> buildString {
-                                append("1. Definiere dein langfristiges Ziel (z. B. in den nächsten 6 Monaten).\n")
-                                append("2. Schreibe auf, was du heute konkret dafür getan hast.\n")
-                                append("3. Überlege, welche nächsten Schritte du morgen gehen kannst.\n")
-                                append("\nTipp: Halte deine Gedanken in kurzen Stichpunkten fest.")
-                            }
-
-                            "Reflexion am Abend" -> buildString {
-                                append("1. Beschreibe in wenigen Sätzen, was heute besonders war.\n")
-                                append("2. Wie fühlst du dich jetzt? Notiere aktuelle Eindrücke.\n")
-                                append("3. Was hast du aus den heutigen Erfahrungen gelernt?\n")
-                                append("\nTipp: Versuche, ehrlich und ohne Bewertung zu schreiben.")
-                            }
-
-                            "Dankbarkeits-Check" -> buildString {
-                                append("1. Denke an drei Dinge, für die du heute dankbar bist.\n")
-                                append("2. Schreibe jeden Punkt kurz mit ein bis zwei Sätzen aus.\n")
-                                append("3. Reflektiere, warum dir gerade diese Dinge wichtig sind.\n")
-                                append("\nTipp: Dankbarkeit kann auch in kleinen Alltagsmomenten stecken.")
-                            }
-
-                            else -> buildString {
-                                append("Du hast aktuell keine Vorlage ausgewählt.\n")
-                                append("Hier kannst du frei schreiben, was dir gerade wichtig ist.\n")
-                                append("Wenn du später gezieltere Fragen möchtest, wähle oben eine Vorlage aus.\n")
-                            }
-                        }
                         Text(
-                            text = instructionText,
+                            text = stringResource(instructionsRes),
                             color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.bodyMedium
                         )
@@ -409,7 +392,7 @@ fun AddEntryScreen(
                             contentColor = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
-                        Text("Schließen")
+                        Text(text = stringResource(R.string.button_close))
                     }
                 }
             )

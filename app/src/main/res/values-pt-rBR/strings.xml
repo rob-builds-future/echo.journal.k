@@ -60,4 +60,213 @@
     <string name="button_translate">Traduzir</string>
     <string name="button_show_original">Mostrar original</string>
     <string name="button_ok">OK</string>
+
+    <!-- AddEntry Screen -->
+    <string name="contentdesc_close">Fechar</string>
+    <string name="contentdesc_save">Salvar</string>
+
+    <string name="discard_changes_title">Descartar alterações?</string>
+    <string name="discard_changes_message">Deseja realmente descartar suas alterações?</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_discard">Descartar</string>
+
+    <string name="no_template">Nenhum template</string>
+    <string name="text_words_2">%1$d palavras</string>
+
+    <string name="placeholder_productive_morning">
+        Qual é seu principal objetivo hoje? Quais três prioridades estão no topo da sua lista?
+    </string>
+    <string name="placeholder_goals">
+        Qual meta de longo prazo você está perseguindo? O que fez hoje para isso?
+    </string>
+    <string name="placeholder_evening_reflection">
+        Quais experiências te tocaram hoje? Como você se sente agora?
+    </string>
+    <string name="placeholder_gratitude">
+        Cite três coisas pelas quais você é grato hoje.
+    </string>
+    <string name="placeholder_none">Comece a escrever aqui…</string>
+
+    <string name="text_translating">Traduzindo…</string>
+
+    <string name="template_none">Nenhum template</string>
+    <string name="template_productive_morning">Manhã Produtiva</string>
+    <string name="template_goals">Metas em Vista</string>
+    <string name="template_evening_reflection">Reflexão noturna</string>
+    <string name="template_gratitude">Check de Gratidão</string>
+
+    <string name="instructions_title">Instruções: %1$s</string>
+    <string name="instructions_productive_morning">
+1. Pense no seu principal objetivo de hoje.
+2. Defina três prioridades que mais importam.
+3. Anote possíveis distrações e como reduzi-las.
+
+Dica: Tente descrever cada prioridade em uma frase.
+    </string>
+    <string name="instructions_goals">
+1. Defina seu objetivo de longo prazo (por exemplo, nos próximos 6 meses).
+2. Anote o que você fez hoje para alcançá-lo.
+3. Considere quais passos você pode dar amanhã.
+
+Dica: Mantenha seus pensamentos em pontos curtos.
+    </string>
+    <string name="instructions_evening_reflection">
+1. Descreva em poucas frases o que mais se destacou hoje.
+2. Como você está se sentindo agora? Anote suas impressões.
+3. O que você aprendeu com as experiências de hoje?
+
+Dica: Tente escrever com honestidade e sem julgamentos.
+    </string>
+    <string name="instructions_gratitude">
+1. Pense em três coisas pelas quais você é grato hoje.
+2. Escreva cada ponto em uma ou duas frases.
+3. Reflita por que essas coisas são importantes para você.
+
+Dica: A gratidão também pode surgir em pequenos momentos do dia a dia.
+    </string>
+    <string name="instructions_none">
+Você não selecionou nenhum template.
+Aqui você pode escrever livremente o que vier à mente.
+Se quiser orientações mais direcionadas depois, escolha um template acima.
+    </string>
+
+    <string name="button_close">Fechar</string>
+
+    <string name="contentdesc_edit">Editar</string>
+    <string name="contentdesc_read">Ouvir</string>
+    <string name="contentdesc_stop">Parar</string>
+    <string name="contentdesc_tts_info">Info TTS</string>
+
+    <string name="button_read">Ouvir</string>
+    <string name="button_stop">Parar</string>
+    <string name="button_understood">Entendido</string>
+
+    <string name="tts_info_title">Instalar dados de voz</string>
+    <string name="tts_info_message">
+Para obter uma voz nativa para seu idioma-alvo, baixe os dados de voz correspondentes nas configurações do Android.
+
+Vá para:
+Configurações → Sistema → Idioma e entrada → Saída de texto para fala → Instalar dados de voz → &lt;Idioma desejado&gt;
+
+Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
+</string>
+
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Suas Configurações</string>
+    <string name="settings_section_profile">Configurações do Perfil</string>
+    <string name="settings_section_app">Configurações do App</string>
+    <string name="settings_logout">Sair</string>
+
+    <string name="logout_dialog_title">Sair</string>
+    <string name="logout_dialog_message">Deseja realmente sair?</string>
+    <string name="button_yes">Sim</string>
+    <string name="button_no">Não</string>
+
+    <string name="contentdesc_back">Voltar</string>
+
+    <string name="detail_title_username">Alterar nome de usuário</string>
+    <string name="detail_title_target_language">Selecionar idioma-alvo</string>
+    <string name="detail_title_profile_info">Informações do perfil</string>
+    <string name="detail_title_theme">Tema</string>
+    <string name="detail_title_templates">Diário guiado</string>
+    <string name="detail_title_reminders">Lembretes</string>
+
+    <!-- AppSettingsCard -->
+    <string name="settings_app_theme">Cor Echo</string>
+    <string name="settings_app_templates">Jornal guiado</string>
+    <string name="settings_app_reminders">Lembretes</string>
+    <string name="settings_app_reminders_summary">Seus lembretes</string>
+
+    <!-- ProfileSettingsCard -->
+    <string name="settings_profile_target_language">Idioma alvo</string>
+    <string name="settings_profile_info">Informações do perfil</string>
+    <string name="settings_profile_info_value">Membro desde %1$s</string>
+
+    <string name="profile_info_member_since">Membro desde: %1$s</string>
+    <string name="profile_info_username">Nome de usuário: %1$s</string>
+    <string name="profile_info_language">Idioma-alvo: %1$s</string>
+    <string name="profile_info_theme">Cor Echo: %1$s</string>
+    <string name="profile_info_template">Template: %1$s</string>
+    <string name="profile_info_reminders">Lembretes: %1$s</string>
+    <string name="profile_info_reminders_status">Desligado</string>
+    <string name="profile_info_delete">Excluir perfil</string>
+    <string name="profile_info_delete_confirm_title">Excluir perfil</string>
+    <string name="profile_info_delete_confirm_message">Deseja realmente excluir seu perfil?</string>
+
+    <!-- Profil Target Language -->
+    <string name="placeholder_search_language">Sprache suchen…</string>
+    <string name="none_selected">–</string>
+    <string name="profile_language_current">Seu idioma-alvo atual: %1$s</string>
+
+    <!-- Guided Journaling Templates -->
+    <string name="template_section_morning">Pela manhã</string>
+    <string name="template_section_evening">À noite</string>
+
+    <string name="preview_none">Comece com uma página em branco.</string>
+    <string name="preview_morning_productive">
+Qual é meu principal objetivo hoje?\nTrês prioridades?\nPossíveis distrações?
+    </string>
+    <string name="preview_morning_goals">
+Qual meta de longo prazo estou perseguindo?\nO que fiz hoje para isso?
+    </string>
+    <string name="preview_evening_reflection">
+O que vivi hoje?\nComo me sinto?\nPelo que sou grato?
+    </string>
+    <string name="preview_evening_gratitude">
+Liste três coisas pelas quais você é grato hoje.
+    </string>
+
+    <!-- Echo Colors -->
+    <string name="profile_theme_title">Escolha sua cor Echo:</string>
+    <string name="theme_display_emerald">Esmeralda</string>
+    <string name="theme_display_cloudless">Sem nuvens</string>
+    <string name="theme_display_vintage">Vintage</string>
+    <string name="theme_display_coral">Coral</string>
+    <string name="theme_display_amber">Âmbar</string>
+
+    <!-- PrefsViewModel and Repo -->
+    <string name="default_theme">Sem nuvens</string>
+
+    <!-- User Name Setting -->
+    <string name="profile_username_instruction">
+        Aqui você pode alterar seu nome de usuário.
+    </string>
+    <string name="profile_username_current">
+        Nome de usuário atual: %1$s
+    </string>
+    <string name="profile_username_label">Novo nome de usuário</string>
+    <string name="profile_username_button_save">Salvar</string>
+    <string name="profile_username_success">
+        Seu nome de usuário foi alterado para “%1$s”
+    </string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Seus Sucessos</string>
+    <string name="statistics_nav_back">Voltar</string>
+
+    <!-- Tracker Card -->
+    <string name="statistics_tracker_title">Rastreador</string>
+
+    <!-- Streak Statistic -->
+    <string name="statistics_streak_title">Atual</string>
+    <string name="statistics_streak_contentdesc">Sequência atual</string>
+    <string name="statistics_streak_value">%1$d-dia\nsequência</string>
+
+    <!-- Total Entries Statistic -->
+    <string name="statistics_total_title">Total</string>
+    <string name="statistics_total_days">%1$d entradas</string>
+    <string name="statistics_total_words">%1$d palavras</string>
+    <string name="statistics_total_minutes">%1$d minutos</string>
+    <string name="statistics_total_days_desc">Dias com entradas</string>
+    <string name="statistics_total_words_desc">Total de palavras</string>
+    <string name="statistics_total_minutes_desc">Duração total</string>
+
+    <!-- Top Words Statistic -->
+    <string name="statistics_top_words_title">Principais Palavras</string>
+
+    <!-- Calendar Navigation -->
+    <string name="statistics_calendar_prev">Mês anterior</string>
+    <string name="statistics_calendar_next">Próximo mês</string>
+
 </resources>

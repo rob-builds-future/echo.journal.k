@@ -30,8 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
 import com.example.echojournal.ui.components.mainflow.statisticsScreen.CalendarView
 import com.example.echojournal.ui.components.mainflow.statisticsScreen.StreakStatistic
@@ -68,13 +70,13 @@ fun StatisticsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Deine Erfolge",
+                        text = stringResource(R.string.statistics_title),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.Close, contentDescription = "Zurück")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.statistics_nav_back))
                     }
                 }
             )
@@ -131,7 +133,7 @@ fun StatisticsScreen(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Tracker",
+                                text = stringResource(R.string.statistics_tracker_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(start = 4.dp)
                             )

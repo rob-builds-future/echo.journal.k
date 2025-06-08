@@ -1,7 +1,5 @@
 package com.example.echojournal.ui.screens.mainflow
 
-import ProfileSettingLanguage
-import ProfileSettingTheme
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
@@ -17,14 +15,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.settingsScreen.SettingType
+import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingInfo
+import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingLanguage
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingReminder
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTemplate
+import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingTheme
 import com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens.ProfileSettingUsername
-import com.example.echojournal.ui.components.settingsScreen.settingDetailScreens.ProfileSettingInfo
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -49,31 +50,18 @@ fun SettingDetailScreen(
     val languageViewModel: LanguageViewModel = koinViewModel()
     val allLanguages by languageViewModel.languages.collectAsState()
 
-    // Formatierer für Datum
-    val dateFormatter = remember {
-        java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    }
-    val memberSince = user
-        ?.createdAt
-        ?.toInstant()
-        ?.atZone(java.time.ZoneId.systemDefault())
-        ?.toLocalDate()
-        ?.format(dateFormatter)
-        ?: "–"
-
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = when (type) {
-                            SettingType.Username        -> "Benutzername ändern"
-                            SettingType.TargetLanguage  -> "Zielsprache wählen"
-                            SettingType.ProfileInfo     -> "Profil Info"
-                            SettingType.Theme           -> "Echo-Farbe"
-                            SettingType.Templates       -> "Geführtes Tagebuchschreiben"
-                            SettingType.Reminders       -> "Erinnerungen"
+                            SettingType.Username       -> stringResource(R.string.detail_title_username)
+                            SettingType.TargetLanguage -> stringResource(R.string.detail_title_target_language)
+                            SettingType.ProfileInfo    -> stringResource(R.string.detail_title_profile_info)
+                            SettingType.Theme          -> stringResource(R.string.detail_title_theme)
+                            SettingType.Templates      -> stringResource(R.string.detail_title_templates)
+                            SettingType.Reminders      -> stringResource(R.string.detail_title_reminders)
                         }
                     )
                 },
@@ -101,6 +89,15 @@ fun SettingDetailScreen(
                     ProfileSettingLanguage()
                 }
                 SettingType.ProfileInfo -> {
+                    // Ihr zeigt hier ProfileSettingInfo, die intern „Member since…“ selber lokalisieren sollte
+                    val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                    val memberSince = user
+                        ?.createdAt
+                        ?.toInstant()
+                        ?.atZone(java.time.ZoneId.systemDefault())
+                        ?.toLocalDate()
+                        ?.format(dateFormatter)
+                        ?: "–"
                     val languageName = allLanguages
                         .firstOrNull { it.code == currentLanguageCode }
                         ?.name

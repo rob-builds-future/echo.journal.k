@@ -59,5 +59,230 @@
     <string name="error_unknown">Unknown error.</string>
     <string name="button_translate">Translate</string>
     <string name="button_show_original">Show Original</string>
-    <string name="button_ok">OK</string>
+    <string name="button_ok" translatable="false">OK</string>
+
+    <!-- AddEntryScreen -->
+    <!-- TopBar Icons -->
+    <string name="contentdesc_close">Close</string>          <!-- en -->
+    <string name="contentdesc_save">Save</string>
+
+    <!-- Discard Alert -->
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="discard_changes_message">Do you really want to discard your changes?</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_discard">Discard</string>
+
+    <!-- CombinedRowUnderEntry -->
+    <string name="no_template">No template</string>
+    <string name="text_words_2">%1$d words</string>
+
+    <!-- EntrySection Placeholder -->
+    <string name="placeholder_productive_morning">
+        What is your main goal for today? Which three priorities top your list?
+    </string>
+    <string name="placeholder_goals">
+        Which long-term goal are you working on? What did you do today for it?
+    </string>
+    <string name="placeholder_evening_reflection">
+        Which experiences moved you today? How are you feeling right now?
+    </string>
+    <string name="placeholder_gratitude">
+        Name three things you’re grateful for today.
+    </string>
+    <string name="placeholder_none">Start writing here…</string>
+
+    <!-- TranslationSection -->
+    <string name="text_translating">Translating…</string>
+
+    <!-- TemplateOptions -->
+    <string name="template_none">No template</string>
+    <string name="template_productive_morning">Productive Morning</string>
+    <string name="template_goals">Goals in Sight</string>
+    <string name="template_evening_reflection">Evening Reflection</string>
+    <string name="template_gratitude">Gratitude Check</string>
+
+    <!-- Instruction Dialog -->
+    <string name="instructions_title">Instructions: %1$s</string>
+    <string name="instructions_productive_morning">
+1. Think about your main goal for today.
+2. Set three priorities that matter most.
+3. Note potential distractions and how to minimize them.
+
+Tip: Try to describe each priority in one sentence.
+    </string>
+    <string name="instructions_goals">
+1. Define your long-term goal (e.g., over the next 6 months).
+2. Write down what you did today toward it.
+3. Consider what steps you can take tomorrow.
+
+Tip: Keep your thoughts in short bullet points.
+    </string>
+    <string name="instructions_evening_reflection">
+1. Describe in a few sentences what stood out today.
+2. How are you feeling now? Note your current impressions.
+3. What did you learn from today’s experiences?
+
+Tip: Try to write honestly and without judgment.
+    </string>
+    <string name="instructions_gratitude">
+1. Think of three things you’re grateful for today.
+2. Write each point out in one or two sentences.
+3. Reflect on why those things matter to you.
+
+Tip: Gratitude can be found in small everyday moments.
+    </string>
+    <string name="instructions_none">
+You haven’t selected a template.
+Here you can freely write whatever is on your mind.
+If you’d like more targeted prompts later, please choose a template above.
+    </string>
+
+    <!-- Common Buttons -->
+    <string name="button_close">Close</string>
+
+    <!-- EntryDetailScreen -->
+    <!-- Accessibility -->
+    <string name="contentdesc_edit">Edit</string>           <!-- de: Bearbeiten, pt: Editar -->
+    <string name="contentdesc_read">Read aloud</string>     <!-- de: Vorlesen, pt: Ouvir -->
+    <string name="contentdesc_stop">Stop</string>           <!-- de: Stoppen, pt: Parar -->
+    <string name="contentdesc_tts_info">TTS info</string>   <!-- de: Hinweis zur Sprachausgabe, pt: Info TTS -->
+
+    <!-- Buttons -->
+    <string name="button_read">Read aloud</string>          <!-- de: Vorlesen, pt: Ouvir -->
+    <string name="button_stop">Stop</string>                <!-- de: Stoppen, pt: Parar -->
+    <string name="button_understood">Understood</string>    <!-- de: Verstanden, pt: Entendido -->
+
+    <!-- TTS-Info Dialog -->
+    <string name="tts_info_title">Install speech data</string>
+    <string name="tts_info_message">
+To get a native voice for your target language, download the corresponding speech data in Android settings.
+
+Go to:
+Settings → System → Language &amp; input → Text-to-speech output → Install voice data → &lt;Desired language&gt;
+
+Tip: You can also choose a different voice under the same menu.
+</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Your Settings</string>
+    <string name="settings_section_profile">Profile Settings</string>
+    <string name="settings_section_app">App Settings</string>
+    <string name="settings_logout">Logout</string>
+
+    <!-- Logout Confirmation -->
+    <string name="logout_dialog_title">Logout</string>
+    <string name="logout_dialog_message">Do you really want to logout?</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+
+    <!-- Allgemein -->
+    <string name="contentdesc_back">Back</string>
+
+    <!-- SettingDetailScreen Titles -->
+    <string name="detail_title_username">Change Username</string>
+    <string name="detail_title_target_language">Select Target Language</string>
+    <string name="detail_title_profile_info">Profile Info</string>
+    <string name="detail_title_theme">Theme</string>
+    <string name="detail_title_templates">Guided Journaling</string>
+    <string name="detail_title_reminders">Reminders</string>
+
+    <!-- AppSettingsCard -->
+    <string name="settings_app_theme">Theme</string>
+    <string name="settings_app_templates">Guided journaling</string>
+    <string name="settings_app_reminders">Reminders</string>
+    <string name="settings_app_reminders_summary">Your reminders</string>
+
+    <!-- ProfileSettingsCard -->
+    <string name="settings_profile_target_language">Target language</string>
+    <string name="settings_profile_info">Profile info</string>
+    <string name="settings_profile_info_value">Member since %1$s</string>
+
+    <string name="profile_info_member_since">Member since: %1$s</string>
+    <string name="profile_info_username">Username: %1$s</string>
+    <string name="profile_info_language">Target language: %1$s</string>
+    <string name="profile_info_theme">Echo color: %1$s</string>
+    <string name="profile_info_template">Template: %1$s</string>
+    <string name="profile_info_reminders">Reminders: %1$s</string>
+    <string name="profile_info_reminders_status">Off</string>
+    <string name="profile_info_delete">Delete profile</string>
+    <string name="profile_info_delete_confirm_title">Delete profile</string>
+    <string name="profile_info_delete_confirm_message">Do you really want to delete your profile?</string>
+
+    <!-- Profil Target Language -->
+    <string name="none_selected">–</string>
+    <string name="profile_language_current">Your current target language: %1$s</string>
+    <string name="placeholder_search_language">Search for a language…</string>
+
+    <!-- Guided Journaling Templates -->
+    <!-- Abschnitts-Überschriften -->
+    <string name="template_section_morning">In the morning</string>
+    <string name="template_section_evening">In the evening</string>
+
+    <!-- Vorschau-Texte -->
+    <string name="preview_none">Start with a blank page.</string>
+    <string name="preview_morning_productive">
+What is my main goal today?\nThree priorities?\nPotential distractions?
+    </string>
+    <string name="preview_morning_goals">
+Which long-term goal am I pursuing?\nWhat did I do today for it?
+    </string>
+    <string name="preview_evening_reflection">
+What did I experience today?\nHow am I feeling?\nWhat am I grateful for?
+    </string>
+    <string name="preview_evening_gratitude">
+Name three things you’re grateful for today.
+    </string>
+
+    <!-- Echo Colors -->
+    <string name="profile_theme_title">Choose your Echo color:</string>
+    <string name="theme_display_emerald">Emerald</string>
+    <string name="theme_display_cloudless">Cloudless</string>
+    <string name="theme_display_vintage">Vintage</string>
+    <string name="theme_display_coral">Coral</string>
+    <string name="theme_display_amber">Amber</string>
+
+    <!-- PrefsViewModel and Repo -->
+    <string name="default_theme">Cloudless</string>
+
+    <!-- User Name Setting -->
+    <string name="profile_username_instruction">
+        Here you can change your username.
+    </string>
+    <string name="profile_username_current">
+        Current username: %1$s
+    </string>
+    <string name="profile_username_label">New username</string>
+    <string name="profile_username_button_save">Save</string>
+    <string name="profile_username_success">
+        Your username has been changed to “%1$s”
+    </string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Your Achievements</string>
+    <string name="statistics_nav_back">Back</string>
+
+    <!-- Tracker Card -->
+    <string name="statistics_tracker_title">Tracker</string>
+
+    <!-- Streak Statistic -->
+    <string name="statistics_streak_title">Current</string>
+    <string name="statistics_streak_contentdesc">Current streak</string>
+    <string name="statistics_streak_value">%1$d-day\nstreak</string>
+
+    <!-- Total Entries Statistic -->
+    <string name="statistics_total_title">Total</string>
+    <string name="statistics_total_days">%1$d entries</string>
+    <string name="statistics_total_words">%1$d words</string>
+    <string name="statistics_total_minutes">%1$d minutes</string>
+    <string name="statistics_total_days_desc">Days with entries</string>
+    <string name="statistics_total_words_desc">Total words</string>
+    <string name="statistics_total_minutes_desc">Total duration</string>
+
+    <!-- Top Words Statistic -->
+    <string name="statistics_top_words_title">Top Words</string>
+
+    <!-- Calendar Navigation -->
+    <string name="statistics_calendar_prev">Previous month</string>
+    <string name="statistics_calendar_next">Next month</string>
+
 </resources>

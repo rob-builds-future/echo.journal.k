@@ -20,7 +20,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.entryListScreen.ShadowCard
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -57,7 +59,7 @@ fun TotalEntriesStatistic(
         ) {
             // Überschrift
             Text(
-                text = "Gesamt",
+                text = stringResource(R.string.statistics_total_title),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -72,13 +74,13 @@ fun TotalEntriesStatistic(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Layers,
-                        contentDescription = "Tage mit Einträgen",
+                        contentDescription = stringResource(R.string.statistics_total_days_desc),
                         tint = echoColor,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$daysWithEntries Einträge",
+                        text = stringResource(R.string.statistics_total_days, daysWithEntries),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
                         )
@@ -101,13 +103,13 @@ fun TotalEntriesStatistic(
                 ) {
                     Icon(
                         imageVector = Icons.Default.FormatQuote,
-                        contentDescription = "Gesamt Wörter",
+                        contentDescription = stringResource(R.string.statistics_total_words_desc),
                         tint = echoColor,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$totalWords Worte",
+                        text = stringResource(R.string.statistics_total_words, totalWords),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
                         )
@@ -120,13 +122,13 @@ fun TotalEntriesStatistic(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Schedule,
-                        contentDescription = "Gesamt Dauer",
+                        contentDescription = stringResource(R.string.statistics_total_minutes_desc),
                         tint = echoColor,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$totalDuration Minuten",
+                        text = stringResource(R.string.statistics_total_minutes, totalDuration),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
                         )

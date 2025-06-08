@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -19,12 +21,23 @@ import org.koin.androidx.compose.koinViewModel
 fun AppSettingsCard(
     onNavigateToAppSetting: (SettingType) -> Unit
 ) {
-    // Preferences holen, um Theme dynamisch anzuzeigen
     val prefsViewModel: PrefsViewModel = koinViewModel()
-    val currentTheme by prefsViewModel.theme.collectAsState()
+    val currentKey by prefsViewModel.theme.collectAsState()
     val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
 
-// App Einstellungen Card
+    // Mapping von Key → String-Resource
+    val displayMap = mapOf(
+        "Smaragd" to R.string.theme_display_emerald,
+        "Wolkenlos" to R.string.theme_display_cloudless,
+        "Vintage" to R.string.theme_display_vintage,
+        "Koralle" to R.string.theme_display_coral,
+        "Bernstein" to R.string.theme_display_amber
+    )
+
+    // Hole dir hier IMMER den Resource-String, nie den rohen Key
+    val themeLabel =
+        stringResource(displayMap[currentKey] ?: R.string.theme_display_cloudless)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -36,20 +49,23 @@ fun AppSettingsCard(
     ) {
         Column {
             SettingItem(
-                label = "Echo-Farbe",
-                value = currentTheme,
+                label = stringResource(R.string.settings_app_theme),
+                value = themeLabel,
                 onClick = { onNavigateToAppSetting(SettingType.Theme) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Geführtes\nTagebuchschreiben",
-                value = currentTemplate.ifBlank { "Keine Vorlage" },
+                label = stringResource(R.string.settings_app_templates),
+                value = if (currentTemplate.isBlank())
+                    stringResource(R.string.template_none)
+                else
+                    currentTemplate,
                 onClick = { onNavigateToAppSetting(SettingType.Templates) }
             )
             HorizontalDivider()
             SettingItem(
-                label = "Erinnerungen",
-                value = "Deine Erinnerungen",
+                label = stringResource(R.string.settings_app_reminders),
+                value = stringResource(R.string.settings_app_reminders_summary),
                 onClick = { onNavigateToAppSetting(SettingType.Reminders) }
             )
         }

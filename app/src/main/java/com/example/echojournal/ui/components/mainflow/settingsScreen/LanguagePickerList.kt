@@ -1,3 +1,4 @@
+package com.example.echojournal.ui.components.mainflow.settingsScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -23,15 +24,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.data.remote.model.util.LanguageDto
-import com.example.echojournal.ui.viewModel.PrefsViewModel
 import com.example.echojournal.ui.viewModel.LanguageViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LanguagePickerList(
-    label: String = "Zielsprache",
+    label: String,
     prefsViewModel: PrefsViewModel = koinViewModel(),
     languageViewModel: LanguageViewModel = koinViewModel(),
+    placeholder: String,
     onSelect: (LanguageDto) -> Unit
 ) {
     // 1) Alle Sprachen vom ViewModel
@@ -41,14 +43,15 @@ fun LanguagePickerList(
 
     var query by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier) {
         Text(text = "$label:")
         Spacer(Modifier.height(8.dp))
 
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("Sprache suchen") },
+            label = { Text(label) },
+            placeholder = { Text(placeholder) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors()
         )

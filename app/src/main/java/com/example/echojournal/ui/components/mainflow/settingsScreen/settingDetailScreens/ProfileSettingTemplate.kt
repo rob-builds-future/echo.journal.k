@@ -1,108 +1,94 @@
 package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileSettingTemplate() {
-    val prefsViewModel: PrefsViewModel = koinViewModel()
-    val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
+    val prefs: PrefsViewModel = koinViewModel()
+    val current by prefs.currentTemplate.collectAsState()
 
-    // selected beginnt mit dem Wert aus DataStore
-    var selected by remember { mutableStateOf(currentTemplate) }
+    var selected by remember { mutableStateOf(current) }
+    LaunchedEffect(current) { selected = current }
 
-    // Wenn sich prefsViewModel.currentTemplate ändert, updaten wir local selected:
-    LaunchedEffect(currentTemplate) {
-        selected = currentTemplate
-    }
-
-    // beim Anklicken merken + in DataStore schreiben + callback:
-    val onSelectLocal: (String) -> Unit = { name ->
+    val onSelect: (String) -> Unit = { name ->
         selected = name
-        prefsViewModel.setTemplate(name)
+        prefs.setTemplate(name)
     }
 
-    // Vorlagen-Optionen mit kurzem Vorschautext
-    val noneOption = "Keine Vorlage" to "Starte mit leerer Seite."
+    // Optionen als Pair<nameRes, previewRes>
+    val noneOption = R.string.template_none to R.string.preview_none
     val morningOptions = listOf(
-        "Produktiver Morgen" to "Was ist mein Hauptziel heute? Drei Prioritäten? Ablenkungen?",
-        "Ziele im Blick" to "Welches Langzeit-Ziel verfolge ich? Was habe ich heute dafür getan?"
+        R.string.template_productive_morning to R.string.preview_morning_productive,
+        R.string.template_goals to R.string.preview_morning_goals
     )
     val eveningOptions = listOf(
-        "Reflexion am Abend" to "Was habe ich heute erlebt? Wie fühle ich mich? Wofür bin ich dankbar?",
-        "Dankbarkeits-Check" to "Nenne drei Dinge, für die du heute dankbar bist."
+        R.string.template_evening_reflection to R.string.preview_evening_reflection,
+        R.string.template_gratitude to R.string.preview_evening_gratitude
     )
 
-    Column {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         // Keine Vorlage
-        TemplateRow(noneOption, selected, onSelectLocal)
+        TemplateRow(noneOption, selected, onSelect)
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-        // Morgensession
+        // Morgens
         Text(
-            text = "Am Morgen",
+            text = stringResource(R.string.template_section_morning),
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(vertical = 4.dp)
         )
-        morningOptions.forEach { TemplateRow(it, selected, onSelectLocal) }
+        morningOptions.forEach { TemplateRow(it, selected, onSelect) }
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-        // Abendsession
+        // Abends
         Text(
-            text = "Am Abend",
+            text = stringResource(R.string.template_section_evening),
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(vertical = 4.dp)
         )
-        eveningOptions.forEach { TemplateRow(it, selected, onSelectLocal) }
+        eveningOptions.forEach { TemplateRow(it, selected, onSelect) }
     }
 }
 
 @Composable
 private fun TemplateRow(
-    option: Pair<String, String>,
+    option: Pair<Int,Int>,
     selected: String,
     onSelect: (String) -> Unit
 ) {
-    val (name, preview) = option
+    val (nameRes, previewRes) = option
+    val name    = stringResource(nameRes)
+    val preview = stringResource(previewRes)
+
     Row(
         verticalAlignment = Alignment.Top,
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
             .clickable { onSelect(name) }
             .padding(vertical = 8.dp)
     ) {
         RadioButton(
-            selected = (name == selected),
-            onClick = { onSelect(name) }
+            selected = name == selected,
+            onClick  = { onSelect(name) }
         )
-        Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+        Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(text = name)
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(Modifier.height(4.dp))
             Text(
                 text = preview,
                 maxLines = 2,

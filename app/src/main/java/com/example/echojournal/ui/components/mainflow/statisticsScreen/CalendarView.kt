@@ -27,9 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -37,7 +40,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
 
 @Composable
 fun CalendarView(
@@ -53,6 +55,10 @@ fun CalendarView(
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
+
+    val context = LocalContext.current
+    // Aktuelle Locale aus den System-Einstellungen
+    val locale = context.resources.configuration.locales.get(0)
 
     // 3.) Zustand für den aktuell angezeigten Monat (YearMonth)
     var displayedMonth by remember { mutableStateOf(YearMonth.of(today.year, today.month)) }
@@ -85,7 +91,7 @@ fun CalendarView(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                    contentDescription = "Vorheriger Monat",
+                    contentDescription = stringResource(R.string.statistics_calendar_prev),
                     tint = if (minEntryMonth?.let { displayedMonth.minusMonths(1) < it } == true)
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                     else
@@ -95,7 +101,7 @@ fun CalendarView(
 
             // Monatsname + Jahr, z. B. „Mai 2025“
             Text(
-                text = "${displayedMonth.month.getDisplayName(TextStyle.FULL, Locale.GERMAN)} ${displayedMonth.year}",
+                text = "${displayedMonth.month.getDisplayName(TextStyle.FULL, locale)} ${displayedMonth.year}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -107,7 +113,7 @@ fun CalendarView(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                    contentDescription = "Nächster Monat",
+                    contentDescription = stringResource(R.string.statistics_calendar_next),
                     tint = if (displayedMonth.isBefore(YearMonth.of(today.year, today.month)))
                         MaterialTheme.colorScheme.onSurface
                     else
@@ -117,9 +123,9 @@ fun CalendarView(
         }
 
         // ─── Wochentags-Leiste (Mo, Di, Mi, …) ────────────────────────────
-        val daysOfWeek = remember {
-            DayOfWeek.entries.map { dow ->
-                dow.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
+        val daysOfWeek = remember(locale) {
+            DayOfWeek.values().map { dow ->
+                dow.getDisplayName(TextStyle.SHORT, locale)
             }
         }
         Row(

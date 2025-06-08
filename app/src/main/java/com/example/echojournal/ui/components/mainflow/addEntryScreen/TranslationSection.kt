@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 
 @Composable
 fun TranslationSection(
@@ -24,7 +26,7 @@ fun TranslationSection(
             .padding(horizontal = 8.dp)
     ) {
         // Splitting text on manual line breaks to preserve paragraph spacing
-        val lines = if (translationText.isEmpty()) listOf("Hier wird übersetzt...")
+        val lines = if (translationText.isEmpty()) listOf(stringResource(R.string.text_translating))
         else translationText.split("\n")
         lines.forEachIndexed { idx, line ->
             Text(

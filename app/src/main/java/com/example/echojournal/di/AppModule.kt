@@ -90,7 +90,7 @@ val appModule = module {
     viewModel { AuthViewModel(get(), get(), get())}
 
     single<PrefsRepo> { PrefsRepoImpl(androidContext(), get()) }
-    viewModel { PrefsViewModel(get()) }
+    viewModel { PrefsViewModel(androidContext(), get()) }
 
     single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
     single<JournalRepo> { JournalRepoImpl(get()) }

@@ -51,6 +51,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,6 +71,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
 
@@ -107,12 +110,14 @@ fun EntryDetailScreen(
                 ?: LocalDate.now()
         )
     }
-    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val locale = context.resources.configuration.locales.get(0)
     val weekday = remember(entryDate) {
         entryDate.dayOfWeek
-            .getDisplayName(java.time.format.TextStyle.FULL, Locale.GERMAN)
-            .replaceFirstChar { it.uppercase() }
+            .getDisplayName(TextStyle.FULL, locale)
+            .replaceFirstChar { it.uppercase(locale) }
     }
+    val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(locale)
     var showDatePicker by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
     // Sobald showDatePicker true wird, erzeugen wir einen einzelnen DatePickerDialog:
@@ -209,7 +214,8 @@ fun EntryDetailScreen(
             if (engine.isLanguageAvailable(genericPt) in listOf(
                     TextToSpeech.LANG_AVAILABLE,
                     TextToSpeech.LANG_COUNTRY_AVAILABLE,
-                    TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE)
+                    TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE
+                )
             ) {
                 engine.setLanguage(genericPt)
                 ttsLocale = genericPt
@@ -228,7 +234,10 @@ fun EntryDetailScreen(
                 Toast.LENGTH_SHORT
             ).show()
             hasShownUnsupportedToast = true
-            Log.d("EntryDetailScreen", "Toast: keine passende Sprachdatei für $desiredTag")
+            Log.d(
+                "EntryDetailScreen",
+                "Toast: keine passende Sprachdatei für $desiredTag"
+            )
         }
     }
 
@@ -248,10 +257,13 @@ fun EntryDetailScreen(
                 // Sobald TTS wirklich startet, setzen wir isSpeaking = true
                 isSpeaking = true
             }
+
             override fun onDone(utteranceId: String?) {
                 // Wiedergabe beendet – isSpeaking wieder false
                 isSpeaking = false
             }
+
+            @Deprecated("Deprecated in Java", ReplaceWith("isSpeaking = false"))
             override fun onError(utteranceId: String?) {
                 // Im Fehlerfall ebenfalls zurücksetzen
                 isSpeaking = false
@@ -277,7 +289,10 @@ fun EntryDetailScreen(
                     IconButton(onClick = {
                         if (isEditing) showDiscardDialog = true else onDismiss()
                     }) {
-                        Icon(Icons.Default.Close, contentDescription = "Zurück")
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.contentdesc_close)
+                        )
                     }
                 },
                 actions = {
@@ -306,7 +321,8 @@ fun EntryDetailScreen(
                                     val dateInstant = entryDate
                                         .atStartOfDay(ZoneId.systemDefault())
                                         .toInstant()
-                                    val newCreatedAt = Timestamp(Date.from(dateInstant))
+                                    val newCreatedAt =
+                                        Timestamp(Date.from(dateInstant))
 
                                     // 3) Ein einziges updated-Objekt inklusive createdAt
                                     val updated = entry.copy(
@@ -328,7 +344,7 @@ fun EntryDetailScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "Speichern",
+                                contentDescription = stringResource(R.string.contentdesc_save),
                                 tint = if (isEnabled) Color.White
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                             )
@@ -337,7 +353,7 @@ fun EntryDetailScreen(
                         IconButton(onClick = { isEditing = true }) {
                             Icon(
                                 Icons.Default.Edit,
-                                contentDescription = "Bearbeiten",
+                                contentDescription = stringResource(R.string.contentdesc_edit),
                                 tint = echoColor
                             )
                         }
@@ -492,12 +508,16 @@ fun EntryDetailScreen(
                             ) {
                                 Icon(
                                     imageVector = if (isSpeaking) Icons.Default.Stop else Icons.Default.PlayArrow,
-                                    contentDescription = if (isSpeaking) "Stoppen" else "Vorlesen",
+                                    contentDescription = stringResource(
+                                        if (isSpeaking) R.string.contentdesc_stop else R.string.contentdesc_read
+                                    ),
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = if (isSpeaking) "Stoppen" else "Vorlesen",
+                                    text = stringResource(
+                                        if (isSpeaking) R.string.button_stop else R.string.button_read
+                                    ),
                                     fontSize = 14.sp
                                 )
                             }
@@ -508,7 +528,7 @@ fun EntryDetailScreen(
                             IconButton(onClick = { showInfoDialog = true }) {
                                 Icon(
                                     imageVector = Icons.Default.Info,
-                                    contentDescription = "Hinweis zur Sprachausgabe",
+                                    contentDescription = stringResource(R.string.contentdesc_tts_info),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             }
@@ -519,21 +539,13 @@ fun EntryDetailScreen(
                     if (showInfoDialog) {
                         AlertDialog(
                             onDismissRequest = { showInfoDialog = false },
-                            title = { Text("Sprachpaket installieren") },
+                            title = { Text(stringResource(R.string.tts_info_title)) },
                             text = {
-                                Text(
-                                    "Um eine native Stimme für deine Zielsprache zu bekommen, " +
-                                            "muss das entsprechende Sprachpaket in den Android-Einstellungen " +
-                                            "heruntergeladen werden.\n\n" +
-                                            "Gehe dazu auf:\n" +
-                                            "Einstellungen → System → Sprache & Eingabe → " +
-                                            "Text-zu-Sprache-Ausgabe → Sprachdaten installieren → " +
-                                            "<Gewünschte Sprache> herunterladen."
-                                )
+                                Text(stringResource(R.string.tts_info_message))
                             },
                             confirmButton = {
                                 TextButton(onClick = { showInfoDialog = false }) {
-                                    Text("Verstanden")
+                                    Text(stringResource(R.string.button_understood))
                                 }
                             }
                         )
@@ -545,13 +557,13 @@ fun EntryDetailScreen(
                 if (showDiscardDialog) {
                     AlertDialog(
                         onDismissRequest = { showDiscardDialog = false },
-                        title = { Text("Bearbeitung verwerfen?") },
-                        text = { Text("Möchtest du deine Änderungen verwerfen?") },
+                        title = { Text(stringResource(R.string.discard_changes_title)) },
+                        text  = { Text(stringResource(R.string.discard_changes_message)) },
                         confirmButton = {
                             TextButton(onClick = {
                                 // Abbrechen: nur Dialog schließen, im Edit-Modus bleiben
                                 showDiscardDialog = false
-                            }) { Text("Abbrechen") }
+                            }) { Text(stringResource(R.string.button_cancel)) }
                         },
                         dismissButton = {
                             TextButton(onClick = {
@@ -560,7 +572,7 @@ fun EntryDetailScreen(
                                 isEditing = false
                                 editStartMs = null
                             }) {
-                                Text("Verwerfen")
+                                Text(stringResource(R.string.button_discard))
                             }
                         }
                     )

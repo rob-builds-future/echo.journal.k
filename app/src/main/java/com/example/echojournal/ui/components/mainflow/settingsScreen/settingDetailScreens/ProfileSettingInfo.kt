@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.settingsScreen.settingDetailScreens
+package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,13 +21,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.echojournal.R
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
-
-private const val dummyReminders = "Aus"
 
 @Composable
 fun ProfileSettingInfo(
@@ -42,67 +42,55 @@ fun ProfileSettingInfo(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    Column  {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.onBackground,
-                contentColor = MaterialTheme.colorScheme.background
-            )
-        ) {
-            Text(
-                text = "Mitglied seit: $memberSince",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Benutzername: $username",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(text = "Zielsprache: $language",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(text = "Echo-Farbe: $currentTheme",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(text = "Vorlage: ${currentTemplate.ifBlank { "Keine Vorlage" }}",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(text = "Erinnerungen: $dummyReminders",
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
+    // Dummy‐Status ebenfalls aus Resource
+    val dummyRemindersStatus = stringResource(R.string.profile_info_reminders_status)
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-                .clickable { showDeleteDialog = true },
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Gray,
-                contentColor = MaterialTheme.colorScheme.background
-            )
-        ) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onBackground,
+            contentColor   = MaterialTheme.colorScheme.background
+        )
+    ) {
+        Column {
             Text(
-                text = "Profil Löschen",
+                text = stringResource(R.string.profile_info_member_since, memberSince),
+                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.profile_info_username, username.ifBlank { "–" }),
+                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = stringResource(R.string.profile_info_language, language),
+                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = stringResource(R.string.profile_info_theme, currentTheme),
+                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = stringResource(
+                    R.string.profile_info_template,
+                    currentTemplate.ifBlank { stringResource(R.string.template_none) }
+                ),
+                modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = stringResource(R.string.profile_info_reminders, dummyRemindersStatus),
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
@@ -110,19 +98,49 @@ fun ProfileSettingInfo(
         }
     }
 
+    Spacer(Modifier.height(24.dp))
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp)
+            .clickable { showDeleteDialog = true },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Gray,
+            contentColor   = MaterialTheme.colorScheme.background
+        )
+    ) {
+        Text(
+            text = stringResource(R.string.profile_info_delete),
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Profil löschen") },
-            text = { Text("Möchtest du dein Profil wirklich löschen?") },
+            title = {
+                Text(stringResource(R.string.profile_info_delete_confirm_title))
+            },
+            text = {
+                Text(stringResource(R.string.profile_info_delete_confirm_message))
+            },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     onDeleteProfile()
-                }) { Text("Ja") }
+                }) {
+                    Text(stringResource(R.string.button_yes))
+                }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Nein") }
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.button_no))
+                }
             }
         )
     }

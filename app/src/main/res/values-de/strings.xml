@@ -59,5 +59,215 @@
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="button_translate">Übersetzen</string>
     <string name="button_show_original">Original anzeigen</string>
-    <string name="button_ok">OK</string>
+
+    <!-- AddEntryScreen -->
+    <string name="contentdesc_close">Schließen</string>
+    <string name="contentdesc_save">Speichern</string>
+
+    <string name="discard_changes_title">Änderungen verwerfen?</string>
+    <string name="discard_changes_message">Möchtest du die Änderungen wirklich verwerfen?</string>
+    <string name="button_cancel">Abbrechen</string>
+    <string name="button_discard">Verwerfen</string>
+
+    <string name="no_template">Keine Vorlage</string>
+    <string name="text_words_2">%1$d Worte</string>
+
+    <string name="placeholder_productive_morning">
+        Was ist dein Hauptziel heute? Welche drei Prioritäten stehen ganz oben auf deiner Liste?
+    </string>
+    <string name="placeholder_goals">
+        Welches langfristige Ziel verfolgst du gerade? Was hast du heute dafür getan?
+    </string>
+    <string name="placeholder_evening_reflection">
+        Welche Erlebnisse haben dich heute besonders bewegt? Wie fühlst du dich gerade?
+    </string>
+    <string name="placeholder_gratitude">
+        Nenne drei Dinge, für die du heute dankbar bist.
+    </string>
+    <string name="placeholder_none">Beginne hier zu schreiben…</string>
+
+    <string name="text_translating">Übersetze…</string>
+
+    <!-- TemplateOptions -->
+    <string name="template_none">Keine Vorlage</string>
+    <string name="template_productive_morning">Produktiver Morgen</string>
+    <string name="template_goals">Ziele im Blick</string>
+    <string name="template_evening_reflection">Reflexion am Abend</string>
+    <string name="template_gratitude">Dankbarkeits-Check</string>
+
+    <!-- Instruction Dialog -->
+    <string name="instructions_title">Anleitung: %1$s</string>
+    <string name="instructions_productive_morning">
+1. Überlege dir, was heute dein Hauptziel ist.
+2. Lege drei Prioritäten fest, die dir am wichtigsten sind.
+3. Notiere mögliche Ablenkungen und wie du sie minimierst.
+
+Tipp: Versuche, jede Priorität in einem Satz zu beschreiben.
+    </string>
+    <string name="instructions_goals">
+1. Definiere dein langfristiges Ziel (z. B. in den nächsten 6 Monaten).
+2. Schreibe auf, was du heute konkret dafür getan hast.
+3. Überlege, welche nächsten Schritte du morgen gehen kannst.
+
+Tipp: Halte deine Gedanken in kurzen Stichpunkten fest.
+    </string>
+    <string name="instructions_evening_reflection">
+1. Beschreibe in wenigen Sätzen, was heute besonders war.
+2. Wie fühlst du dich jetzt? Notiere aktuelle Eindrücke.
+3. Was hast du aus den heutigen Erfahrungen gelernt?
+
+Tipp: Versuche, ehrlich und ohne Bewertung zu schreiben.
+    </string>
+    <string name="instructions_gratitude">
+1. Denke an drei Dinge, für die du heute dankbar bist.
+2. Schreibe jeden Punkt kurz mit ein bis zwei Sätzen aus.
+3. Reflektiere, warum dir gerade diese Dinge wichtig sind.
+
+Tipp: Dankbarkeit kann auch in kleinen Alltagsmomenten stecken.
+    </string>
+    <string name="instructions_none">
+Du hast aktuell keine Vorlage ausgewählt.
+Hier kannst du frei schreiben, was dir gerade wichtig ist.
+Wenn du später gezieltere Fragen möchtest, wähle oben eine Vorlage aus.
+    </string>
+
+    <string name="button_close">Schließen</string>
+
+    <string name="contentdesc_edit">Bearbeiten</string>
+    <string name="contentdesc_read">Vorlesen</string>
+    <string name="contentdesc_stop">Stoppen</string>
+    <string name="contentdesc_tts_info">Hinweis zur Sprachausgabe</string>
+
+    <string name="button_read">Vorlesen</string>
+    <string name="button_stop">Stoppen</string>
+    <string name="button_understood">Verstanden</string>
+
+    <string name="tts_info_title">Sprachpaket installieren</string>
+    <string name="tts_info_message">
+Um eine native Stimme für deine Zielsprache zu bekommen, muss das entsprechende Sprachpaket in den Android-Einstellungen heruntergeladen werden.
+
+Gehe dazu auf:
+Einstellungen → System → Sprache &amp; Eingabe → Text-zu-Sprache-Ausgabe → Sprachdaten installieren → &lt;Gewünschte Sprache&gt;
+
+Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
+</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Deine Einstellungen</string>
+    <string name="settings_section_profile">Profil-Einstellungen</string>
+    <string name="settings_section_app">App-Einstellungen</string>
+    <string name="settings_logout">Abmelden</string>
+
+    <string name="logout_dialog_title">Abmelden</string>
+    <string name="logout_dialog_message">Möchtest du dich wirklich abmelden?</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
+
+    <string name="contentdesc_back">Zurück</string>
+
+    <string name="detail_title_username">Benutzername ändern</string>
+    <string name="detail_title_target_language">Zielsprache wählen</string>
+    <string name="detail_title_profile_info">Profil Info</string>
+    <string name="detail_title_theme">Echo-Farbe</string>
+    <string name="detail_title_templates">Geführtes Tagebuchschreiben</string>
+    <string name="detail_title_reminders">Erinnerungen</string>
+
+    <!-- AppSettingsCard -->
+    <string name="settings_app_theme">Echo-Farbe</string>
+    <string name="settings_app_templates">Geführtes Tagebuchschreiben</string>
+    <string name="settings_app_reminders">Erinnerungen</string>
+    <string name="settings_app_reminders_summary">Deine Erinnerungen</string>
+
+    <!-- ProfileSettingsCard -->
+    <string name="settings_profile_target_language">Zielsprache</string>
+    <string name="settings_profile_info">Profil-Info</string>
+    <string name="settings_profile_info_value">Mitglied seit %1$s</string>
+
+    <string name="profile_info_member_since">Mitglied seit: %1$s</string>
+    <string name="profile_info_username">Benutzername: %1$s</string>
+    <string name="profile_info_language">Zielsprache: %1$s</string>
+    <string name="profile_info_theme">Echo-Farbe: %1$s</string>
+    <string name="profile_info_template">Vorlage: %1$s</string>
+    <string name="profile_info_reminders">Erinnerungen: %1$s</string>
+    <string name="profile_info_reminders_status">Aus</string>
+    <string name="profile_info_delete">Profil löschen</string>
+    <string name="profile_info_delete_confirm_title">Profil löschen</string>
+    <string name="profile_info_delete_confirm_message">Möchtest du dein Profil wirklich löschen?</string>
+
+    <!-- Profil Target Language -->
+    <string name="placeholder_search_language">Sprache suchen…</string>
+    <string name="none_selected">–</string>
+    <string name="profile_language_current">Deine aktuelle Zielsprache: %1$s</string>
+
+    <!-- Guided Journaling Templates -->
+    <string name="template_section_morning">Am Morgen</string>
+    <string name="template_section_evening">Am Abend</string>
+
+    <string name="preview_none">Starte mit leerer Seite.</string>
+    <string name="preview_morning_productive">
+Was ist mein Hauptziel heute?\nDrei Prioritäten?\nMögliche Ablenkungen?
+    </string>
+    <string name="preview_morning_goals">
+Welchem Langzeit-Ziel folge ich?\nWas habe ich heute dafür getan?
+    </string>
+    <string name="preview_evening_reflection">
+Was habe ich heute erlebt?\nWie fühle ich mich?\nWofür bin ich dankbar?
+    </string>
+    <string name="preview_evening_gratitude">
+Nenne drei Dinge, für die du heute dankbar bist.
+    </string>
+
+    <!-- Echo Colors -->
+    <string name="profile_theme_title">Deine Echo-Farbe wählen:</string>
+    <string name="theme_display_emerald">Smaragd</string>
+    <string name="theme_display_cloudless">Wolkenlos</string>
+    <string name="theme_display_vintage">Vintage</string>
+    <string name="theme_display_coral">Koralle</string>
+    <string name="theme_display_amber">Bernstein</string>
+
+    <!-- PrefsViewModel and Repo -->
+    <string name="default_theme">Wolkenlos</string>
+
+    <!-- User Name Setting -->
+    <string name="profile_username_instruction">
+        Hier kannst du deinen Benutzernamen ändern.
+    </string>
+    <string name="profile_username_current">
+        Aktueller Benutzername: %1$s
+    </string>
+    <string name="profile_username_label">Neuer Benutzername</string>
+    <string name="profile_username_button_save">Speichern</string>
+    <string name="profile_username_success">
+        Dein Nutzername wurde geändert zu „%1$s“
+    </string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Deine Erfolge</string>
+    <string name="statistics_nav_back">Zurück</string>
+
+    <!-- Tracker Card -->
+    <string name="statistics_tracker_title">Tracker</string>
+
+    <!-- Streak Statistic -->
+    <string name="statistics_streak_title">Aktuell</string>
+    <string name="statistics_streak_contentdesc">Aktuelle Streak</string>
+    <string name="statistics_streak_value">%1$d-Tages\nStreak</string>
+
+    <!-- Total Entries Statistic -->
+    <string name="statistics_total_title">Gesamt</string>
+    <string name="statistics_total_days">%1$d Einträge</string>
+    <string name="statistics_total_words">%1$d Worte</string>
+    <string name="statistics_total_minutes">%1$d Minuten</string>
+    <string name="statistics_total_days_desc">Tage mit Einträgen</string>
+    <string name="statistics_total_words_desc">Gesamt Wörter</string>
+    <string name="statistics_total_minutes_desc">Gesamt Dauer</string>
+
+    <!-- Top Words Statistic -->
+    <string name="statistics_top_words_title">Top Wörter</string>
+
+    <!-- Calendar Navigation -->
+    <string name="statistics_calendar_prev">Vorheriger Monat</string>
+    <string name="statistics_calendar_next">Nächster Monat</string>
+
+
 </resources>
