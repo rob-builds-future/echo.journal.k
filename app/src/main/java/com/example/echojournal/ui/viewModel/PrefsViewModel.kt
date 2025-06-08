@@ -22,7 +22,7 @@ class PrefsViewModel(
     val currentLanguage = prefsRepo.currentLanguageCode
         .stateIn(viewModelScope, SharingStarted.Eagerly, "en")
     val sourceLanguage: StateFlow<String> = prefsRepo.sourceLanguageCode
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "de")
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "auto")
     val username: StateFlow<String> = prefsRepo.username
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
     val currentTemplate: StateFlow<String> = prefsRepo.currentTemplateName

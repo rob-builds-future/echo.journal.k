@@ -91,7 +91,7 @@ class PrefsRepoImpl(
     }
 
     override val sourceLanguageCode: Flow<String> = ds.data
-        .map { it[Keys.SOURCE_LANGUAGE] ?: "de" }
+        .map { it[Keys.SOURCE_LANGUAGE] ?: "auto" }
 
     override suspend fun setSourceLanguageCode(value: String) {
         ds.edit { it[Keys.SOURCE_LANGUAGE] = value }
