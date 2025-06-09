@@ -9,6 +9,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.example.echojournal.R
@@ -18,12 +21,16 @@ import com.example.echojournal.R
 fun EntryListTopBar(
     title: AnnotatedString,
     onSettingsClick: () -> Unit,
-    onStatsClick: () -> Unit
+    onStatsClick: () -> Unit,
+    onStatsIconPositioned: (Offset) -> Unit
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
         navigationIcon = {
-            IconButton(onClick = onStatsClick) {
+            IconButton(onClick = onStatsClick,
+                modifier = Modifier.onGloballyPositioned {
+                    onStatsIconPositioned(it.localToWindow(Offset.Zero))
+                }) {
                 Icon(
                     imageVector = Icons.Default.Insights,
                     contentDescription = stringResource(R.string.contentdesc_stats)

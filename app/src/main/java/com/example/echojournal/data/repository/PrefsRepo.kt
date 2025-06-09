@@ -41,4 +41,10 @@ interface PrefsRepo {
      * Setzt nur das „time“-Feld (als String, z. B. "09:00") für das gegebene Label (enabled bleibt erhalten).
      */
     suspend fun updateReminderTime(label: String, time: String)
+
+    /** Gibt das Datum zurück, an dem zuletzt der Congrats-Dialog gezeigt wurde (Format: "yyyy-MM-dd"), oder null. */
+    suspend fun getLastCongratsDate(): String?
+
+    /** Setzt das Datum, an dem der Dialog zuletzt gezeigt wurde. */
+    suspend fun setLastCongratsDate(date: String)
 }

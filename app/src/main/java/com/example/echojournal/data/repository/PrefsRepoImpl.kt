@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 
@@ -34,6 +35,7 @@ class PrefsRepoImpl(
         val USERNAME  = stringPreferencesKey("username")
         val TEMPLATE_NAME = stringPreferencesKey("template_name")
         val REMINDERS_JSON = stringPreferencesKey("key_reminders_json")
+        val KEY_LAST_CONGRATS_DATE = stringPreferencesKey("last_congrats_date")
     }
 
     // 1. DataStore verwenden
@@ -146,5 +148,14 @@ class PrefsRepoImpl(
             currentMap[label] = ReminderConfig(enabled = oldEnabled, time = time)
             prefs[Keys.REMINDERS_JSON] = toJsonString(currentMap)
         }
+    }
+
+    override suspend fun getLastCongratsDate(): String? {
+        val prefs = ds.data.first()
+        return prefs[Keys.KEY_LAST_CONGRATS_DATE]
+    }
+
+    override suspend fun setLastCongratsDate(date: String) {
+        ds.edit { it[Keys.KEY_LAST_CONGRATS_DATE] = date }
     }
 }

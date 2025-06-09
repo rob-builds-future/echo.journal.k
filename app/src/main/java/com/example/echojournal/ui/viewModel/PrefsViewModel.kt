@@ -65,4 +65,16 @@ class PrefsViewModel(
             prefsRepo.updateReminderTime(label, time)
         }
     }
+
+    // Für das Abrufen (wird von einem suspend-Scope aus benutzt, z.B. LaunchedEffect)
+    suspend fun getLastCongratsDate(): String? {
+        return prefsRepo.getLastCongratsDate()
+    }
+
+    // Für das Setzen, wie die anderen Einstellungen (übernimmt selbst das launch)
+    fun setLastCongratsDate(date: String) {
+        viewModelScope.launch {
+            prefsRepo.setLastCongratsDate(date)
+        }
+    }
 }

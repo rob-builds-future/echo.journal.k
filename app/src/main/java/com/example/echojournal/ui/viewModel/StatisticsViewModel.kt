@@ -2,8 +2,10 @@ package com.example.echojournal.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.echojournal.R
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
@@ -72,17 +74,48 @@ class StatisticsViewModel(
                 initialValue = 0
             )
 
-    // Aktueller Streak (Tage in Folge bis heute)
-    val currentStreak: StateFlow<Int> =
-        entryDates
-            .map { dates ->
-                var streak = 0
-                var day = LocalDate.now()
-                while (dates.contains(day)) {
-                    streak++
-                    day = day.minusDays(1)
-                }
-                streak
+
+    // 1) Streak inklusive heute
+    private val streakInclToday = entryDates
+        .map { dates ->
+            var streak = 0
+            var day = LocalDate.now()
+            while (dates.contains(day)) {
+                streak++
+                day = day.minusDays(1)
             }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+            streak
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+
+    // 2) Streak bis gestern
+    private val streakUntilYesterday = entryDates
+        .map { dates ->
+            var streak = 0
+            var day = LocalDate.now().minusDays(1)
+            while (dates.contains(day)) {
+                streak++
+                day = day.minusDays(1)
+            }
+            streak
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+
+    // 3) Flag: heute schon geschrieben?
+    val hasEntryToday = entryDates
+        .map { it.contains(LocalDate.now()) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    // 4) Sichtbarer Streak: je nach Fall
+    val visibleStreak = combine(hasEntryToday, streakInclToday, streakUntilYesterday) { today, incl, until ->
+        if (today) incl else until
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+
+    val streakMessageRes: StateFlow<Int> = combine(hasEntryToday, visibleStreak) { today, streak ->
+        when {
+            today -> R.string.statistics_streak_message_today
+            streak > 0 -> R.string.statistics_streak_message_not_today
+            else -> R.string.statistics_streak_message_first
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, R.string.statistics_streak_message_first)
 }

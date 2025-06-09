@@ -144,7 +144,7 @@ Wenn du später gezieltere Fragen möchtest, wähle oben eine Vorlage aus.
 
     <string name="tts_info_title">Sprachpaket installieren</string>
     <string name="tts_info_message">
-Um eine native Stimme für deine Zielsprache zu bekommen, muss das entsprechende Sprachpaket in den Android-Einstellungen heruntergeladen werden.
+Um eine native Stimme für deine Echo Stimme zu bekommen, muss das entsprechende Sprachpaket in den Android-Einstellungen heruntergeladen werden.
 
 Gehe dazu auf:
 Einstellungen → System → Sprache &amp; Eingabe → Text-zu-Sprache-Ausgabe → Sprachdaten installieren → &lt;Gewünschte Sprache&gt;
@@ -166,7 +166,7 @@ Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
     <string name="contentdesc_back">Zurück</string>
 
     <string name="detail_title_username">Benutzername ändern</string>
-    <string name="detail_title_target_language">Zielsprache wählen</string>
+    <string name="detail_title_target_language">Echo-Sprache wählen</string>
     <string name="detail_title_profile_info">Profil Info</string>
     <string name="detail_title_theme">Echo-Farbe</string>
     <string name="detail_title_templates">Geführtes Tagebuchschreiben</string>
@@ -179,13 +179,13 @@ Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
     <string name="settings_app_reminders_summary">Deine Erinnerungen</string>
 
     <!-- ProfileSettingsCard -->
-    <string name="settings_profile_target_language">Zielsprache</string>
+    <string name="settings_profile_target_language">Echo-Sprache</string>
     <string name="settings_profile_info">Profil-Info</string>
     <string name="settings_profile_info_value">Mitglied seit %1$s</string>
 
     <string name="profile_info_member_since">Mitglied seit: %1$s</string>
     <string name="profile_info_username">Benutzername: %1$s</string>
-    <string name="profile_info_language">Zielsprache: %1$s</string>
+    <string name="profile_info_language">Echo-Sprache: %1$s</string>
     <string name="profile_info_theme">Echo-Farbe: %1$s</string>
     <string name="profile_info_template">Vorlage: %1$s</string>
     <string name="profile_info_reminders">Erinnerungen: %1$s</string>
@@ -197,7 +197,7 @@ Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
     <!-- Profil Target Language -->
     <string name="placeholder_search_language">Sprache suchen…</string>
     <string name="none_selected">–</string>
-    <string name="profile_language_current">Deine aktuelle Zielsprache: %1$s</string>
+    <string name="profile_language_current">Deine aktuelle Echo-Sprache: %1$s</string>
 
     <!-- Guided Journaling Templates -->
     <string name="template_section_morning">Am Morgen</string>
@@ -252,6 +252,16 @@ Nenne drei Dinge, für die du heute dankbar bist.
     <string name="statistics_streak_title">Aktuell</string>
     <string name="statistics_streak_contentdesc">Aktuelle Streak</string>
     <string name="statistics_streak_value">%1$d-Tages\nStreak</string>
+    <string name="statistics_streak_info_contentdesc">Streak‐Info anzeigen</string>
+    <string name="statistics_streak_message_today">
+        Du hast heute schon geschrieben! Deine aktuelle Serie: %1$d Tage.
+    </string>
+    <string name="statistics_streak_message_not_today">
+        Noch kein Eintrag heute. Bisherige Serie: %1$d Tage. Leg jetzt los, um sie nicht zu verlieren!
+    </string>
+    <string name="statistics_streak_message_first">
+        Starte deine erste Serie – schreibe heute ins Tagebuch!
+    </string>
 
     <!-- Total Entries Statistic -->
     <string name="statistics_total_title">Gesamt</string>
@@ -269,5 +279,10 @@ Nenne drei Dinge, für die du heute dankbar bist.
     <string name="statistics_calendar_prev">Vorheriger Monat</string>
     <string name="statistics_calendar_next">Nächster Monat</string>
 
+    <!-- Congrats-Dialog -->
+    <string name="congrats_title">Herzlichen Glückwunsch!</string>
+    <string name="congrats_message">Du hast heute ein Tagebuch geführt und bewusster gelebt.
+    Außerdem hast du einen Streak-Punkt verdient. Mach weiter so!</string>
+    <string name="button_nice">Super!</string>
 
 </resources>

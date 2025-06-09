@@ -19,11 +19,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class EntryViewModel(
     private val authViewModel: AuthViewModel,
     private val journalRepo: JournalRepo,
-    private val translationApiRepo: TranslationApiRepo
+    private val translationApiRepo: TranslationApiRepo,
 ) : ViewModel() {
 
     private val userFlow = authViewModel.user
@@ -42,7 +43,8 @@ class EntryViewModel(
         .catch { e ->
             // Wenn Firestore uns die Berechtigung entzieht, ignoriere das
             if (e is FirebaseFirestoreException && e.code ==
-                com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED
+            ) {
                 emit(emptyList())
             } else {
                 throw e
@@ -63,6 +65,21 @@ class EntryViewModel(
     private val _localEntries = MutableStateFlow<List<JournalEntry>>(emptyList())
     val localEntries: StateFlow<List<JournalEntry>> = _localEntries.asStateFlow()
 
+    private val _justExtendedStreak = MutableStateFlow(false)
+    val justExtendedStreak: StateFlow<Boolean> = _justExtendedStreak.asStateFlow()
+
+    // Intern: letzter bekannter Streak
+    private var lastStreak = 0
+
+    init {
+        // Nur laden, kein Dialog auslösen
+        viewModelScope.launch {
+            entries.collect { list ->
+                _localEntries.value = list
+            }
+        }
+    }
+
     /** Erstellt einen neuen Eintrag inkl. Übersetzung. */
     fun createEntry(
         rawContent: String,
@@ -72,18 +89,17 @@ class EntryViewModel(
         createdAt: Timestamp
     ) {
         viewModelScope.launch {
-            _createResult.value = runCatching {
+            // Persistieren + Ergebnis speichern
+            val result = runCatching {
                 val userId = authViewModel.user.value?.id
                     ?: throw IllegalStateException("User nicht authentifiziert")
-                val translatedText = translationApiRepo.translate(
-                    text = rawContent,
-                    from = sourceLang,
-                    to = targetLang
+                val translated = translationApiRepo.translate(
+                    text = rawContent, from = sourceLang, to = targetLang
                 )
                 val entry = JournalEntry(
                     userId = userId,
                     content = rawContent,
-                    translatedContent = translatedText,
+                    translatedContent = translated,
                     sourceLang = sourceLang,
                     targetLang = targetLang,
                     duration = duration,
@@ -92,7 +108,43 @@ class EntryViewModel(
                 )
                 journalRepo.createEntry(userId, entry)
             }
+            _createResult.value = result
+            result.onSuccess {
+                _justExtendedStreak.value = true
+            }
         }
+    }
+
+    private fun calculateStreak(dates: Set<LocalDate>): Int {
+        var streak = 0
+        var day = LocalDate.now()
+        while (dates.contains(day)) {
+            streak++
+            day = day.minusDays(1)
+        }
+        return streak
+    }
+
+    /**
+     * Markiert, dass die Streak durch einen neuen Eintrag verlängert wurde.
+     * Wird nach erfolgreichem Erstellen eines Eintrags vom UI ausgelöst.
+     */
+    fun extendStreak() {
+        _justExtendedStreak.value = true
+    }
+
+    /**
+     * Setzt das Create-Result zurück.
+     */
+    fun clearCreateResult() {
+        _createResult.value = null
+    }
+
+    /**
+     * Setzt das Extended-Streak-Flag zurück.
+     */
+    fun clearExtendedStreakFlag() {
+        _justExtendedStreak.value = false
     }
 
     /** Aktualisiert einen bestehenden Eintrag. */
@@ -116,9 +168,6 @@ class EntryViewModel(
     }
 
     /** Reset-Methoden für die Ergebnisse. */
-    fun clearCreateResult() {
-        _createResult.value = null
-    }
 
     fun clearUpdateResult() {
         _updateResult.value = null
@@ -154,16 +203,6 @@ class EntryViewModel(
                 _localEntries.value = _localEntries.value.map { current ->
                     if (current.id == entry.id) entry else current
                 }
-            }
-        }
-    }
-    init {
-        viewModelScope.launch {
-            entries.collect { updatedEntries ->
-                // Logge vorab, welche Values hier ankommen
-                updatedEntries.forEach { entry ->
-                }
-                _localEntries.value = updatedEntries
             }
         }
     }

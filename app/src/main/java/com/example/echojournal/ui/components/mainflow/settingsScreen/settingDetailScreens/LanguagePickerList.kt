@@ -1,4 +1,4 @@
-package com.example.echojournal.ui.components.mainflow.settingsScreen
+package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -37,15 +37,13 @@ fun LanguagePickerList(
     onSelect: (LanguageDto) -> Unit
 ) {
     // 1) Alle Sprachen vom ViewModel
-    val allLangs by languageViewModel.languages.collectAsState(emptyList())
+    val allLangs by languageViewModel.localizedLanguages.collectAsState(emptyList())
     // 2) aktuell gespeicherter Code – das ist unsere Single Source of Truth
     val currentCode by prefsViewModel.currentLanguage.collectAsState()
 
     var query by remember { mutableStateOf("") }
 
     Column(modifier = Modifier) {
-        Text(text = "$label:")
-        Spacer(Modifier.height(8.dp))
 
         OutlinedTextField(
             value = query,

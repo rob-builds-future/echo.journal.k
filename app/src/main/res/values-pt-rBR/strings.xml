@@ -143,7 +143,7 @@ Se quiser orientações mais direcionadas depois, escolha um template acima.
 
     <string name="tts_info_title">Instalar dados de voz</string>
     <string name="tts_info_message">
-Para obter uma voz nativa para seu idioma-alvo, baixe os dados de voz correspondentes nas configurações do Android.
+Para obter uma voz nativa para seu Echo voz, baixe os dados de voz correspondentes nas configurações do Android.
 
 Vá para:
 Configurações → Sistema → Idioma e entrada → Saída de texto para fala → Instalar dados de voz → &lt;Idioma desejado&gt;
@@ -166,7 +166,7 @@ Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
     <string name="contentdesc_back">Voltar</string>
 
     <string name="detail_title_username">Alterar nome de usuário</string>
-    <string name="detail_title_target_language">Selecionar idioma-alvo</string>
+    <string name="detail_title_target_language">Selecionar idioma Echo</string>
     <string name="detail_title_profile_info">Informações do perfil</string>
     <string name="detail_title_theme">Tema</string>
     <string name="detail_title_templates">Diário guiado</string>
@@ -174,18 +174,18 @@ Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
 
     <!-- AppSettingsCard -->
     <string name="settings_app_theme">Cor Echo</string>
-    <string name="settings_app_templates">Jornal guiado</string>
+    <string name="settings_app_templates">Diário guiado</string>
     <string name="settings_app_reminders">Lembretes</string>
     <string name="settings_app_reminders_summary">Seus lembretes</string>
 
     <!-- ProfileSettingsCard -->
-    <string name="settings_profile_target_language">Idioma alvo</string>
+    <string name="settings_profile_target_language">Idioma Echo</string>
     <string name="settings_profile_info">Informações do perfil</string>
     <string name="settings_profile_info_value">Membro desde %1$s</string>
 
     <string name="profile_info_member_since">Membro desde: %1$s</string>
     <string name="profile_info_username">Nome de usuário: %1$s</string>
-    <string name="profile_info_language">Idioma-alvo: %1$s</string>
+    <string name="profile_info_language">Idioma Echo: %1$s</string>
     <string name="profile_info_theme">Cor Echo: %1$s</string>
     <string name="profile_info_template">Template: %1$s</string>
     <string name="profile_info_reminders">Lembretes: %1$s</string>
@@ -195,9 +195,9 @@ Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
     <string name="profile_info_delete_confirm_message">Deseja realmente excluir seu perfil?</string>
 
     <!-- Profil Target Language -->
-    <string name="placeholder_search_language">Sprache suchen…</string>
+    <string name="placeholder_search_language">Pesquisar idioma…</string>
     <string name="none_selected">–</string>
-    <string name="profile_language_current">Seu idioma-alvo atual: %1$s</string>
+    <string name="profile_language_current">Seu idioma Echo atual: %1$s</string>
 
     <!-- Guided Journaling Templates -->
     <string name="template_section_morning">Pela manhã</string>
@@ -252,6 +252,16 @@ Liste três coisas pelas quais você é grato hoje.
     <string name="statistics_streak_title">Atual</string>
     <string name="statistics_streak_contentdesc">Sequência atual</string>
     <string name="statistics_streak_value">%1$d-dia\nsequência</string>
+    <string name="statistics_streak_info_contentdesc">Mostrar informações da sequência</string>
+    <string name="statistics_streak_message_today">
+        Você já escreveu hoje! Sua série atual: %1$d dias.
+    </string>
+    <string name="statistics_streak_message_not_today">
+        Ainda não há registro hoje. Sua série até agora: %1$d dias. Escreva agora para não interromper!
+    </string>
+    <string name="statistics_streak_message_first">
+        Inicie sua primeira série—escreva no diário hoje!
+    </string>
 
     <!-- Total Entries Statistic -->
     <string name="statistics_total_title">Total</string>
@@ -269,4 +279,9 @@ Liste três coisas pelas quais você é grato hoje.
     <string name="statistics_calendar_prev">Mês anterior</string>
     <string name="statistics_calendar_next">Próximo mês</string>
 
+    <!-- Diálogo de parabéns -->
+    <string name="congrats_title">Parabéns!</string>
+    <string name="congrats_message">Você escreveu no diário hoje e viveu de forma mais consciente.
+    Você também ganhou um ponto de sequência. Continue assim!</string>
+    <string name="button_nice">Legal!</string>
 </resources>

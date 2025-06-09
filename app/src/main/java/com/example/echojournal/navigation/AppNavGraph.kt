@@ -146,13 +146,16 @@ fun AppNavGraph(
                     },
                     onStatsClick = {
                         navController.navigate(StatisticsRoute.route)
-                    }
+                    },
+                    navController = navController
                 )
             }
 
             // Add-Entry-Screen
             composable(AddEntryRoute.route) {
-                AddEntryScreen(onDismiss = { navController.popBackStack() })
+                AddEntryScreen(
+                    onDismiss = { navController.popBackStack() },
+                    navController = navController)
             }
 
             // JournalEntry-Detail

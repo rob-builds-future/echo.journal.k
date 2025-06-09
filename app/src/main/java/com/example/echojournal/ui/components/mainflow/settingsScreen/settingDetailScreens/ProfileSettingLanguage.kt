@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
-import com.example.echojournal.ui.components.mainflow.settingsScreen.LanguagePickerList
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
@@ -25,7 +24,7 @@ fun ProfileSettingLanguage(
 ) {
     // Aktuelle Codes & Listen
     val currentCode by prefsViewModel.currentLanguage.collectAsState()
-    val languages by languageViewModel.languages.collectAsState()
+    val languages by languageViewModel.localizedLanguages.collectAsState()
 
     // Anzeigename der aktuellen Sprache ermitteln
     val currentName = languages

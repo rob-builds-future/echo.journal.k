@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.echojournal.R
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.CombinedRowUnderEntry
 import com.example.echojournal.ui.components.mainflow.addEntryScreen.EntrySection
@@ -71,7 +72,7 @@ import java.util.Date
 @Composable
 fun AddEntryScreen(
     onDismiss: () -> Unit,
-    //translationViewModel: TranslationViewModel = koinViewModel()
+    navController: NavHostController
 ) {
     // ViewModels holen
     val entryViewModel: EntryViewModel = koinViewModel()
@@ -89,7 +90,6 @@ fun AddEntryScreen(
     val context = LocalContext.current
     var content by remember { mutableStateOf("") }
     val translationText by translationViewModel.translatedText.collectAsState()
-    val createResult by entryViewModel.createResult.collectAsState()
     var showDiscardAlert by remember { mutableStateOf(false) }
     var showInstructionDialog by remember { mutableStateOf(false) }
 
@@ -151,6 +151,21 @@ fun AddEntryScreen(
     // Fokus immer auf EntrySection
     LaunchedEffect(isReversed) { entryFocusRequester.requestFocus() }
     LaunchedEffect(Unit) { entryFocusRequester.requestFocus() }
+
+    val createResult by entryViewModel.createResult.collectAsState()
+    LaunchedEffect(createResult) {
+        createResult?.onSuccess {
+            entryViewModel.extendStreak()
+            entryViewModel.clearCreateResult()
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("congrats_date", LocalDate.now().toString())
+            onDismiss()   // PopBackStack sofort
+        }
+        createResult?.onFailure {
+            entryViewModel.clearCreateResult()
+        }
+    }
 
     BackHandler(enabled = true) { showDiscardAlert = true }
 
@@ -396,17 +411,6 @@ fun AddEntryScreen(
                     }
                 }
             )
-        }
-    }
-    // Create-Result-Handling
-    LaunchedEffect(createResult) {
-        createResult?.onSuccess {
-            entryViewModel.clearCreateResult()
-            onDismiss()
-        }
-        createResult?.onFailure {
-            // show error logik ergänzen
-            entryViewModel.clearCreateResult()
         }
     }
 }

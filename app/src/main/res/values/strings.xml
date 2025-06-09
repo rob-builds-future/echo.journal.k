@@ -155,7 +155,7 @@ If you’d like more targeted prompts later, please choose a template above.
     <!-- TTS-Info Dialog -->
     <string name="tts_info_title">Install speech data</string>
     <string name="tts_info_message">
-To get a native voice for your target language, download the corresponding speech data in Android settings.
+To get a native voice for your Echo voice, download the corresponding speech data in Android settings.
 
 Go to:
 Settings → System → Language &amp; input → Text-to-speech output → Install voice data → &lt;Desired language&gt;
@@ -180,7 +180,7 @@ Tip: You can also choose a different voice under the same menu.
 
     <!-- SettingDetailScreen Titles -->
     <string name="detail_title_username">Change Username</string>
-    <string name="detail_title_target_language">Select Target Language</string>
+    <string name="detail_title_target_language">Select Echo Language</string>
     <string name="detail_title_profile_info">Profile Info</string>
     <string name="detail_title_theme">Theme</string>
     <string name="detail_title_templates">Guided Journaling</string>
@@ -193,13 +193,13 @@ Tip: You can also choose a different voice under the same menu.
     <string name="settings_app_reminders_summary">Your reminders</string>
 
     <!-- ProfileSettingsCard -->
-    <string name="settings_profile_target_language">Target language</string>
+    <string name="settings_profile_target_language">Echo language</string>
     <string name="settings_profile_info">Profile info</string>
     <string name="settings_profile_info_value">Member since %1$s</string>
 
     <string name="profile_info_member_since">Member since: %1$s</string>
     <string name="profile_info_username">Username: %1$s</string>
-    <string name="profile_info_language">Target language: %1$s</string>
+    <string name="profile_info_language">Echo language: %1$s</string>
     <string name="profile_info_theme">Echo color: %1$s</string>
     <string name="profile_info_template">Template: %1$s</string>
     <string name="profile_info_reminders">Reminders: %1$s</string>
@@ -208,9 +208,9 @@ Tip: You can also choose a different voice under the same menu.
     <string name="profile_info_delete_confirm_title">Delete profile</string>
     <string name="profile_info_delete_confirm_message">Do you really want to delete your profile?</string>
 
-    <!-- Profil Target Language -->
+    <!-- Profil Echo Language -->
     <string name="none_selected">–</string>
-    <string name="profile_language_current">Your current target language: %1$s</string>
+    <string name="profile_language_current">Your current Echo language: %1$s</string>
     <string name="placeholder_search_language">Search for a language…</string>
 
     <!-- Guided Journaling Templates -->
@@ -268,6 +268,16 @@ Name three things you’re grateful for today.
     <string name="statistics_streak_title">Current</string>
     <string name="statistics_streak_contentdesc">Current streak</string>
     <string name="statistics_streak_value">%1$d-day\nstreak</string>
+    <string name="statistics_streak_info_contentdesc">Show streak info</string>
+    <string name="statistics_streak_message_today">
+        You’ve written today! Your current streak: %1$d days.
+    </string>
+    <string name="statistics_streak_message_not_today">
+        No entry yet today. Your streak so far: %1$d days. Write now to keep it going!
+    </string>
+    <string name="statistics_streak_message_first">
+        Start your first streak—write in your journal today!
+    </string>
 
     <!-- Total Entries Statistic -->
     <string name="statistics_total_title">Total</string>
@@ -284,5 +294,11 @@ Name three things you’re grateful for today.
     <!-- Calendar Navigation -->
     <string name="statistics_calendar_prev">Previous month</string>
     <string name="statistics_calendar_next">Next month</string>
+
+    <!-- Congrats-Dialog -->
+    <string name="congrats_title">Congratulations!</string>
+    <string name="congrats_message">You journaled today and lived more consciously.
+    You’ve also earned a streak point. Keep up the good work!</string>
+    <string name="button_nice">Nice!</string>
 
 </resources>

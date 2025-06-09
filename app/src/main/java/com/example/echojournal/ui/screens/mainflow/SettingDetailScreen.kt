@@ -48,7 +48,7 @@ fun SettingDetailScreen(
 
     // LanguageViewModel für die Liste aller Sprachen
     val languageViewModel: LanguageViewModel = koinViewModel()
-    val allLanguages by languageViewModel.languages.collectAsState()
+    val allLanguages by languageViewModel.localizedLanguages.collectAsState()
 
     Scaffold(
         topBar = {

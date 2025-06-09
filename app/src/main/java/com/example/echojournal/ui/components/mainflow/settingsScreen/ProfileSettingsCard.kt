@@ -30,7 +30,7 @@ fun ProfileSettingsCard(
     val languageViewModel: LanguageViewModel = koinViewModel()
     val username by prefsViewModel.username.collectAsState()
     val currentLanguageCode by prefsViewModel.currentLanguage.collectAsState()
-    val allLanguages by languageViewModel.languages.collectAsState()
+    val allLanguages by languageViewModel.localizedLanguages.collectAsState()
     val languageName = allLanguages
         .firstOrNull { it.code == currentLanguageCode }
         ?.name
