@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
 
 @Composable
@@ -26,9 +28,19 @@ fun ThemePickerOnboarding(
     onSelect: (String) -> Unit,
     modifier: Modifier
 ) {
-    Column {
+    // Map für Farbnamen zu String-Resources
+    val displayMap = mapOf(
+        "Smaragd" to R.string.theme_display_emerald,
+        "Wolkenlos" to R.string.theme_display_cloudless,
+        "Vintage" to R.string.theme_display_vintage,
+        "Koralle" to R.string.theme_display_coral,
+        "Bernstein" to R.string.theme_display_amber
+    )
+
+    Column(modifier = modifier) {
         options.forEach { key ->
             val color = ColorManager.getColor(key)
+            val label = stringResource(displayMap[key] ?: R.string.theme_display_cloudless)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -42,7 +54,7 @@ fun ThemePickerOnboarding(
                         .background(color = color, shape = RoundedCornerShape(6.dp))
                 )
                 Spacer(Modifier.width(12.dp))
-                Text(text = key)
+                Text(text = label)
                 Spacer(Modifier.weight(1f))
                 RadioButton(
                     selected = key == selectedTheme,

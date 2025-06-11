@@ -1,6 +1,7 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,9 +36,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
 import com.example.echojournal.data.remote.model.JournalEntry
@@ -51,8 +55,6 @@ fun EntryRow(
     onToggleFavorite: () -> Unit,
     onDelete: () -> Unit
 ) {
-    var menuExpanded by remember { mutableStateOf(false) }
-
     val count = entry.content
         .trim()
         .split("\\s+".toRegex())
@@ -62,6 +64,11 @@ fun EntryRow(
     val context = LocalContext.current
     val locale = context.resources.configuration.locales.get(0)
     val dateStr: String = formatDate(entry.createdAt, locale)
+
+    val density = LocalDensity.current
+    var menuOffsetY by remember { mutableStateOf(0.dp) }
+    var menuExpanded by remember { mutableStateOf(false) }
+
 
     ShadowCard(
         onClick = { onClick() },
@@ -122,82 +129,130 @@ fun EntryRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp, 28.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                                shape = customCornerShape(
-                                    topStart = 12.dp,
-                                    bottomEnd = 12.dp
+                    Box {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp, 28.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    shape = customCornerShape(
+                                        topStart = 12.dp,
+                                        bottomEnd = 12.dp
+                                    )
+                                )
+                                .clickable { menuExpanded = true }
+                                .onGloballyPositioned { coordinates ->
+                                    // Y-Position für Offset merken (optional)// Höhe von px zu dp konvertieren
+                                    menuOffsetY =
+                                        with(density) { coordinates.size.height.toDp() }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = stringResource(R.string.contentdesc_more),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false },
+                            offset = DpOffset(0.dp, menuOffsetY - 16.dp),
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = MaterialTheme.shapes.medium
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    shape = MaterialTheme.shapes.medium
+                                ),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(R.string.menu_show_entry),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    onClick()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Visibility,
+                                        contentDescription = stringResource(R.string.contentdesc_show_entry),
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                colors = androidx.compose.material3.MenuDefaults.itemColors(
+                                    textColor = MaterialTheme.colorScheme.onSurface,
+                                    leadingIconColor = MaterialTheme.colorScheme.onSurface,
+                                    trailingIconColor = MaterialTheme.colorScheme.onSurface
                                 )
                             )
-                            .clickable { menuExpanded = true },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = stringResource(R.string.contentdesc_more),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.menu_show_entry)) },
-                            onClick = {
-                                menuExpanded = false
-                                onClick()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Visibility,
-                                    contentDescription = stringResource(R.string.contentdesc_show_entry)
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        if (entry.favorite)
+                                            stringResource(R.string.menu_unfavorite)
+                                        else
+                                            stringResource(R.string.menu_favorite),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    onToggleFavorite()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = if (entry.favorite)
+                                            Icons.Default.BookmarkRemove
+                                        else
+                                            Icons.Default.Bookmark,
+                                        contentDescription = if (entry.favorite)
+                                            stringResource(R.string.contentdesc_unfavorite)
+                                        else
+                                            stringResource(R.string.contentdesc_favorite),
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                colors = androidx.compose.material3.MenuDefaults.itemColors(
+                                    textColor = MaterialTheme.colorScheme.onSurface,
+                                    leadingIconColor = MaterialTheme.colorScheme.onSurface,
+                                    trailingIconColor = MaterialTheme.colorScheme.onSurface
                                 )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    if (entry.favorite)
-                                        stringResource(R.string.menu_unfavorite)
-                                    else
-                                        stringResource(R.string.menu_favorite)
+                            )
+                            HorizontalDivider()
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(R.string.menu_delete),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    onDelete()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.contentdesc_delete),
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
+                                colors = androidx.compose.material3.MenuDefaults.itemColors(
+                                    textColor = MaterialTheme.colorScheme.onSurface,
+                                    leadingIconColor = MaterialTheme.colorScheme.onSurface,
+                                    trailingIconColor = MaterialTheme.colorScheme.onSurface
                                 )
-                            },
-                            onClick = {
-                                menuExpanded = false
-                                onToggleFavorite()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = if (entry.favorite)
-                                        Icons.Default.BookmarkRemove
-                                    else
-                                        Icons.Default.Bookmark,
-                                    contentDescription = if (entry.favorite)
-                                        stringResource(R.string.contentdesc_unfavorite)
-                                    else
-                                        stringResource(R.string.contentdesc_favorite)
-                                )
-                            }
-                        )
-                        HorizontalDivider()
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.menu_delete)) },
-                            onClick = {
-                                menuExpanded = false
-                                onDelete()
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = stringResource(R.string.contentdesc_delete)
-                                )
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

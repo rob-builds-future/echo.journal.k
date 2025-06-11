@@ -1,11 +1,13 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,9 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
 import com.example.echojournal.ui.theme.ColorManager
@@ -47,7 +49,6 @@ fun InspirationPopover(
 
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
-    val isLightTheme = themeName.equals("Light", ignoreCase = true)
 
     // 2) Context + Locale
     val context = LocalContext.current
@@ -94,17 +95,20 @@ fun InspirationPopover(
         }
     }
 
-    // 6) On-Demand-Übersetzung: Nur starten, wenn User klickt
-    //    => Wir binden diesen Code in den Button-OnClick statt in LaunchedEffect.
-
     // 7) AlertDialog-UI
     AlertDialog(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = AlertDialogDefaults.shape
+            ),
         onDismissRequest = onDismiss,
-        containerColor = if (isLightTheme) Color.White else Color.Black,
+        containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
                 text = defaultTitle,
-                color = if (isLightTheme) Color.Black else Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
         },
@@ -116,7 +120,7 @@ fun InspirationPopover(
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = stringResource(R.string.text_loading),
-                            color = if (isLightTheme) Color.Black else Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -124,32 +128,35 @@ fun InspirationPopover(
                 errorMessage != null -> {
                     Text(
                         text = errorMessage!!,
-                        color = if (isLightTheme) Color.Black else Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 inspirationOriginal != null -> {
-                    // Hier entscheiden wir, ob Original oder bereits übersetzt angezeigt wird:
+                    // Inspiration Text
                     val displayText = if (showTranslated && inspirationTranslated != null) {
                         inspirationTranslated!!
                     } else {
                         inspirationOriginal!!
                     }
-                    val displayColor = when {
-                        showTranslated && inspirationTranslated != null -> echoColor
-                        isLightTheme                                 -> Color.Black
-                        else                                         -> Color.White
+                    val displayColor = if (showTranslated && inspirationTranslated != null) {
+                        echoColor
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
                     }
+                    val displayWeight = if (showTranslated && inspirationTranslated != null) FontWeight.Bold else FontWeight.Normal
+
                     Text(
                         text = displayText,
                         color = displayColor,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = displayWeight
                     )
                 }
                 else -> {
                     Text(
                         text = stringResource(R.string.error_unknown),
-                        color = if (isLightTheme) Color.Black else Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -174,8 +181,8 @@ fun InspirationPopover(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isLightTheme) Color.Black else Color.White,
-                            contentColor = if (isLightTheme) Color.White else Color.Black
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         Text(text = stringResource(R.string.button_translate))
@@ -186,8 +193,8 @@ fun InspirationPopover(
                     Button(
                         onClick = { showTranslated = !showTranslated },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isLightTheme) Color.Black else Color.White,
-                            contentColor = if (isLightTheme) Color.White else Color.Black
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         Text(
@@ -206,8 +213,8 @@ fun InspirationPopover(
                 Button(
                     onClick = onDismiss,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isLightTheme) Color.Black else Color.White,
-                        contentColor = if (isLightTheme) Color.White else Color.Black
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(text = stringResource(R.string.button_ok))

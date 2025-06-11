@@ -45,6 +45,15 @@ fun ProfileSettingInfo(
     // Dummy‐Status ebenfalls aus Resource
     val dummyRemindersStatus = stringResource(R.string.profile_info_reminders_status)
 
+    val displayMap = mapOf(
+        "Smaragd" to R.string.theme_display_emerald,
+        "Wolkenlos" to R.string.theme_display_cloudless,
+        "Vintage" to R.string.theme_display_vintage,
+        "Koralle" to R.string.theme_display_coral,
+        "Bernstein" to R.string.theme_display_amber
+    )
+    val themeLabel = stringResource(displayMap[currentTheme] ?: R.string.theme_display_cloudless)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -75,7 +84,7 @@ fun ProfileSettingInfo(
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = stringResource(R.string.profile_info_theme, currentTheme),
+                text = stringResource(R.string.profile_info_theme, themeLabel),
                 modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium

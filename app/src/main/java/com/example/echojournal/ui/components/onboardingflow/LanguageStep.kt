@@ -13,7 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.echojournal.R
 import com.example.echojournal.ui.viewModel.LanguageViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -33,10 +35,9 @@ fun LanguageStep(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text("Wähle deine echo-Sprache")
+        Text(stringResource(R.string.onboarding_language_title))
         Spacer(Modifier.height(16.dp))
 
-        // Picker füllt den verfügbaren Platz aus (siehe weight)
         LanguagePickerListOnboarding(
             languages = languages,
             selectedCode = selectedCode,
@@ -49,7 +50,7 @@ fun LanguageStep(
         Spacer(Modifier.height(24.dp))
 
         BottomBarButton(
-            text = "Weiter",
+            text = stringResource(R.string.onboarding_button_next),
             onClick = { if (selectedCode.isNotBlank()) onNext(selectedCode) },
             enabled = selectedCode.isNotBlank()
         )

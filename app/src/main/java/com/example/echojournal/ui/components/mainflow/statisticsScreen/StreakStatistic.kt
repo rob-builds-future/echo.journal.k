@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.mainflow.statisticsScreen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -116,6 +118,13 @@ fun StreakStatistic(
     if (showInfoDialog) {
         AlertDialog(
             onDismissRequest = { showInfoDialog = false },
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = AlertDialogDefaults.shape
+                ),
+            containerColor = MaterialTheme.colorScheme.surface,
             title = { Text(text = stringResource(R.string.statistics_streak_title)) },
             text = { Text(text = stringResource(id = streakRes, visibleStreak)) },
             confirmButton = {

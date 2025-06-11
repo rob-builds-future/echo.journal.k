@@ -12,37 +12,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary              = Color.White,
-    onPrimary            = Color.Black,
-    primaryContainer     = Color.White,
-    onPrimaryContainer   = Color.Black,
-    secondary            = Color.White,
-    onSecondary          = Color.Black,
-    secondaryContainer   = Color.Black,
+    primary = Color.White,
+    onPrimary = Color.Black,
+    primaryContainer = Color.White,
+    onPrimaryContainer = Color.Black,
+    secondary = Color.White,
+    onSecondary = Color.Black,
+    secondaryContainer = Color.Black,
     onSecondaryContainer = Color.White,
-    background           = Color.Black,
-    onBackground         = Color.White,
-    surface              = Color.Black,
-    onSurface            = Color.White,
-    error                = Color(0xFFCF6679),
-    onError              = Color.Black
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
+    error = Color(0xFFCF6679),
+    onError = Color.Black,
+    outline = Color.White.copy(alpha = 0.25f)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary              = Color.Black,
-    onPrimary            = Color.White,
-    primaryContainer     = Color.Black,
-    onPrimaryContainer   = Color.White,
-    secondary            = Color.Black,
-    onSecondary          = Color.White,
-    secondaryContainer   = Color.White,
+    primary = Color.Black,
+    onPrimary = Color.White,
+    primaryContainer = Color.Black,
+    onPrimaryContainer = Color.White,
+    secondary = Color.Black,
+    onSecondary = Color.White,
+    secondaryContainer = Color.White,
     onSecondaryContainer = Color.Black,
-    background           = Color.White,
-    onBackground         = Color.Black,
-    surface              = Color.White,
-    onSurface            = Color.Black,
-    error                = Color(0xFFB00020),
-    onError              = Color.White
+    background = Color.White,
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black,
+    error = Color(0xFFB00020),
+    onError = Color.White,
+    outline = Color.Black.copy(alpha = 0.25f)
 )
 
 @Composable

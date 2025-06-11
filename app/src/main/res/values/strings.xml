@@ -301,4 +301,28 @@ Name three things you’re grateful for today.
     You’ve also earned a streak point. Keep up the good work!</string>
     <string name="button_nice">Nice!</string>
 
+    <!-- Onboarding Welcome Step -->
+    <string name="onboarding_welcome_headline_1">Get to know&#160;</string>
+    <string name="onboarding_welcome_headline_echo">echo&#160;</string>
+    <string name="onboarding_welcome_headline_2">–</string>
+    <string name="onboarding_welcome_subheadline">Your companion in this app.</string>
+    <string name="onboarding_welcome_intro">Hey, I am echo!</string>
+    <string name="onboarding_welcome_body">Consider me the voice of your future self, helping you reach your writing and speaking goals.</string>
+    <string name="onboarding_button_next">Next</string>
+
+    <!-- Onboarding Username Step -->
+    <string name="onboarding_username_title">What would you like to be called?</string>
+    <string name="onboarding_username_label">Display name</string>
+
+    <!-- Onboarding Language Step -->
+    <string name="onboarding_language_title">Choose your echo language</string>
+
+    <!-- Onboarding Theme Step -->
+    <string name="onboarding_theme_title">Choose your echo color</string>
+
+    <!-- Onboarding Template Step -->
+    <string name="onboarding_template_title">Choose a writing goal if you want</string>
+    <string name="onboarding_template_info">You can change this setting at any time in the app settings!</string>
+    <string name="onboarding_button_finish">Finish</string>
+
 </resources>

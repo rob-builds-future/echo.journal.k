@@ -6,6 +6,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -27,7 +28,9 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -498,7 +501,7 @@ fun EntryDetailScreen(
                                         )
                                     }
                                 },
-                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                colors = ButtonDefaults.buttonColors(
                                     containerColor = echoColor,
                                     contentColor = Color.White
                                 ),
@@ -538,13 +541,33 @@ fun EntryDetailScreen(
                     // ── Info-Dialog anzeigen, wenn showInfoDialog == true ──
                     if (showInfoDialog) {
                         AlertDialog(
+                            modifier = Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    shape = AlertDialogDefaults.shape
+                                ),
+                            containerColor = MaterialTheme.colorScheme.surface,
                             onDismissRequest = { showInfoDialog = false },
-                            title = { Text(stringResource(R.string.tts_info_title)) },
+                            title = {
+                                Text(
+                                    stringResource(R.string.tts_info_title),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            },
                             text = {
-                                Text(stringResource(R.string.tts_info_message))
+                                Text(
+                                    stringResource(R.string.tts_info_message),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
                             },
                             confirmButton = {
-                                TextButton(onClick = { showInfoDialog = false }) {
+                                TextButton(
+                                    onClick = { showInfoDialog = false },
+                                    colors = ButtonDefaults.textButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                ) {
                                     Text(stringResource(R.string.button_understood))
                                 }
                             }
@@ -556,14 +579,35 @@ fun EntryDetailScreen(
                 // Verwerfen-Dialog
                 if (showDiscardDialog) {
                     AlertDialog(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline,
+                                shape = AlertDialogDefaults.shape
+                            ),
+                        containerColor = MaterialTheme.colorScheme.surface,
                         onDismissRequest = { showDiscardDialog = false },
-                        title = { Text(stringResource(R.string.discard_changes_title)) },
-                        text  = { Text(stringResource(R.string.discard_changes_message)) },
+                        title = {
+                            Text(
+                                stringResource(R.string.discard_changes_title),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        },
+                        text = {
+                            Text(
+                                stringResource(R.string.discard_changes_message),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        },
                         confirmButton = {
-                            TextButton(onClick = {
-                                // Abbrechen: nur Dialog schließen, im Edit-Modus bleiben
-                                showDiscardDialog = false
-                            }) { Text(stringResource(R.string.button_cancel)) }
+                            TextButton(
+                                onClick = {
+                                    // Abbrechen: nur Dialog schließen, im Edit-Modus bleiben
+                                    showDiscardDialog = false
+                                }, colors = ButtonDefaults.textButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface
+                                )
+                            ) { Text(stringResource(R.string.button_cancel)) }
                         },
                         dismissButton = {
                             TextButton(onClick = {
@@ -571,7 +615,10 @@ fun EntryDetailScreen(
                                 showDiscardDialog = false
                                 isEditing = false
                                 editStartMs = null
-                            }) {
+                            }, colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            )
+                            ) {
                                 Text(stringResource(R.string.button_discard))
                             }
                         }

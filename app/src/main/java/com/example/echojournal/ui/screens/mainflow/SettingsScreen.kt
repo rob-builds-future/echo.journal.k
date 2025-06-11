@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.screens.mainflow
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -137,23 +140,45 @@ fun SettingsScreen(
             if (showLogoutDialog) {
                 AlertDialog(
                     onDismissRequest = { showLogoutDialog = false },
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline,
+                            shape = AlertDialogDefaults.shape
+                        ),
+                    containerColor = MaterialTheme.colorScheme.surface,
                     title = {
-                        Text(stringResource(R.string.logout_dialog_title))
+                        Text(
+                            stringResource(R.string.logout_dialog_title),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
                     },
                     text = {
-                        Text(stringResource(R.string.logout_dialog_message))
+                        Text(
+                            stringResource(R.string.logout_dialog_message),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
                     },
                     confirmButton = {
-                        TextButton(onClick = {
-                            showLogoutDialog = false
-                            authViewModel.signOut()
-                            onLogoutConfirmed()
-                        }) {
+                        TextButton(
+                            onClick = {
+                                showLogoutDialog = false
+                                authViewModel.signOut()
+                                onLogoutConfirmed()
+                            }, colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        ) {
                             Text(stringResource(R.string.button_yes))
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showLogoutDialog = false }) {
+                        TextButton(
+                            onClick = { showLogoutDialog = false },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        ) {
                             Text(stringResource(R.string.button_no))
                         }
                     }

@@ -82,7 +82,6 @@ fun AddEntryScreen(
     // Theme & Farbe
     val themeName by prefsViewModel.theme.collectAsState()
     val echoColor = ColorManager.getColor(themeName)
-    val isLightTheme = themeName.equals("Light", ignoreCase = true)
 
     val userTargetLang = prefsViewModel.currentLanguage.collectAsState().value
 
@@ -274,8 +273,7 @@ fun AddEntryScreen(
                         templateMenuExpanded = templateMenuExpanded,
                         onTemplateMenuToggle = { templateMenuExpanded = it },
                         onShowInstructions = { showInstructionDialog = true },
-                        echoColor = echoColor,
-                        isLightTheme = isLightTheme
+                        echoColor = echoColor
                     )
 
                 } else {
@@ -301,8 +299,7 @@ fun AddEntryScreen(
                         templateMenuExpanded = templateMenuExpanded,
                         onTemplateMenuToggle = { templateMenuExpanded = it },
                         onShowInstructions = { showInstructionDialog = true },
-                        echoColor = echoColor,
-                        isLightTheme = isLightTheme
+                        echoColor = echoColor
                     )
 
                     // Dann SwapDivider + TranslationSection
@@ -323,8 +320,8 @@ fun AddEntryScreen(
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = if (isLightTheme) Color.Gray else Color.LightGray,
-                        shape = AlertDialogDefaults.shape // oder z.B. RoundedCornerShape(16.dp)
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = AlertDialogDefaults.shape
                     ),
                 containerColor = MaterialTheme.colorScheme.surface,
                 title = {
@@ -380,7 +377,7 @@ fun AddEntryScreen(
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = if (isLightTheme) Color.Gray else Color.LightGray,
+                        color = MaterialTheme.colorScheme.outline,
                         shape = AlertDialogDefaults.shape
                     ),
                 containerColor = MaterialTheme.colorScheme.surface,

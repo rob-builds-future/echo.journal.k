@@ -34,8 +34,7 @@ fun CombinedRowUnderEntry(
     templateMenuExpanded: Boolean,
     onTemplateMenuToggle: (Boolean) -> Unit,
     onShowInstructions: () -> Unit,
-    echoColor: Color,
-    isLightTheme: Boolean
+    echoColor: Color
 ) {
     // Wortanzahl berechnen
     val wordCount = remember(content) {
@@ -86,10 +85,10 @@ fun CombinedRowUnderEntry(
             modifier = Modifier
                 .border(
                     width = 1.dp,
-                    color = if (isLightTheme) Color.Black else Color.LightGray,
+                    color = MaterialTheme.colorScheme.outline,
                     shape = MaterialTheme.shapes.medium
                 ),
-            containerColor = if (isLightTheme) Color.White else MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.medium
         ) {
             templateOptions.forEach { option ->

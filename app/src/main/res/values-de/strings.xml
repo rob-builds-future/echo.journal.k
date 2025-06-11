@@ -285,4 +285,28 @@ Nenne drei Dinge, für die du heute dankbar bist.
     Außerdem hast du einen Streak-Punkt verdient. Mach weiter so!</string>
     <string name="button_nice">Super!</string>
 
+    <!-- Onboarding Welcome Step -->
+    <string name="onboarding_welcome_headline_1">Lerne&#160;</string>
+    <string name="onboarding_welcome_headline_echo">echo&#160;</string>
+    <string name="onboarding_welcome_headline_2">kennen –</string>
+    <string name="onboarding_welcome_subheadline">Deinen Begleiter in dieser App.</string>
+    <string name="onboarding_welcome_intro">Hey, ich bin echo!</string>
+    <string name="onboarding_welcome_body">Betrachte es als die Stimme deines zukünftigen Ich, das mit Dir Schreib- und Sprach-Ziele erreicht.</string>
+    <string name="onboarding_button_next">Weiter</string>
+
+    <!-- Onboarding Username Step -->
+    <string name="onboarding_username_title">Wie möchtest Du genannt werden?</string>
+    <string name="onboarding_username_label">Anzeigename</string>
+
+    <!-- Onboarding Language Step -->
+    <string name="onboarding_language_title">Wähle Deine echo-Sprache</string>
+
+    <!-- Onboarding Theme Step -->
+    <string name="onboarding_theme_title">Wähle Deine echo-Farbe</string>
+
+    <!-- Onboarding Template Step -->
+    <string name="onboarding_template_title">Wähle ein Schreibziel, wenn du möchtest</string>
+    <string name="onboarding_template_info">Du kannst diese Einstellung jederzeit im Einstellungsbereich der App ändern!</string>
+    <string name="onboarding_button_finish">Abschließen</string>
+
 </resources>

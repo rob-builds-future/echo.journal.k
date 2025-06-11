@@ -32,7 +32,9 @@ import com.example.echojournal.ui.components.onboardingflow.ThemeStep
 import com.example.echojournal.ui.components.onboardingflow.UsernameStep
 import com.example.echojournal.ui.components.onboardingflow.WelcomeStep
 import com.example.echojournal.ui.theme.ColorManager
+import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 // -- OnboardingStep Enum für Übersichtlichkeit --
 enum class OnboardingStep { Welcome, Username, Language, Theme, Template }
@@ -41,6 +43,7 @@ enum class OnboardingStep { Welcome, Username, Language, Theme, Template }
 @Composable
 fun OnboardingFlow(
     prefsViewModel: PrefsViewModel,
+    authViewModel: AuthViewModel = koinViewModel(),
     onComplete: () -> Unit
 ) {
     var step by remember { mutableStateOf(OnboardingStep.Welcome) }
@@ -79,8 +82,13 @@ fun OnboardingFlow(
                     TopAppBar(
                         title = {},
                         navigationIcon = {
-                            IconButton(onClick = { step = steps[currentIndex - 1] }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                            IconButton(onClick = {
+                                step = steps[currentIndex - 1]
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Zurück"
+                                )
                             }
                         }
                     )
@@ -100,13 +108,15 @@ fun OnboardingFlow(
                 OnboardingStep.Welcome -> WelcomeStep(
                     onNext = { step = OnboardingStep.Username }
                 )
+
                 OnboardingStep.Username -> UsernameStep(
                     onNext = { username ->
-                        prefsViewModel.setUsername(username)
+                        authViewModel.updateUsername(username)
                         step = OnboardingStep.Language
                     },
                     onBack = { step = OnboardingStep.Welcome }
                 )
+
                 OnboardingStep.Language -> LanguageStep(
                     onNext = { languageCode ->
                         prefsViewModel.setLanguage(languageCode)
@@ -114,6 +124,7 @@ fun OnboardingFlow(
                     },
                     onBack = { step = OnboardingStep.Username }
                 )
+
                 OnboardingStep.Theme -> ThemeStep(
                     onNext = { theme ->
                         prefsViewModel.setTheme(theme)
@@ -121,6 +132,7 @@ fun OnboardingFlow(
                     },
                     onBack = { step = OnboardingStep.Language }
                 )
+
                 OnboardingStep.Template -> TemplateStep(
                     onNext = { template ->
                         prefsViewModel.setTemplate(template)

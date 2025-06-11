@@ -284,4 +284,29 @@ Liste três coisas pelas quais você é grato hoje.
     <string name="congrats_message">Você escreveu no diário hoje e viveu de forma mais consciente.
     Você também ganhou um ponto de sequência. Continue assim!</string>
     <string name="button_nice">Legal!</string>
+
+    <!-- Onboarding Welcome Step -->
+    <string name="onboarding_welcome_headline_1">Conheça&#160;</string>
+    <string name="onboarding_welcome_headline_echo">echo&#160;</string>
+    <string name="onboarding_welcome_headline_2">–</string>
+    <string name="onboarding_welcome_subheadline">Seu companheiro neste app.</string>
+    <string name="onboarding_welcome_intro">Ei, eu sou o echo!</string>
+    <string name="onboarding_welcome_body">Considere-me a voz do seu futuro eu, ajudando você a alcançar suas metas de escrita e fala.</string>
+    <string name="onboarding_button_next">Próximo</string>
+
+    <!-- Onboarding Username Step -->
+    <string name="onboarding_username_title">Como você gostaria de ser chamado?</string>
+    <string name="onboarding_username_label">Nome de exibição</string>
+
+    <!-- Onboarding Language Step -->
+    <string name="onboarding_language_title">Escolha o idioma do echo</string>
+
+    <!-- Onboarding Theme Step -->
+    <string name="onboarding_theme_title">Escolha a cor do echo</string>
+
+    <!-- Onboarding Template Step -->
+    <string name="onboarding_template_title">Escolha um objetivo de escrita, se quiser</string>
+    <string name="onboarding_template_info">Você pode alterar esta configuração a qualquer momento nas configurações do app!</string>
+    <string name="onboarding_button_finish">Concluir</string>
+
 </resources>

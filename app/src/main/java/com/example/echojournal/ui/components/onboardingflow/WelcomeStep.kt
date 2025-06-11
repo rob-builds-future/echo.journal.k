@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echojournal.R
@@ -34,25 +35,25 @@ fun WelcomeStep(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        // Überschrift: Lerne echo kennen –
+        // Überschrift: z.B. "Lerne echo kennen –"
         Row(modifier = Modifier.padding(horizontal = 18.dp)) {
             Text(
-                text = "Lerne ",
+                text = stringResource(R.string.onboarding_welcome_headline_1),
                 fontSize = 32.sp
             )
             Text(
-                text = "echo ",
+                text = stringResource(R.string.onboarding_welcome_headline_echo),
                 fontSize = 32.sp,
                 color = colorResource(id = R.color.Lichtblau)
             )
             Text(
-                text = "kennen –",
+                text = stringResource(R.string.onboarding_welcome_headline_2),
                 fontSize = 32.sp
             )
         }
 
         Text(
-            text = "Deinen Begleiter in dieser App.",
+            text = stringResource(R.string.onboarding_welcome_subheadline),
             fontSize = 32.sp,
             lineHeight = 32.sp,
             modifier = Modifier.padding(horizontal = 18.dp)
@@ -71,13 +72,13 @@ fun WelcomeStep(
             )
         ) {
             Text(
-                text = "Hey, ich bin echo!",
+                text = stringResource(R.string.onboarding_welcome_intro),
                 fontSize = 24.sp
             )
 
             AnimatedEchoSymbol(
                 color = colorResource(id = R.color.Lichtblau),
-                maxDiameter = 100.dp,   // z.B. im SplashScreen
+                maxDiameter = 100.dp,
                 step = 20.dp,
                 circleCount = 4,
                 strokeWidth = 4.dp
@@ -87,7 +88,7 @@ fun WelcomeStep(
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
-            text = "Betrachte es als die Stimme deines zukünftigen Ich, das mit Dir Schreib- und Sprach-Ziele erreicht.",
+            text = stringResource(R.string.onboarding_welcome_body),
             fontSize = 24.sp,
             lineHeight= 24.sp,
             modifier = Modifier.padding(horizontal = 18.dp)
@@ -107,7 +108,7 @@ fun WelcomeStep(
             ),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
-            Text("Weiter")
+            Text(stringResource(R.string.onboarding_button_next))
         }
     }
 }
