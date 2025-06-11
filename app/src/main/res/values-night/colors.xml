@@ -12,6 +12,5 @@
     <color name="Smaragdgrün">#2AA282</color>
     <color name="Vintagepurpur">#A05E78</color>
     <color name="Korallorange">#FF6F61</color>
-    <color name="ic_launcher_background">#FF000000</color>  <!-- schwarz für Dark Mode -->
     <color name="splash_background">#121212</color> <!-- Dunkel, z.B. fast schwarz oder dunkelblau -->
 </resources>
