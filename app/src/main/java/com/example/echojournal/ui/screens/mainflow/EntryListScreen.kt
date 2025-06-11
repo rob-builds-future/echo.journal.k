@@ -246,14 +246,16 @@ fun EntryListScreen(
                 flameStartOffset = centerOffset
                 showCongratsDialog = false       // Dialog ausblenden
                 startFlameAnimation = true        // Animation starten
-            }
+            },
+            flameColor = echoColor
         )
     }
     if (startFlameAnimation) {
         AnimatedFlame(
             from = flameStartOffset,
             to = statsButtonOffset,
-            onFinished = { startFlameAnimation = false }
+            onFinished = { startFlameAnimation = false },
+            flameColor = echoColor
         )
     }
 }

@@ -118,7 +118,18 @@ fun AppNavGraph(
                 })
             }
             composable(PrefsRoute.route) {
-                PrefsSetupScreen(onComplete = {
+//                PrefsSetupScreen(onComplete = {
+//                    prefsViewModel.setOnboarded(true)
+//                    navController.navigate(EntryListRoute.route) {
+//                        popUpTo(OnboardingRootRoute.route) { inclusive = true }
+//                    }
+//                })
+                PrefsSetupScreen(onComplete = { username, languageCode, theme, template ->
+                    // <-- Hier werden die Werte gespeichert!
+                    prefsViewModel.setUsername(username)
+                    prefsViewModel.setLanguage(languageCode)
+                    prefsViewModel.setTheme(theme)
+                    if (template.isNotEmpty()) prefsViewModel.setTemplate(template)
                     prefsViewModel.setOnboarded(true)
                     navController.navigate(EntryListRoute.route) {
                         popUpTo(OnboardingRootRoute.route) { inclusive = true }

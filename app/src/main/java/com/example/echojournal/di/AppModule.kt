@@ -12,7 +12,6 @@ import com.example.echojournal.data.repository.TranslationApiRepo
 import com.example.echojournal.data.repository.TranslationApiRepoImpl
 import com.example.echojournal.data.repository.UserAuthRepo
 import com.example.echojournal.data.repository.UserAuthRepoImpl
-import com.example.echojournal.service.EchoNotificationService
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.EntryViewModel
 import com.example.echojournal.ui.viewModel.LanguageViewModel
@@ -98,6 +97,4 @@ val appModule = module {
 
     viewModel { StatisticsViewModel(get()) }
 
-    // EchoNotificationService verfügbar machen
-    single { EchoNotificationService(androidContext()) }
 }

@@ -3,14 +3,12 @@ package com.example.echojournal.data.repository
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.echojournal.R
 import com.example.echojournal.dataStore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -115,41 +113,6 @@ class PrefsRepoImpl(
         ds.edit { it[Keys.TEMPLATE_NAME] = name }
     }
 
-    // ─── Reminder‐Einstellungen ──────────────────────────────────────────────────
-    override fun getReminderSettings(): Flow<Map<String, Pair<Boolean, String>>> =
-        ds.data
-            .catch { emit(emptyPreferences()) }
-            .map { prefs ->
-                val json = prefs[Keys.REMINDERS_JSON].orEmpty()
-                val parsed: Map<String, ReminderConfig> = parseJsonToMap(json)
-                // Konvertiere ReminderConfig → Pair(enabled, time)
-                parsed.mapValues { (_, cfg) -> cfg.enabled to cfg.time }
-            }
-
-    override suspend fun updateReminderEnabled(label: String, enabled: Boolean) {
-        ds.edit { prefs ->
-            val currentJson = prefs[Keys.REMINDERS_JSON].orEmpty()
-            val currentMap: MutableMap<String, ReminderConfig> =
-                parseJsonToMap(currentJson).toMutableMap()
-
-            val oldTime = currentMap[label]?.time ?: "09:00"
-            currentMap[label] = ReminderConfig(enabled = enabled, time = oldTime)
-            prefs[Keys.REMINDERS_JSON] = toJsonString(currentMap)
-        }
-    }
-
-    override suspend fun updateReminderTime(label: String, time: String) {
-        ds.edit { prefs ->
-            val currentJson = prefs[Keys.REMINDERS_JSON].orEmpty()
-            val currentMap: MutableMap<String, ReminderConfig> =
-                parseJsonToMap(currentJson).toMutableMap()
-
-            val oldEnabled = currentMap[label]?.enabled ?: false
-            currentMap[label] = ReminderConfig(enabled = oldEnabled, time = time)
-            prefs[Keys.REMINDERS_JSON] = toJsonString(currentMap)
-        }
-    }
-
     override suspend fun getLastCongratsDate(): String? {
         val prefs = ds.data.first()
         return prefs[Keys.KEY_LAST_CONGRATS_DATE]
@@ -158,4 +121,6 @@ class PrefsRepoImpl(
     override suspend fun setLastCongratsDate(date: String) {
         ds.edit { it[Keys.KEY_LAST_CONGRATS_DATE] = date }
     }
+
+    // ─── Reminder‐Einstellungen ──────────────────────────────────────────────────
 }

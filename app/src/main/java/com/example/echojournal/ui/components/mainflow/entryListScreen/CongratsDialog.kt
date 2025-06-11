@@ -29,7 +29,8 @@ fun CongratsDialog(
     show: Boolean,
     onDismiss: () -> Unit,
     onFlameIconPositioned: (Offset) -> Unit,
-    onNiceClick: (Offset) -> Unit
+    onNiceClick: (Offset) -> Unit,
+    flameColor: Color
 ) {
     if (!show) return
 
@@ -46,7 +47,7 @@ fun CongratsDialog(
                 Icon(
                     imageVector = Icons.Default.Whatshot,
                     contentDescription = null,
-                    tint = Color.Yellow,
+                    tint = flameColor,
                     modifier = Modifier
                         .size(32.dp)
                         .onGloballyPositioned { coords ->

@@ -27,9 +27,6 @@ class PrefsViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
     val currentTemplate: StateFlow<String> = prefsRepo.currentTemplateName
         .stateIn(viewModelScope, SharingStarted.Eagerly, application.getString(R.string.template_none))
-    val savedReminders: StateFlow<Map<String, Pair<Boolean, String>>> =
-        prefsRepo.getReminderSettings()
-            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
 
     fun setOnboarded(value: Boolean) {
@@ -51,18 +48,6 @@ class PrefsViewModel(
     fun setTemplate(name: String) {
         viewModelScope.launch {
             prefsRepo.setTemplateName(name)
-        }
-    }
-
-    fun setReminderEnabled(label: String, enabled: Boolean) {
-        viewModelScope.launch {
-            prefsRepo.updateReminderEnabled(label, enabled)
-        }
-    }
-
-    fun setReminderTime(label: String, time: String) {
-        viewModelScope.launch {
-            prefsRepo.updateReminderTime(label, time)
         }
     }
 

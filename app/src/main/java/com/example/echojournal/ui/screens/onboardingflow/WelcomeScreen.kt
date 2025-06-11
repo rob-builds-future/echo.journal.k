@@ -100,7 +100,7 @@ fun WelcomeScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Betrachte es als die Stimme deines zukünftigen Ich, das mit Dir Schreib- und Sprach- ziele erreicht.",
+                text = "Betrachte es als die Stimme deines zukünftigen Ich, das mit Dir Schreib- und Sprach-Ziele erreicht.",
                 fontSize = 24.sp,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )

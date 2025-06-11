@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 fun AnimatedFlame(
     from: Offset,
     to: Offset,
-    onFinished: () -> Unit
+    onFinished: () -> Unit,
+    flameColor: Color
 ) {
     // Animations-Fortschritt von 0f bis 1f
     val progress = remember { Animatable(0f) }
@@ -58,7 +59,7 @@ fun AnimatedFlame(
         Icon(
             imageVector = Icons.Default.Whatshot,
             contentDescription = null,
-            tint = Color.Yellow,
+            tint = flameColor,
             modifier = Modifier
                 .size(initialSize)
         )
