@@ -43,7 +43,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -54,6 +53,7 @@ import com.example.echojournal.R
 import com.example.echojournal.ui.components.authflow.EchoLogoWithText
 import com.example.echojournal.ui.components.authflow.SignInWithGoogle
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,6 +62,10 @@ fun SignInScreen(
     onSignUpClick: () -> Unit,
     viewModel: AuthViewModel = koinViewModel()
 ) {
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = com.example.echojournal.ui.theme.ColorManager.getColor(themeName)
+
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val loading by viewModel.loading.collectAsState()
@@ -147,7 +151,8 @@ fun SignInScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     EchoLogoWithText(
-                        color = colorResource(id = R.color.Lichtblau),
+                        color = echoColor,
+
                         maxDiameter = 200.dp,
                         step = 35.dp,
                         modifier = Modifier.padding(top = 32.dp)

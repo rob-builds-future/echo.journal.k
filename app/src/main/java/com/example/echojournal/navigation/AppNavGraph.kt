@@ -26,8 +26,7 @@ import com.example.echojournal.ui.screens.mainflow.EntryListScreen
 import com.example.echojournal.ui.screens.mainflow.SettingDetailScreen
 import com.example.echojournal.ui.screens.mainflow.SettingsScreen
 import com.example.echojournal.ui.screens.mainflow.StatisticsScreen
-import com.example.echojournal.ui.screens.onboardingflow.PrefsSetupScreen
-import com.example.echojournal.ui.screens.onboardingflow.WelcomeScreen
+import com.example.echojournal.ui.screens.onboardingflow.OnboardingFlow
 import com.example.echojournal.ui.viewModel.AuthViewModel
 import com.example.echojournal.ui.viewModel.PrefsViewModel
 
@@ -56,12 +55,14 @@ fun AppNavGraph(
                         launchSingleTop = true
                     }
                 }
+
                 !onboarded -> {
-                    navController.navigate(OnboardingRootRoute.route) {
+                    navController.navigate(OnboardingFlowRoute.route) {
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
+
                 else -> {
                     navController.navigate(MainRootRoute.route) {
                         popUpTo(0) { inclusive = true }
@@ -99,7 +100,7 @@ fun AppNavGraph(
                     onSignedUp = {
                         // nach Signup flaggen, dass Onboarding nötig ist
                         prefsViewModel.setOnboarded(false)
-                        navController.navigate(OnboardingRootRoute.route) {
+                        navController.navigate(OnboardingFlowRoute.route) {
                             popUpTo(AuthRootRoute.route) { inclusive = true }
                         }
                     },
@@ -108,35 +109,18 @@ fun AppNavGraph(
             }
         }
         // ONBOARDING FLOW
-        navigation(
-            startDestination = WelcomeRoute.route,
-            route = OnboardingRootRoute.route
-        ) {
-            composable(WelcomeRoute.route) {
-                WelcomeScreen(onNext = {
-                    navController.navigate(PrefsRoute.route)
-                })
-            }
-            composable(PrefsRoute.route) {
-//                PrefsSetupScreen(onComplete = {
-//                    prefsViewModel.setOnboarded(true)
-//                    navController.navigate(EntryListRoute.route) {
-//                        popUpTo(OnboardingRootRoute.route) { inclusive = true }
-//                    }
-//                })
-                PrefsSetupScreen(onComplete = { username, languageCode, theme, template ->
-                    // <-- Hier werden die Werte gespeichert!
-                    prefsViewModel.setUsername(username)
-                    prefsViewModel.setLanguage(languageCode)
-                    prefsViewModel.setTheme(theme)
-                    if (template.isNotEmpty()) prefsViewModel.setTemplate(template)
-                    prefsViewModel.setOnboarded(true)
+
+        composable(OnboardingFlowRoute.route) {
+            OnboardingFlow(
+                prefsViewModel = prefsViewModel,
+                onComplete = {
                     navController.navigate(EntryListRoute.route) {
-                        popUpTo(OnboardingRootRoute.route) { inclusive = true }
+                        popUpTo(OnboardingFlowRoute.route) { inclusive = true }
                     }
-                })
-            }
+                }
+            )
         }
+
         // MAIN FLOW
         navigation(
             startDestination = EntryListRoute.route,
@@ -166,7 +150,8 @@ fun AppNavGraph(
             composable(AddEntryRoute.route) {
                 AddEntryScreen(
                     onDismiss = { navController.popBackStack() },
-                    navController = navController)
+                    navController = navController
+                )
             }
 
             // JournalEntry-Detail

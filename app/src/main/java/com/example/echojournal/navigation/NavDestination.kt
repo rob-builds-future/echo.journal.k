@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 interface NavDestination {
     val route: String
 }
-
+@Serializable object SplashRoute : NavDestination { override val route = "splash" }
 @Serializable object MainRootRoute       : NavDestination { override val route = "main_root" }
 @Serializable object EntryListRoute      : NavDestination { override val route = "entry_list" }
 @Serializable object AddEntryRoute : NavDestination { override val route = "add_entry" }
@@ -24,6 +24,4 @@ interface NavDestination {
 @Serializable object SignInRoute         : NavDestination { override val route = "sign_in" }
 @Serializable object SignUpRoute         : NavDestination { override val route = "sign_up" }
 
-@Serializable object OnboardingRootRoute : NavDestination { override val route = "onboarding_root" }
-@Serializable object WelcomeRoute        : NavDestination { override val route = "welcome" }
-@Serializable object PrefsRoute          : NavDestination { override val route = "prefs_setup" }
+@Serializable object OnboardingFlowRoute : NavDestination { override val route = "onboarding_flow" }

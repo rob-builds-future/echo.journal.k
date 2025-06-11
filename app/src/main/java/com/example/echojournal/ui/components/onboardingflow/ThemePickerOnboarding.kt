@@ -23,7 +23,8 @@ import com.example.echojournal.ui.theme.ColorManager
 fun ThemePickerOnboarding(
     options: List<String>,
     selectedTheme: String,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    modifier: Modifier
 ) {
     Column {
         options.forEach { key ->

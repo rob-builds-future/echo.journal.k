@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
 
-    <style name="Theme.Echojournal" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- App-Theme -->
+    <style name="Theme.Echojournal" parent="android:Theme.Material.Light.NoActionBar"  />
 
+    <!-- Splash-Theme -->
     <style name="Theme.Echojournal.Splash" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:windowBackground">@color/splash_background</item>
     </style>
+
 </resources>

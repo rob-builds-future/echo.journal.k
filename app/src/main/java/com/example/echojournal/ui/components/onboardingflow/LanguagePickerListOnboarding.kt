@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -28,11 +29,12 @@ import com.example.echojournal.data.remote.model.util.LanguageDto
 fun LanguagePickerListOnboarding(
     languages: List<LanguageDto>,
     selectedCode: String,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var query by remember { mutableStateOf("") }
 
-    Column {
+    Column(modifier = modifier.fillMaxSize()) {
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
@@ -41,9 +43,13 @@ fun LanguagePickerListOnboarding(
         )
         Spacer(Modifier.height(8.dp))
 
-        // Nur gefilterte anzeigen
         val filtered = languages.filter { it.name.contains(query, ignoreCase = true) }
-        LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
+        // **Das hier füllt den Rest der Column**
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
             items(filtered, key = { it.code }) { lang ->
                 Row(
                     Modifier
@@ -63,3 +69,4 @@ fun LanguagePickerListOnboarding(
         }
     }
 }
+

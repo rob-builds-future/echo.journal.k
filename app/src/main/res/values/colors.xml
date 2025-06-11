@@ -13,5 +13,6 @@
     <color name="Vintagepurpur">#A05E78</color>
     <color name="Korallorange">#FF6F61</color>
     <color name="ic_launcher_background">#FFFFFFFF</color>  <!-- weiß für Light Mode -->
+    <color name="splash_background">#FFFFFF</color> <!-- Hell, z.B. Weiß oder dein Lichtblau -->
 
 </resources>

@@ -21,7 +21,8 @@ import com.example.echojournal.R
 @Composable
 fun TemplatePickerOnboarding(
     selected: String,
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
+    modifier: Modifier
 ) {
     // Die Optionen übernehmen wir wie im Settings-Screen
     val noneOption = R.string.template_none to R.string.preview_none
