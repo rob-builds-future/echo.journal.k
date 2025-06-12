@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
 import com.example.echojournal.ui.components.authflow.EchoLogoWithText
 import com.example.echojournal.ui.viewModel.AuthViewModel
+import com.example.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,6 +62,10 @@ fun SignUpScreen(
     onSignInClick: () -> Unit,
     viewModel: AuthViewModel = koinViewModel()
 ) {
+    val prefsViewModel: PrefsViewModel = koinViewModel()
+    val themeName by prefsViewModel.theme.collectAsState()
+    val echoColor = com.example.echojournal.ui.theme.ColorManager.getColor(themeName)
+
     val username by viewModel.username.collectAsState()
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
@@ -95,20 +100,20 @@ fun SignUpScreen(
         return
     }
 
-    val backgroundPainter = painterResource(id = R.drawable.background)
+    val backgroundPainter = painterResource(id = R.drawable.background2)
 
     val textFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor   = MaterialTheme.colorScheme.surface,
+        focusedContainerColor = MaterialTheme.colorScheme.surface,
         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-        focusedLabelColor       = MaterialTheme.colorScheme.onSurface,
-        unfocusedLabelColor     = MaterialTheme.colorScheme.onSurface
+        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
     )
 
     val buttonColors = ButtonDefaults.buttonColors(
-        containerColor        = MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.onPrimary,
         disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
-        contentColor          = MaterialTheme.colorScheme.primary,
-        disabledContentColor  = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+        contentColor = MaterialTheme.colorScheme.primary,
+        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     )
 
     Scaffold { insets ->
@@ -125,7 +130,7 @@ fun SignUpScreen(
             Box(
                 Modifier
                     .matchParentSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(Color.Black.copy(alpha = 0.25f))
             )
 
             // ─── UI im Vordergrund ───────────────────────
@@ -136,12 +141,12 @@ fun SignUpScreen(
                     .imePadding()
                     .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+                    .padding(8.dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 EchoLogoWithText(
-                    color = colorResource(id = R.color.Lichtblau),
+                    color = echoColor,
                     maxDiameter = 170.dp,
                     step = 32.dp,
                     modifier = Modifier.padding(top = 32.dp)
@@ -216,8 +221,8 @@ fun SignUpScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = when {
                         password.isEmpty() -> Color.White
-                        passwordValid       -> colorResource(id = R.color.Smaragdgrün)
-                        else                -> MaterialTheme.colorScheme.error
+                        passwordValid -> colorResource(id = R.color.Smaragdgrün)
+                        else -> MaterialTheme.colorScheme.error
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -248,10 +253,11 @@ fun SignUpScreen(
                         Text(stringResource(R.string.button_register))
                     }
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.weight(0.1f))
 
                 // ─── Link zum Login ────────────────────────
-                TextButton(onClick = { onSignInClick() }) {
+                TextButton(
+                    onClick = { onSignInClick() }) {
                     Text(
                         text = stringResource(R.string.text_already_registered_sign_in),
                         color = Color.White

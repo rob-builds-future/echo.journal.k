@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.mainflow.entryListScreen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -7,7 +8,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,9 +42,20 @@ fun CongratsDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = AlertDialogDefaults.shape
+            ),
+        containerColor = MaterialTheme.colorScheme.surface,
         icon = { /* optional */ },
         title = {
-            Text(stringResource(R.string.congrats_title))
+            Text(
+                stringResource(R.string.congrats_title),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium
+            )
         },
         text = {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -61,11 +76,20 @@ fun CongratsDialog(
                         }
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.congrats_message))
+                Text(
+                    stringResource(R.string.congrats_message),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onNiceClick(flameIconOffset) }) {
+            TextButton(
+                onClick = { onNiceClick(flameIconOffset) },
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
                 Text(stringResource(R.string.button_nice))
             }
         }

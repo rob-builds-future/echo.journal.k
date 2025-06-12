@@ -1,13 +1,35 @@
 package com.example.echojournal.ui.components.mainflow.settingsScreen.settingDetailScreens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -27,6 +49,7 @@ fun ProfileSettingUsername(
     var textFieldValue by remember { mutableStateOf(currentUsername) }
     var showDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     // Sync bei externem Update
     LaunchedEffect(currentUsername) {
@@ -51,11 +74,16 @@ fun ProfileSettingUsername(
         OutlinedTextField(
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
-            modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(R.string.profile_username_label)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { /* hide keyboard if needed */ })
+            singleLine = true, // Verhindert Zeilenumbruch
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done // oder ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }, // Keyboard schließen!
+                onSearch = { focusManager.clearFocus() } // falls du Search willst
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(16.dp))
@@ -75,7 +103,7 @@ fun ProfileSettingUsername(
             elevation = CardDefaults.cardElevation(4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor   = MaterialTheme.colorScheme.onPrimary
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
             Box(modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)) {
@@ -90,16 +118,30 @@ fun ProfileSettingUsername(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = AlertDialogDefaults.shape
+                ),
+            containerColor = MaterialTheme.colorScheme.surface,
             text = {
                 Text(
                     text = stringResource(
                         R.string.profile_username_success,
                         textFieldValue
-                    )
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             confirmButton = {
-                TextButton(onClick = { showDialog = false }) {
+                TextButton(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
                     Text(stringResource(R.string.button_ok))
                 }
             }

@@ -38,10 +38,10 @@ fun TemplatePickerOnboarding(
     Column {
         TemplateRowOnboarding(noneOption, selected, onSelect)
         Spacer(Modifier.height(8.dp))
-        Text(text = "Morgens")
+        Text(text = stringResource(R.string.template_section_morning))
         morningOptions.forEach { TemplateRowOnboarding(it, selected, onSelect) }
         Spacer(Modifier.height(8.dp))
-        Text(text = "Abends")
+        Text(text = stringResource(R.string.template_section_evening))
         eveningOptions.forEach { TemplateRowOnboarding(it, selected, onSelect) }
     }
 }

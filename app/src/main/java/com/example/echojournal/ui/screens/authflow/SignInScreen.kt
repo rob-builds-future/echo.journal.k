@@ -76,7 +76,7 @@ fun SignInScreen(
     val context = LocalContext.current
     val activity = remember(context) {
         context as? Activity
-            ?: throw IllegalStateException("SignInScreen muss in einer Activity gerendert werden!")
+            ?: throw IllegalStateException("SignInScreen has to be rendered in activity!")
     }
 
     LaunchedEffect(error) {
@@ -99,7 +99,7 @@ fun SignInScreen(
         return
     }
 
-    val backgroundPainter = painterResource(id = R.drawable.background)
+    val backgroundPainter = painterResource(id = R.drawable.background2)
 
     // TextField-Farben
     val textFieldColors = TextFieldDefaults.colors(
@@ -129,7 +129,7 @@ fun SignInScreen(
             Box(
                 Modifier
                     .matchParentSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(Color.Black.copy(alpha = 0.25f))
             )
 
             // ─── UI im Vordergrund ───────────────────────
@@ -152,9 +152,8 @@ fun SignInScreen(
                 ) {
                     EchoLogoWithText(
                         color = echoColor,
-
-                        maxDiameter = 200.dp,
-                        step = 35.dp,
+                        maxDiameter = 170.dp,
+                        step = 32.dp,
                         modifier = Modifier.padding(top = 32.dp)
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -172,7 +171,9 @@ fun SignInScreen(
                         keyboardActions = KeyboardActions(
                             onNext = { passwordRequester.requestFocus() }
                         ),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(passwordRequester),
                         colors = textFieldColors
                     )
 
@@ -221,7 +222,7 @@ fun SignInScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // ─── OR Separator ─────────────────────────
                     Text(
@@ -232,7 +233,7 @@ fun SignInScreen(
                             .wrapContentWidth(Alignment.CenterHorizontally)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // ─── Google Sign-In ───────────────────────
                     SignInWithGoogle(
@@ -242,13 +243,11 @@ fun SignInScreen(
                             .height(48.dp)
                     )
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
 
                     // ─── Wechsel zu Signup ───────────────────
                     TextButton(
-                        onClick = { onSignUpClick() },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
+                        onClick = { onSignUpClick() }) {
                         Text(
                             text = stringResource(R.string.text_no_account_sign_up),
                             color = Color.White
