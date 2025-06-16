@@ -107,7 +107,8 @@ fun SignInScreen(
         focusedContainerColor = MaterialTheme.colorScheme.surface,
         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
         focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedIndicatorColor = Color.Transparent,
     )
 
     // Button-Farben

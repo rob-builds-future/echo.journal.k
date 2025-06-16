@@ -71,7 +71,6 @@ fun StatisticsScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.statistics_title),
-                        style = MaterialTheme.typography.titleMedium
                     )
                 },
                 navigationIcon = {

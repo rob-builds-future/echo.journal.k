@@ -20,7 +20,7 @@ import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -302,7 +302,7 @@ fun EntryRow(
                 )
                 Spacer(Modifier.width(4.dp))
                 Icon(
-                    imageVector = Icons.Default.Timer,
+                    imageVector = Icons.Default.Schedule,
                     contentDescription = stringResource(R.string.contentdesc_timer),
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.onSurface
