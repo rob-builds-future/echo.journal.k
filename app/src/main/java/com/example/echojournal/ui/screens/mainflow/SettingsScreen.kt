@@ -71,7 +71,6 @@ fun SettingsScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.settings_title),
-                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             )
@@ -87,7 +86,6 @@ fun SettingsScreen(
             // Profil-Einstellungen Abschnitt
             Text(
                 text = stringResource(R.string.settings_section_profile),
-                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 4.dp)
             )
             ProfileSettingsCard(onNavigateToProfile = onNavigateToProfile)
@@ -95,7 +93,6 @@ fun SettingsScreen(
             // App-Einstellungen Abschnitt
             Text(
                 text = stringResource(R.string.settings_section_app),
-                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 4.dp)
             )
             AppSettingsCard(onNavigateToAppSetting = onNavigateToAppSetting)
@@ -131,8 +128,7 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = version,
-                    style = MaterialTheme.typography.bodySmall
+                    text = version
                 )
             }
 

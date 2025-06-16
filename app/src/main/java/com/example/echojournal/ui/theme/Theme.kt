@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+
 private val DarkColorScheme = darkColorScheme(
     primary = Color.White,
     onPrimary = Color.Black,
@@ -47,11 +48,18 @@ private val LightColorScheme = lightColorScheme(
     outline = Color.Black.copy(alpha = 0.25f)
 )
 
+
+enum class FontStyle {
+    DEFAULT,
+    MANROPE,
+    VARELA
+}
+
 @Composable
 fun EchojournalTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
+    fontStyle: FontStyle = FontStyle.DEFAULT,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -61,14 +69,19 @@ fun EchojournalTheme(
                 context
             )
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 
+    val typography = when (fontStyle) {
+        FontStyle.DEFAULT -> DefaultTypography
+        FontStyle.MANROPE -> ManropeTypography
+        FontStyle.VARELA -> VarelaTypography
+    }
+
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typography,
         content = content
     )
 }

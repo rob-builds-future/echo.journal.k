@@ -12,6 +12,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.echojournal.ui.theme.EchojournalTheme
+import com.example.echojournal.ui.theme.FontStyle
 
 private const val DATASTORE_NAME = "user_prefs"
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            EchojournalTheme(dynamicColor = false) {
+            EchojournalTheme(dynamicColor = false, fontStyle = FontStyle.VARELA) {
                     AppStart()
             }
         }
