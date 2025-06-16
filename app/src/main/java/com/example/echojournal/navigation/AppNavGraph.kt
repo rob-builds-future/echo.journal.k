@@ -40,14 +40,15 @@ fun AppNavGraph(
 ) {
     // User- und Onboard-State abholen
     val user by authViewModel.user.collectAsState()
+    val userLoading by authViewModel.loading.collectAsState()
     val onboarded by prefsViewModel.onboarded.collectAsState()
+    val prefsLoading by prefsViewModel.loading.collectAsState()
 
     // Einmal-Flag, damit wir den Routing-Code nur beim ersten Composable-Aufbau ausführen
     var hasNavigatedOnce by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(user, onboarded) {
-        if (!hasNavigatedOnce) {
-            // Erstes Mal, solange noch nichts navigiert wurde:
+    LaunchedEffect(user, onboarded, userLoading, prefsLoading) {
+        if (!hasNavigatedOnce && !userLoading && !prefsLoading && onboarded != null) {
             when {
                 user == null -> {
                     navController.navigate(AuthRootRoute.route) {
@@ -55,14 +56,12 @@ fun AppNavGraph(
                         launchSingleTop = true
                     }
                 }
-
-                !onboarded -> {
+                onboarded == false -> {
                     navController.navigate(OnboardingFlowRoute.route) {
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
-
                 else -> {
                     navController.navigate(MainRootRoute.route) {
                         popUpTo(0) { inclusive = true }
@@ -72,8 +71,6 @@ fun AppNavGraph(
             }
             hasNavigatedOnce = true
         }
-        // Wenn hasNavigatedOnce true ist, tut LaunchedEffect nichts mehr,
-        // egal ob user/onboarded sich später ändern.
     }
 
     NavHost(

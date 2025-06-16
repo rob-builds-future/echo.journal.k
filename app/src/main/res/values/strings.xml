@@ -323,7 +323,7 @@ Name three things you’re grateful for today.
 
     <!-- Onboarding Template Step -->
     <string name="onboarding_template_title">Choose a writing goal if you want</string>
-    <string name="onboarding_template_info">You can change this setting at any time in the app settings!</string>
+    <string name="onboarding_template_info">You can change these settings at any time in the app settings!</string>
     <string name="onboarding_button_finish">Finish</string>
 
 </resources>

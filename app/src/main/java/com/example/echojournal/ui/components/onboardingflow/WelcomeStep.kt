@@ -39,23 +39,23 @@ fun WelcomeStep(
         Row(modifier = Modifier.padding(horizontal = 18.dp)) {
             Text(
                 text = stringResource(R.string.onboarding_welcome_headline_1),
-                fontSize = 32.sp
+                fontSize = 28.sp
             )
             Text(
                 text = stringResource(R.string.onboarding_welcome_headline_echo),
-                fontSize = 32.sp,
+                fontSize = 28.sp,
                 color = colorResource(id = R.color.Lichtblau)
             )
             Text(
                 text = stringResource(R.string.onboarding_welcome_headline_2),
-                fontSize = 32.sp
+                fontSize = 28.sp
             )
         }
 
         Text(
             text = stringResource(R.string.onboarding_welcome_subheadline),
-            fontSize = 32.sp,
-            lineHeight = 32.sp,
+            fontSize = 28.sp,
+            lineHeight = 28.sp,
             modifier = Modifier.padding(horizontal = 18.dp)
         )
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echojournal.R
 import com.example.echojournal.data.repository.PrefsRepo
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,8 +16,6 @@ class PrefsViewModel(
     private val prefsRepo: PrefsRepo
 ) : ViewModel() {
 
-    val onboarded: StateFlow<Boolean> = prefsRepo.onboarded
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
     val theme: StateFlow<String> = prefsRepo.theme
         .stateIn(viewModelScope, SharingStarted.Eagerly, application.getString(R.string.default_theme))
     val currentLanguage = prefsRepo.currentLanguageCode
@@ -28,6 +27,21 @@ class PrefsViewModel(
     val currentTemplate: StateFlow<String> = prefsRepo.currentTemplateName
         .stateIn(viewModelScope, SharingStarted.Eagerly, application.getString(R.string.template_none))
 
+    private val _loading = MutableStateFlow(true)
+    val loading: StateFlow<Boolean> get() = _loading
+
+    private val _onboarded = MutableStateFlow<Boolean?>(null)
+    val onboarded: StateFlow<Boolean?> = _onboarded
+
+    init {
+        viewModelScope.launch {
+            prefsRepo.onboarded.collect { value ->
+                _onboarded.value = value
+                _loading.value = false
+            }
+        }
+        // Ggf. weitere Init-Logik für andere Prefs (optional)
+    }
 
     fun setOnboarded(value: Boolean) {
         viewModelScope.launch { prefsRepo.setOnboarded(value) }
@@ -51,15 +65,15 @@ class PrefsViewModel(
         }
     }
 
-    // Für das Abrufen (wird von einem suspend-Scope aus benutzt, z.B. LaunchedEffect)
-    suspend fun getLastCongratsDate(): String? {
-        return prefsRepo.getLastCongratsDate()
-    }
-
-    // Für das Setzen, wie die anderen Einstellungen (übernimmt selbst das launch)
-    fun setLastCongratsDate(date: String) {
-        viewModelScope.launch {
-            prefsRepo.setLastCongratsDate(date)
-        }
-    }
+//    // Für das Abrufen (wird von einem suspend-Scope aus benutzt, z.B. LaunchedEffect)
+//    suspend fun getLastCongratsDate(): String? {
+//        return prefsRepo.getLastCongratsDate()
+//    }
+//
+//    // Für das Setzen, wie die anderen Einstellungen (übernimmt selbst das launch)
+//    fun setLastCongratsDate(date: String) {
+//        viewModelScope.launch {
+//            prefsRepo.setLastCongratsDate(date)
+//        }
+//    }
 }

@@ -57,8 +57,8 @@ fun TemplateStep(
 
             Text(
                 stringResource(R.string.onboarding_template_info),
-                fontSize = 24.sp,
-                modifier = Modifier.padding(bottom = 12.dp)
+                fontSize = 20.sp,
+                modifier = Modifier.padding(vertical = 12.dp)
             )
 
             Spacer(Modifier.weight(1f))

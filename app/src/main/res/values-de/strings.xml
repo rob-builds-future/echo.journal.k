@@ -283,7 +283,7 @@ Nenne drei Dinge, für die du heute dankbar bist.
 
     <!-- Congrats-Dialog -->
     <string name="congrats_title">Herzlichen Glückwunsch!</string>
-    <string name="congrats_message">Du hast heute ein Tagebuch geführt und bewusster gelebt.
+    <string name="congrats_message">Du hast heute Tagebuch geführt und bewusster gelebt.
     Außerdem hast du einen Streak-Punkt verdient. Mach weiter so!</string>
     <string name="button_nice">Super!</string>
 
@@ -308,7 +308,7 @@ Nenne drei Dinge, für die du heute dankbar bist.
 
     <!-- Onboarding Template Step -->
     <string name="onboarding_template_title">Wähle ein Schreibziel, wenn du möchtest</string>
-    <string name="onboarding_template_info">Du kannst diese Einstellung jederzeit im Einstellungsbereich der App ändern!</string>
+    <string name="onboarding_template_info">Du kannst diese Einstellungen jederzeit im Einstellungsbereich der App ändern!</string>
     <string name="onboarding_button_finish">Abschließen</string>
 
 </resources>
