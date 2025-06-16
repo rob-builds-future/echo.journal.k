@@ -171,10 +171,12 @@ Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
     <string name="detail_title_theme">Echo-Farbe</string>
     <string name="detail_title_templates">Geführtes Tagebuchschreiben</string>
     <string name="detail_title_reminders">Erinnerungen</string>
+    <string name="reminders_coming_soon">Erinnerungen sind bald verfügbar!</string>
+
 
     <!-- AppSettingsCard -->
     <string name="settings_app_theme">Echo-Farbe</string>
-    <string name="settings_app_templates">Geführtes Tagebuchschreiben</string>
+    <string name="settings_app_templates">Geführtes\nTagebuchschreiben</string>
     <string name="settings_app_reminders">Erinnerungen</string>
     <string name="settings_app_reminders_summary">Deine Erinnerungen</string>
 

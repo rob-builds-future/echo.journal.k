@@ -191,6 +191,7 @@ Tip: You can also choose a different voice under the same menu.
     <string name="settings_app_templates">Guided journaling</string>
     <string name="settings_app_reminders">Reminders</string>
     <string name="settings_app_reminders_summary">Your reminders</string>
+    <string name="reminders_coming_soon">Reminders will be available soon!</string>
 
     <!-- ProfileSettingsCard -->
     <string name="settings_profile_target_language">Echo language</string>

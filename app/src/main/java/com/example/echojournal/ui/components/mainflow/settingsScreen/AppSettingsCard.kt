@@ -1,5 +1,6 @@
 package com.example.echojournal.ui.components.mainflow.settingsScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.echojournal.R
@@ -21,6 +23,8 @@ import org.koin.androidx.compose.koinViewModel
 fun AppSettingsCard(
     onNavigateToAppSetting: (SettingType) -> Unit
 ) {
+    val context = LocalContext.current
+    val toastText = stringResource(R.string.reminders_coming_soon)
     val prefsViewModel: PrefsViewModel = koinViewModel()
     val currentKey by prefsViewModel.theme.collectAsState()
     val currentTemplate by prefsViewModel.currentTemplate.collectAsState()
@@ -66,7 +70,15 @@ fun AppSettingsCard(
             SettingItem(
                 label = stringResource(R.string.settings_app_reminders),
                 value = stringResource(R.string.settings_app_reminders_summary),
-                onClick = { onNavigateToAppSetting(SettingType.Reminders) }
+                enabled = false,
+                onClick = {},
+                onDisabledClick = {
+                    Toast.makeText(
+                        context,
+                        toastText,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }

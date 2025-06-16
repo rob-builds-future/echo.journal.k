@@ -171,6 +171,7 @@ Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
     <string name="detail_title_theme">Tema</string>
     <string name="detail_title_templates">Diário guiado</string>
     <string name="detail_title_reminders">Lembretes</string>
+    <string name="reminders_coming_soon">Lembretes estarão disponíveis em breve!</string>
 
     <!-- AppSettingsCard -->
     <string name="settings_app_theme">Cor Echo</string>
