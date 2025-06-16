@@ -309,7 +309,7 @@ fun EntryRow(
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = "${entry.duration} ${stringResource(R.string.text_minutes)}",
+                    text = "${entry.duration}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
