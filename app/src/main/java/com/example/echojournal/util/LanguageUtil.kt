@@ -30,7 +30,7 @@ object LanguageUtil {
             "ja" -> "ja-JP"   // Japanisch
             "zh" -> "zh-CN"   // Chinesisch → China
             "hi" -> "hi-IN"   // Hindi → Indien
-            // … du kannst hier weitere Ausnahmen ergänzen, sobald du sie brauchst …
+            // ggf weitere Ausnahmen ergänzen
 
             // Wenn es schon ein BCP-47-Tag ist (z.B. "de-DE", "en-GB"), dann direkt zurückgeben:
             in Regex("^[a-z]{2}-[A-Z]{2}\$").find(lc)?.value ?: "" -> lc
