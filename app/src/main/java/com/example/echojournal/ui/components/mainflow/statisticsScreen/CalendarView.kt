@@ -177,11 +177,11 @@ fun CalendarView(
                                 shape = MaterialTheme.shapes.small
                             )
                             isMinDate -> Modifier.background(
-                                color = Color(0xFFFFD700).copy(alpha = 0.4f),
+                                color = Color(0xFFFFD700),
                                 shape = MaterialTheme.shapes.small
                             )
                             isMarked -> Modifier.background(
-                                color = echoColor.copy(alpha = 0.3f),
+                                color = echoColor,
                                 shape = MaterialTheme.shapes.small
                             )
                             else -> Modifier
@@ -207,8 +207,8 @@ fun CalendarView(
                                 ),
                                 color = when {
                                     isBeforeMin -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-                                    isMinDate   -> Color(0xFFFFD700)  // Gold für Mitgliedsdatum
-                                    isMarked    -> echoColor
+                                    isMinDate   -> Color.Black
+                                    isMarked    -> Color.White
                                     else        -> MaterialTheme.colorScheme.onBackground
                                 }
                             )
