@@ -89,7 +89,6 @@ fun SettingDetailScreen(
                     ProfileSettingLanguage()
                 }
                 SettingType.ProfileInfo -> {
-                    // Ihr zeigt hier ProfileSettingInfo, die intern „Member since…“ selber lokalisieren sollte
                     val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
                     val memberSince = user
                         ?.createdAt

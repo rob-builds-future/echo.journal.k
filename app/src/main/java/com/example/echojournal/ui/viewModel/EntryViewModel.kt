@@ -41,7 +41,7 @@ class EntryViewModel(
             }
         }
         .catch { e ->
-            // Wenn Firestore uns die Berechtigung entzieht, ignoriere das
+            // Wenn Firestore die Berechtigung entzieht, ignorieren
             if (e is FirebaseFirestoreException && e.code ==
                 com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED
             ) {

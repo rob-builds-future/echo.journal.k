@@ -75,13 +75,16 @@ fun StatisticsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.statistics_nav_back))
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.statistics_nav_back)
+                        )
                     }
                 }
             )
         },
         content = { paddingValues ->
-            // Wir verwenden ein Box-Layout, um alles zu stapeln
+            // Box-Layout, um alles zu stapeln
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -144,9 +147,7 @@ fun StatisticsScreen(
                             )
                         }
                     }
-
                     TopWordsStatistic()
-                    // (Falls euer Content noch länger ist, wird er hier automatisch scrollen)
                 }
 
                 // Gradient Overlay oben

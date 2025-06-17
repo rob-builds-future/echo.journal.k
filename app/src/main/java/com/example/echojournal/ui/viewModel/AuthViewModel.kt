@@ -61,7 +61,6 @@ class AuthViewModel(
                 Log.d("AuthViewModel", "Init: Firebase-User vorhanden: UID = ${firebaseUser.uid}")
             }
 
-            // Dann lädst du den Firestore-User
             _user.value = repo.getCurrentUser().also {
                 it?.let { u -> Log.d("AuthViewModel", "getCurrentUser() gibt User zurück mit UID ${u.id}") }
             }
@@ -98,7 +97,7 @@ class AuthViewModel(
                 _loading.value = false
                 return@launch
             }
-            // Dein Regex: mindestens 8+ Zeichen, 1 Großbuchstabe, 1 Zahl
+            // Regex: mindestens 8+ Zeichen, 1 Großbuchstabe, 1 Zahl
             val pwdOk = Regex("""^(?=.*[A-Z])(?=.*\d).{8,}$""")
                 .matches(password.value)
             if (!pwdOk) {
@@ -236,7 +235,7 @@ class AuthViewModel(
     }
 
     fun loadJournalEntriesForCurrentUser() {
-        // DIREKTEN Zugriff nehmen – kein suspend nötig:
+        // Direkten Zugriff nehmen – kein suspend nötig:
         val firebaseAuthUser = FirebaseAuth.getInstance().currentUser
         if (firebaseAuthUser == null) {
             Log.w("AuthViewModel", "Kein angemeldeter User: journalEntries werden NICHT geladen.")

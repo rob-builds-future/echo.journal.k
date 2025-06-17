@@ -106,7 +106,6 @@ fun AppNavGraph(
             }
         }
         // ONBOARDING FLOW
-
         composable(OnboardingFlowRoute.route) {
             OnboardingFlow(
                 prefsViewModel = prefsViewModel,
