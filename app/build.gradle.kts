@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.echojournal"
+    namespace = "com.rbf.echojournal"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.echojournal"
+        applicationId = "com.rbf.echojournal"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
