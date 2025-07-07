@@ -7,50 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:224969646099:android:8fcc25763769dae081dfe6",
-        "android_client_info": {
-          "package_name": "com.example.echojournal"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "224969646099-c12eu9kdg4b7l03bas9g90601kq5om4r.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.echojournal",
-            "certificate_hash": "cc4a43d1431e9e7553b0c00d03b6470dba3399d4"
-          }
-        },
-        {
-          "client_id": "224969646099-rn20ovhne8g3fbd22eghr4frk6kh81hu.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDaYa7LUyr_pHSX_m8UiAAfKenLmtUvGRg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "224969646099-rn20ovhne8g3fbd22eghr4frk6kh81hu.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "224969646099-4d5816kud83lbbgucrhrkn6su49j8qjr.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.rbf.echo-journal"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:224969646099:android:f726daa8e3dec20981dfe6",
         "android_client_info": {
           "package_name": "com.rbf.echojournal"
