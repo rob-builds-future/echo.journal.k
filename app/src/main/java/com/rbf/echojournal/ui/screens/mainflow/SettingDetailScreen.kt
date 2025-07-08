@@ -30,13 +30,17 @@ import com.rbf.echojournal.ui.viewModel.AuthViewModel
 import com.rbf.echojournal.ui.viewModel.LanguageViewModel
 import com.rbf.echojournal.ui.viewModel.PrefsViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingDetailScreen(
     type: SettingType,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onLogoutConfirmed: () -> Unit = {},
+    onProfileDeleted: () -> Unit = {}
 ) {
     // AuthViewModel holen
     val authViewModel: AuthViewModel = koinViewModel()
@@ -89,11 +93,11 @@ fun SettingDetailScreen(
                     ProfileSettingLanguage()
                 }
                 SettingType.ProfileInfo -> {
-                    val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
                     val memberSince = user
                         ?.createdAt
                         ?.toInstant()
-                        ?.atZone(java.time.ZoneId.systemDefault())
+                        ?.atZone(ZoneId.systemDefault())
                         ?.toLocalDate()
                         ?.format(dateFormatter)
                         ?: "–"
@@ -103,10 +107,22 @@ fun SettingDetailScreen(
                         ?: currentLanguageCode.ifBlank { "–" }
 
                     ProfileSettingInfo(
-                        memberSince     = memberSince,
-                        username        = user?.username ?: "–",
-                        language        = languageName,
-                        onDeleteProfile = { /* … */ }
+                        memberSince = memberSince,
+                        username = user?.username ?: "–",
+                        language = languageName,
+                        onLogout = {
+                            authViewModel.signOut()
+                            onLogoutConfirmed()
+                        },
+                        onDeleteConfirmed = {
+                            authViewModel.deleteProfile { success ->
+                                if (success) {
+                                    onProfileDeleted()
+                                } else {
+                                    // Fehler: Snackbar/Dialog anzeigen (optional)
+                                }
+                            }
+                        }
                     )
                 }
                 SettingType.Theme -> {

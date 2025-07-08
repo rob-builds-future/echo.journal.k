@@ -192,7 +192,17 @@ fun AppNavGraph(
                 val type = SettingType.valueOf(typeName)
                 SettingDetailScreen(
                     type = type,
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    onLogoutConfirmed = {
+                        navController.navigate(AuthRootRoute.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                        }
+                    },
+                    onProfileDeleted = {
+                        navController.navigate(AuthRootRoute.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                        }
+                    }
                 )
             }
 

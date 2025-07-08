@@ -194,6 +194,7 @@ Dica: Você também pode escolher uma voz diferente nesse mesmo menu.
     <string name="profile_info_delete">Excluir perfil</string>
     <string name="profile_info_delete_confirm_title">Excluir perfil</string>
     <string name="profile_info_delete_confirm_message">Deseja realmente excluir seu perfil?</string>
+    <string name="delete_profile_confirm_type">Digite ‘DELETE’ para confirmar:</string>
 
     <!-- Profil Target Language -->
     <string name="placeholder_search_language">Pesquisar idioma…</string>
@@ -309,5 +310,17 @@ Liste três coisas pelas quais você é grato hoje.
     <string name="onboarding_template_title">Escolha um objetivo de escrita, se quiser</string>
     <string name="onboarding_template_info">Você pode alterar esta configuração a qualquer momento nas configurações do app!</string>
     <string name="onboarding_button_finish">Concluir</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Enviar feedback</string>
+    <string name="feedback_subtitle">Ajude-nos a tornar o echo.journal ainda melhor!</string>
+    <string name="feedback_mail_subject">Feedback para echo.journal</string>
+    <string name="feedback_mail_body">Do que você gosta? O que você gostaria de ver? (Por favor, escreva seu feedback aqui)\n\nObrigado por nos ajudar a melhorar o echo.journal!</string>
+
+    <!-- Esqueci minha senha Flow -->
+    <string name="forgot_password">Esqueceu a senha?</string>
+    <string name="forgot_password_dialog_info">Enviaremos um link para redefinir sua senha.</string>
+    <string name="forgot_password_dialog_success">Se este e-mail estiver registrado, um link foi enviado!</string>
+    <string name="button_send">Enviar</string>
 
 </resources>

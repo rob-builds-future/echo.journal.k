@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,12 +29,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -55,6 +59,7 @@ import com.rbf.echojournal.ui.components.authflow.EchoLogoWithText
 import com.rbf.echojournal.ui.components.authflow.SignInWithGoogle
 import com.rbf.echojournal.ui.viewModel.AuthViewModel
 import com.rbf.echojournal.ui.viewModel.PrefsViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -102,20 +107,25 @@ fun SignInScreen(
 
     val backgroundPainter = painterResource(id = R.drawable.background2)
 
-    // TextField-Farben
     val textFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = MaterialTheme.colorScheme.surface,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+        focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+        unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
         focusedLabelColor = MaterialTheme.colorScheme.onSurface,
         unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
         unfocusedIndicatorColor = Color.Transparent,
     )
 
-    // Button-Farben
     val buttonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.onPrimary,
-        contentColor = MaterialTheme.colorScheme.primary
+        disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+        contentColor = MaterialTheme.colorScheme.primary,
+        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     )
+
+    var showResetDialog by remember { mutableStateOf(false) }
+    var resetEmail by remember { mutableStateOf(email) } // Vorbefüllt, falls User im Feld schon was eingetragen hat
+    var resetResultMessageKey by remember { mutableStateOf<String?>(null) }
+
 
     Scaffold { paddingValues ->
         Box(Modifier.fillMaxSize()) {
@@ -203,13 +213,25 @@ fun SignInScreen(
                             .focusRequester(passwordRequester),
                         colors = textFieldColors
                     )
+                    TextButton(
+                        onClick = { showResetDialog = true },
+                        modifier = Modifier.align(Alignment.End),
+                    ) {
+                        Text(
+                            stringResource(R.string.forgot_password),
+                            color = Color.White
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // ─── Anmelden-Button ──────────────────────
+                    val canSignIn =
+                        email.isNotBlank() && password.isNotBlank() && !loading
+
                     Button(
                         onClick = { viewModel.signIn() },
-                        enabled = !loading,
+                        enabled = canSignIn,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
@@ -258,8 +280,82 @@ fun SignInScreen(
                             color = Color.White
                         )
                     }
+
+                    if (showResetDialog) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showResetDialog = false
+                                resetResultMessageKey = null
+                            },
+                            title = { Text(stringResource(R.string.forgot_password)) },
+                            text = {
+                                Column {
+                                    Text(stringResource(R.string.forgot_password_dialog_info))
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    TextField(
+                                        value = resetEmail,
+                                        onValueChange = { resetEmail = it },
+                                        label = { Text(stringResource(R.string.label_email)) },
+                                        singleLine = true
+                                    )
+                                    // Feedback für Erfolg oder Fehler
+                                    if (resetResultMessageKey != null) {
+                                        Text(
+                                            text = stringResource(
+                                                id = getStringResourceByName(
+                                                    resetResultMessageKey!!
+                                                )
+                                            ),
+                                            color = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.sendPasswordReset(resetEmail) { success, errorKey ->
+                                            resetResultMessageKey = if (success) {
+                                                "forgot_password_dialog_success"
+                                            } else {
+                                                errorKey ?: "error_generic"
+                                            }
+                                            // Optional: Dialog automatisch schließen nach Erfolg
+                                            if (success) {
+                                                // (Kleines Delay, damit der Text kurz sichtbar bleibt)
+                                                // Achtung: GlobalScope ist nur für Demo ok – besser wäre LaunchedEffect!
+                                                kotlinx.coroutines.GlobalScope.launch {
+                                                    kotlinx.coroutines.delay(1200)
+                                                    showResetDialog = false
+                                                    resetResultMessageKey = null
+                                                }
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.button_send))
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = {
+                                    showResetDialog = false
+                                    resetResultMessageKey = null
+                                }) {
+                                    Text(stringResource(R.string.button_cancel))
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun getStringResourceByName(name: String): Int {
+    val context = LocalContext.current
+    return remember(name) {
+        context.resources.getIdentifier(name, "string", context.packageName)
     }
 }

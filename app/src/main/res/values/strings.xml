@@ -208,6 +208,7 @@ Tip: You can also choose a different voice under the same menu.
     <string name="profile_info_delete">Delete profile</string>
     <string name="profile_info_delete_confirm_title">Delete profile</string>
     <string name="profile_info_delete_confirm_message">Do you really want to delete your profile?</string>
+    <string name="delete_profile_confirm_type">Type \'DELETE\' to confirm:</string>
 
     <!-- Profil Echo Language -->
     <string name="none_selected">–</string>
@@ -325,5 +326,18 @@ Name three things you’re grateful for today.
     <string name="onboarding_template_title">Choose a writing goal if you want</string>
     <string name="onboarding_template_info">You can change these settings at any time in the app settings!</string>
     <string name="onboarding_button_finish">Finish</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Give feedback</string>
+    <string name="feedback_subtitle">Help us make echo.journal even better!</string>
+    <string name="feedback_mail_subject">Feedback for echo.journal</string>
+    <string name="feedback_mail_body">What do you like? What do you wish for? (Please write your feedback here)\n\nThank you for helping us improve echo.journal!</string>
+
+    <!-- Forgot Password Flow -->
+    <string name="forgot_password">Forgot password?</string>
+    <string name="forgot_password_dialog_info">We\'ll send you an email with a link to reset your password.</string>
+    <string name="forgot_password_dialog_success">If this email is registered, a reset link was sent!</string>
+    <string name="button_send">Send</string>
+
 
 </resources>

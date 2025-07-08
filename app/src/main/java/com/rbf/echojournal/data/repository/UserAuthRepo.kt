@@ -31,4 +31,6 @@ interface UserAuthRepo {
 
     suspend fun getJournalEntries(userId: String): List<JournalEntry>
 
+    suspend fun deleteUser(userId: String)
+
 }

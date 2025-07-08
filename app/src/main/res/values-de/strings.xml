@@ -195,6 +195,7 @@ Tipp: Du kannst dort auch eine andere Ausgabestimme auswählen.
     <string name="profile_info_delete">Profil löschen</string>
     <string name="profile_info_delete_confirm_title">Profil löschen</string>
     <string name="profile_info_delete_confirm_message">Möchtest du dein Profil wirklich löschen?</string>
+    <string name="delete_profile_confirm_type">Tippe „DELETE“ zur Bestätigung ein:</string>
 
     <!-- Profil Target Language -->
     <string name="placeholder_search_language">Sprache suchen…</string>
@@ -310,5 +311,17 @@ Nenne drei Dinge, für die du heute dankbar bist.
     <string name="onboarding_template_title">Wähle ein Schreibziel, wenn du möchtest</string>
     <string name="onboarding_template_info">Du kannst diese Einstellungen jederzeit im Einstellungsbereich der App ändern!</string>
     <string name="onboarding_button_finish">Abschließen</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Feedback geben</string>
+    <string name="feedback_subtitle">Hilf uns, echo.journal gemeinsam zu verbessern!</string>
+    <string name="feedback_mail_subject">Feedback zu echo.journal</string>
+    <string name="feedback_mail_body">Was gefällt dir? Was wünschst du dir? (Bitte schreibe dein Feedback hier)\n\nDanke, dass du uns hilfst, echo.journal zu verbessern!</string>
+
+    <!-- Passwort vergessen Flow -->
+    <string name="forgot_password">Passwort vergessen?</string>
+    <string name="forgot_password_dialog_info">Wir senden dir einen Link zum Zurücksetzen deines Passworts.</string>
+    <string name="forgot_password_dialog_success">Falls diese E-Mail registriert ist, wurde ein Link verschickt!</string>
+    <string name="button_send">Senden</string>
 
 </resources>

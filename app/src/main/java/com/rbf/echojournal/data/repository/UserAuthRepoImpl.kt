@@ -5,15 +5,15 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import com.rbf.echojournal.R
-import com.rbf.echojournal.data.remote.model.JournalEntry
-import com.rbf.echojournal.data.remote.model.User
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.rbf.echojournal.R
+import com.rbf.echojournal.data.remote.model.JournalEntry
+import com.rbf.echojournal.data.remote.model.User
 import kotlinx.coroutines.tasks.await
 import java.security.MessageDigest
 import java.util.Date
@@ -194,5 +194,28 @@ class UserAuthRepoImpl(
             )
         }
         user
+    }
+
+    override suspend fun deleteUser(userId: String) {
+        // Firestore-Dokument löschen
+        db.collection("users")
+            .document(userId)
+            .delete()
+            .await()
+
+        // Optional: Auch die JournalEntries löschen
+        // Das ist ein bisschen "advanced", weil Firestore keine batch delete von Subcollections erlaubt
+        val entries = db.collection("users")
+            .document(userId)
+            .collection("journalEntries")
+            .get()
+            .await()
+        for (doc in entries.documents) {
+            doc.reference.delete().await()
+        }
+
+        // Der eigentliche Firebase-Account-Delete muss im ViewModel/FirebaseUser passieren,
+        // weil nur der angemeldete User sich selbst löschen darf!
+        // Siehe im ViewModel: firebaseUser.delete()
     }
 }

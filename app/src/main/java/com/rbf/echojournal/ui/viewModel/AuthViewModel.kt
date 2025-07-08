@@ -6,16 +6,16 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rbf.echojournal.R
-import com.rbf.echojournal.data.remote.model.JournalEntry
-import com.rbf.echojournal.data.remote.model.User
-import com.rbf.echojournal.data.repository.UserAuthRepo
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.rbf.echojournal.R
+import com.rbf.echojournal.data.remote.model.JournalEntry
+import com.rbf.echojournal.data.remote.model.User
+import com.rbf.echojournal.data.repository.UserAuthRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -257,5 +257,49 @@ class AuthViewModel(
                 _error.value = "Konnte Journal-Einträge nicht laden."
             }
         }
+    }
+
+    fun deleteProfile(onResult: (Boolean) -> Unit = {}) {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        if (firebaseUser == null) {
+            onResult(false)
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                // Lösche User-Daten aus Firestore UND alle Einträge
+                repo.deleteUser(firebaseUser.uid)
+                // Jetzt Firebase-Account löschen (Client-seitig, geht NUR für sich selbst!)
+                firebaseUser.delete()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            _user.value = null
+                            onResult(true)
+                        } else {
+                            Log.e("AuthViewModel", "deleteProfile: Fehler beim Löschen", task.exception)
+                            onResult(false)
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "deleteProfile: Exception", e)
+                onResult(false)
+            }
+        }
+    }
+
+    fun sendPasswordReset(email: String, onResult: (Boolean, String?) -> Unit) {
+        if (email.isBlank()) {
+            onResult(false, "Bitte E-Mail eingeben.") // Lokalisieren!
+            return
+        }
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(true, null)
+                } else {
+                    onResult(false, task.exception?.localizedMessage)
+                }
+            }
     }
 }
