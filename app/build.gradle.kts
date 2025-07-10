@@ -18,12 +18,19 @@ android {
         applicationId = "com.rbf.echojournal"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/robinbe/Developer/Google KeyStore/Untitled")
+            storePassword = "548754"
+            keyAlias = "echo-release-key"
+            keyPassword = "548754"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,6 +38,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
