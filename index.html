@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>echo – Dein KI-Journal</title>
+    <meta name="description" content="echo ist dein intelligentes, privates Journal. Schreibe, reflektiere, entdecke – einfach & sicher.">
+    <style>
+        body {
+          font-family: system-ui, sans-serif;
+          margin: 0; padding: 0;
+          background: #fafbfc; color: #212529;
+          display: flex; flex-direction: column; min-height: 100vh;
+        }
+        header {
+          padding: 2rem 1rem 1rem 1rem;
+          text-align: center;
+        }
+        h1 { font-size: 2.2rem; margin: 0; letter-spacing: 0.02em; }
+        .claim { color: #595959; font-size: 1.1rem; margin-top: .4rem; }
+        main {
+          flex: 1;
+          display: flex; flex-direction: column; align-items: center;
+          padding: 1rem;
+          max-width: 500px; margin: 0 auto;
+        }
+        .app-img {
+          width: 120px; margin: 2rem 0 1.2rem 0;
+          border-radius: 24px; box-shadow: 0 2px 12px #d4d8dd40;
+        }
+        .desc {
+          font-size: 1.08rem; color: #333; margin-bottom: 1.7rem;
+          line-height: 1.6;
+          text-align: center;
+        }
+        .download-btn {
+          background: #2255e5; color: #fff;
+          border: none; border-radius: 8px;
+          padding: 0.85rem 2.2rem;
+          font-size: 1.12rem; font-weight: 500;
+          box-shadow: 0 2px 8px #a0a5b540;
+          cursor: pointer; transition: background .18s;
+          margin-bottom: 2rem;
+          text-decoration: none; display: inline-block;
+        }
+        .download-btn:hover { background: #133a98; }
+        footer {
+          text-align: center; font-size: 0.95rem; color: #7a7a7a;
+          padding: 1.2rem .5rem .9rem .5rem;
+          border-top: 1px solid #e6e9ef;
+          margin-top: 2rem;
+        }
+        .footer-links a {
+          color: #7a7a7a; margin: 0 0.6em;
+          text-decoration: none;
+        }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>echo</h1>
+    <div class="claim">Dein KI-Journal. Privater. Schlauer. Einfach.</div>
+</header>
+<main>
+    <img src="img/app-icon.png" alt="echo App Icon" class="app-img" />
+    <div class="desc">
+        Schreibe deine Gedanken auf, lass dich inspirieren und entdecke neue Perspektiven – mit KI-Unterstützung, die deine Privatsphäre respektiert.
+        <br><br>
+        echo ist das digitale Tagebuch für alle, die mehr aus ihren Notizen machen wollen – 100% privat, ohne Datenverkauf.
+    </div>
+    <a href="https://play.google.com/store/apps/details?id=com.rbf.echojournal&pcampaignid=web_share" target="_blank" rel="noopener">
+        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/de_badge_web_generic.png" alt="Jetzt bei Google Play" style="height:52px;">
+    </a>
+
+    <!-- Optional: Screenshot-Grid -->
+    <!-- <div class="screenshots">... Screenshots ...</div> -->
+</main>
+<footer>
+    <div class="footer-links">
+        <a href="datenschutz.html">Datenschutz</a> |
+        <a href="impressum.html">Impressum</a>
+    </div>
+    <div style="margin-top:.3em;">&copy; echo.journal, 2024</div>
+</footer>
+</body>
+</html>
