@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -129,6 +131,8 @@ fun AddEntryScreen(
         stringResource(id)
     }
 
+    val scrollState = rememberScrollState()
+
     // DatePicker-Dialog
     if (showDatePicker) {
         val dialog = DatePickerDialog(
@@ -240,7 +244,9 @@ fun AddEntryScreen(
             contentAlignment = Alignment.TopStart
         ) {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
             ) {
                 // Entry - Translation Swap + Sections
                 if (isReversed) {
@@ -309,7 +315,7 @@ fun AddEntryScreen(
                         echoColor = echoColor
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
